@@ -37,7 +37,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     default: {
       if (args.length === 0) {
         // Return user's friend code if they have one
-        const fc = client.userDB.ensure(message.author.id, client.config.userDBDefaults).friendcode;
+        const fc = client.userDB.ensure(message.author.id, client.config.userDBDefaults).friendCode;
         if (!fc) {
           return client.error(message.channel, 'No Code Found!', 'You have not set a friend code! You can do so by running \`.fc set <code>\`!');
         }
@@ -56,7 +56,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' '));
 
       if (member) {
-        const fc = client.userDB.ensure(member.user.id, client.config.userDBDefaults).friendcode;
+        const fc = client.userDB.ensure(member.user.id, client.config.userDBDefaults).friendCode;
         if (!fc) {
           return client.error(message.channel, 'No Code Found!', `${member.displayName} has not set their friend code!`);
         }

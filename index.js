@@ -4,6 +4,7 @@
 const Discord = require('discord.js');
 const Enmap = require('enmap');
 const fs = require('fs');
+require('dotenv').config();
 
 const client = new Discord.Client({
   messageCacheMaxSize: 500,
@@ -32,6 +33,7 @@ client.config = require('./config');
 client.version = `v${botVersion}`;
 client.emoji = emoji;
 client.token = process.env.TOKEN;
+console.log(client.token);
 
 fs.readdir('./events/', (err, files) => {
   if (err) {

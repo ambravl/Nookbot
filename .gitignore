@@ -1,6 +1,9 @@
 # Node crap
 node_modules
 
+# .env for local testing
+.env
+
 # Data
 data
 
