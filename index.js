@@ -23,12 +23,12 @@ const client = new Discord.Client({
     ],
   },
 });
-const configFile = require('./config');
 const { botVersion } = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
-client.config = configFile;
+client.config = require('./config');
+
 client.version = `v${botVersion}`;
 client.emoji = emoji;
 client.token = process.env.TOKEN;
@@ -81,8 +81,8 @@ fs.readdir('./commands/', (err, folders) => {
 });
 
 client.levelCache = {};
-for (let i = 0; i < configFile.permLevels.length; i += 1) {
-  const thisLevel = configFile.permLevels[i];
+for (let i = 0; i < client.config.permLevels.length; i += 1) {
+  const thisLevel = client.config.permLevels[i];
   client.levelCache[thisLevel.name] = thisLevel.level;
 }
 
