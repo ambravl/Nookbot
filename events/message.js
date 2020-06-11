@@ -134,9 +134,9 @@ If you believe this member is a mention spammer bot, please ban them with the co
 
   // Grab the command data and aliases from the client.commands Enmap
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  let enabledCmds = client.enabledCmds.get(command);
-  if (enabledCmds === undefined) {
-    enabledCmds = client.enabledCmds.get(client.aliases.get(command));
+  let enabledCommands = client.enabledCommands.get(command);
+  if (enabledCommands === undefined) {
+    enabledCommands = client.enabledCommands.get(client.aliases.get(command));
   }
 
   // If that command doesn't exist, silently exit and do nothing
@@ -144,7 +144,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
     return;
   }
 
-  if (enabledCmds === false && level[1] < 4) {
+  if (enabledCommands === false && level[1] < 4) {
     return client.error(message.channel, 'Command Disabled!', 'This command is currently disabled!');
   }
 
