@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+/* eslint-disable consistent-return,linebreak-style */
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 const Discord = require('discord.js');
@@ -24,13 +24,13 @@ const client = new Discord.Client({
     ],
   },
 });
-const config = require('./config');
-const { version } = require('./package.json');
+const configFile = require('./config');
+const { botVersion } = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
-client.config = config;
-client.version = `v${version}`;
+client.config = configFile;
+client.version = `v${botVersion}`;
 client.emoji = emoji;
 
 fs.readdir('./events/', (err, files) => {
@@ -59,12 +59,11 @@ fs.readdir('./commands/', (err, folders) => {
         return console.error(error);
       }
       files.forEach((file) => {
+        const props = require(`./commands/${folders[i]}/${file}`);
+        const commandName = props.help.name;
         if (!file.endsWith('.js')) {
           return;
         }
-
-        const props = require(`./commands/${folders[i]}/${file}`);
-        const commandName = props.help.name;
 
         console.log(`Attempting to load command ${commandName}`);
         client.commands.set(commandName, props);
@@ -75,16 +74,16 @@ fs.readdir('./commands/', (err, folders) => {
           });
         }
 
-        client.enabledCmds.ensure(commandName, true);
+        client.enabledCommands.ensure(commandName, true);
       });
     });
   }
 });
 
 client.levelCache = {};
-for (let i = 0; i < config.permLevels.length; i++) {
-  const thislvl = config.permLevels[i];
-  client.levelCache[thislvl.name] = thislvl.level;
+for (let i = 0; i < configFile.permLevels.length; i += 1) {
+  const thisLevel = configFile.permLevels[i];
+  client.levelCache[thisLevel.name] = thisLevel.level;
 }
 
 client.firstReady = false;
@@ -129,17 +128,17 @@ client.twitter = new Twitter({
 // Start up the twitter webhook listener
 client.twitterHook = new Discord.WebhookClient(client.config.twitterHookID, client.config.twitterHookToken);
 
-Object.assign(client, Enmap.multi(['enabledCmds', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
+Object.assign(client, Enmap.multi(['enabledCommands', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
 
-client.login(config.token).then(() => {
+client.login(configFile.token).then(() => {
   console.log('Bot successfully logged in.');
 }).catch(() => {
-  console.log('Retrying client.login()...');
   let counter = 1;
+  console.log('Retrying client.login()...');
   const interval = setInterval(() => {
     console.log(`  Retrying attempt ${counter}`);
     counter += 1;
-    client.login(config.token).then(() => {
+    client.login(configFile.token).then(() => {
       console.log('  Bot successfully logged in.');
       clearInterval(interval);
     });
