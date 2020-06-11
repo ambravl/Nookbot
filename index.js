@@ -4,7 +4,6 @@
 const Discord = require('discord.js');
 const Enmap = require('enmap');
 const fs = require('fs');
-const Twitter = require('twitter-lite');
 
 const client = new Discord.Client({
   messageCacheMaxSize: 500,
@@ -116,17 +115,6 @@ client.songQueue = {
 client.imageOnlyFilterCount = 0;
 client.newlineLimitFilterCount = 0;
 client.noMentionFilterCount = 0;
-
-// Twitter object for listening for tweets
-client.twitter = new Twitter({
-  consumer_key: client.config.twitterAPIKey,
-  consumer_secret: client.config.twitterAPISecret,
-  access_token_key: client.config.twitterAccessToken,
-  access_token_secret: client.config.twitterAccessTokenSecret,
-});
-
-// Start up the twitter webhook listener
-client.twitterHook = new Discord.WebhookClient(client.config.twitterHookID, client.config.twitterHookToken);
 
 Object.assign(client, Enmap.multi(['enabledCommands', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
 
