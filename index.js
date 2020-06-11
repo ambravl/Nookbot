@@ -31,6 +31,7 @@ require('./src/functions')(client);
 client.config = configFile;
 client.version = `v${botVersion}`;
 client.emoji = emoji;
+client.token = process.env.TOKEN;
 
 fs.readdir('./events/', (err, files) => {
   if (err) {
@@ -118,7 +119,7 @@ client.noMentionFilterCount = 0;
 
 Object.assign(client, Enmap.multi(['enabledCommands', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
 
-client.login(configFile.token).then(() => {
+client.login(client.token).then(() => {
   console.log('Bot successfully logged in.');
 }).catch(() => {
   let counter = 1;
@@ -126,7 +127,7 @@ client.login(configFile.token).then(() => {
   const interval = setInterval(() => {
     console.log(`  Retrying attempt ${counter}`);
     counter += 1;
-    client.login(configFile.token).then(() => {
+    client.login(client.token).then(() => {
       console.log('  Bot successfully logged in.');
       clearInterval(interval);
     });
