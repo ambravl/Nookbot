@@ -29,6 +29,7 @@ module.exports = async (client, messageReaction, user) => {
       const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
 
       if (roleID) {
+        console.log('got here');
         const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
         if (member) {
           // Check if they have any of the other roles in this list and remove them.
