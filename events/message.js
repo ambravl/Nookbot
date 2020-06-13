@@ -25,8 +25,8 @@ module.exports = async (client, message) => {
   let regMatch;
   while ((regMatch = regex.exec(msg)) !== null) {
     // If the emoji ID is in our emoji, then increment its count
-    if (client.emoji.has(regMatch[1])) {
-      client.emoji.inc(regMatch[1]);
+    if (client.emojiDB.has(regMatch[1])) {
+      client.emojiDB.inc(regMatch[1]);
     }
   }
 

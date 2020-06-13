@@ -16,12 +16,12 @@ module.exports = (client) => {
       // Emoji usage tracking database init
       guild.emojis.cache.forEach((e) => {
         // If emoji does not have the emoji, add it.
-        if (!client.emoji.has(e.id)) {
-          client.emoji.set(e.id, 0);
+        if (!client.emojiDB.has(e.id)) {
+          client.emojiDB.set(e.id, 0);
         }
       });
       // Sweep emojis from the DB that are no longer in the guild emojis
-      client.emoji.sweep((v, k) => !guild.emojis.cache.has(k));
+      client.emojiDB.sweep((v, k) => !guild.emojis.cache.has(k));
 
       setInterval(() => {
         client.user.setActivity(`ACNH with ${guild.memberCount} users!`);

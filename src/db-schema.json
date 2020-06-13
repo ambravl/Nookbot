@@ -21,7 +21,7 @@
    "infractions": "text[]",
    "lastMessageTimestamp": "timestamptz"
  },
- "emoji":  {
+ "emojiDB":  {
   "emojiID": "bigint PRIMARY KEY",
   "uses": "integer"
  },
