@@ -77,11 +77,9 @@ fs.readdir('./commands/', (err, folders) => {
             client.aliases.set(alias, commandName);
           });
         }
-
-        client.initialize();
-
-        client.enabledCommands.ensure(commandName, true);
       });
+
+      client.initialize();
     });
   }
 });
