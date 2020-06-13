@@ -12,7 +12,7 @@ module.exports = (client) => {
     while (permOrder.length) {
       const currentlvl = permOrder.shift();
 
-      if (currentlvl.check(client, message)) {
+      if (client.config.levelCheck(currentlvl, client, message)) {
         permName = currentlvl.name;
         permlvl = currentlvl.level;
         break;
@@ -36,11 +36,6 @@ module.exports = (client) => {
       .replace(clientParam.token, 'mfa.VkO_2G4Qv3T--NO--lWetW_tjND--TOKEN--QFTm6YGtzq9PH--4U--tG0');
 
     return text;
-  };
-
-  client.fetchOwner = async () => {
-    const owner = await client.userDB.users(client.config.ownerID);
-    return owner;
   };
 
   client.success = (channel, suc, msg) => {

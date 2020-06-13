@@ -59,5 +59,10 @@
     "config_name": "text PRIMARY KEY",
     "config_value": "text",
     "config_type": "text"
+  },
+  "permissionDB": {
+    "roleID": "bigint PRIMARY KEY",
+    "level": "integer",
+    "name": "text"
   }
 }
