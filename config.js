@@ -1,10 +1,6 @@
 module.exports = (client) => {
-  client.configDB.query(`SELECT * FROM configDB`, (err, res) => {
-    if(err) {
-      console.error(`Encountered error when reading the configuration database, error: ${err}`);
-      throw err;
-    }
-    let config = res.rows;
+    let config = client.configDB.query(`SELECT * FROM configDB`).rows;
+    console.log(`config has ${config.length} rows`);
     const testing = true;
     const valueCol = testing ? "testing_value" : "config_value";
     config.forEach(row => {
@@ -21,14 +17,10 @@ module.exports = (client) => {
       }
     });
   });
-  client.permissionDB.query(`SELECT * FROM permissionDB`, (err, res) => {
-    if(err){
-      console.error(err);
-      throw(err);
-    }
+  let permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`);
     client.levelCache = {};
-    for (let i = 0; i < res.rows.length; i += 1) {
-      const thisLevel = res.rows[i];
+    for (let i = 0; i < permLevels.length; i += 1) {
+      const thisLevel = permLevels[i];
       client.levelCache[thisLevel.name] = thisLevel.level;
     }
   });
