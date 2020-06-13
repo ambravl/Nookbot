@@ -17,7 +17,7 @@ module.exports = async (client, message) => {
   }
 
   // User activity tracking
-  client.db.users.set(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
+  client.users.set(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
 
   // Emoji finding and tracking
   const regex = /<a?:\w+:([\d]+)>/g;
@@ -25,8 +25,8 @@ module.exports = async (client, message) => {
   let regMatch;
   while ((regMatch = regex.exec(msg)) !== null) {
     // If the emoji ID is in our emoji, then increment its count
-    if (client.db.emoji.has(regMatch[1])) {
-      client.db.emoji.inc(regMatch[1]);
+    if (client.emoji.has(regMatch[1])) {
+      client.emoji.inc(regMatch[1]);
     }
   }
 

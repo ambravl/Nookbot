@@ -7,7 +7,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   if (!member) {
     if (!args[0]) {
       member = message.member;
-    } else if (client.db.users.get(parseInt(args[0], 10))) {
+    } else if (client.users.get(parseInt(args[0], 10))) {
       member = parseInt(args[0], 10);
     } else {
       return client.error(message.channel, 'Member Not Found!', 'This member may have left the server or the id provided is not a member id!');
@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   }
 
   const nickArray = [];
-  client.db.users.ensure(member === parseInt(args[0], 10) ? member : member.id, client.config.usersDefaults).nicknames.forEach((n) => {
+  client.users.ensure(member === parseInt(args[0], 10) ? member : member.id, client.config.usersDefaults).nicknames.forEach((n) => {
     nickArray.unshift(`${moment.utc(n.timestamp).format('DD MMM YY HH:mm')} UTC: ${n.nickname}`);
   });
 

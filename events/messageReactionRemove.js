@@ -3,7 +3,7 @@ module.exports = async (client, messageReaction, user) => {
     return;
   }
 
-  let reactionRoleMenu = client.db.reactionRoles.getProp(messageReaction.message.id, 'reactions');
+  let reactionRoleMenu = client.reactionRoles.getProp(messageReaction.message.id, 'reactions');
 
   // If not there isn't a type, then this is not a reaction role message.
   if (!reactionRoleMenu) {

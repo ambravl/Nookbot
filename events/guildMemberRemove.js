@@ -5,10 +5,10 @@ module.exports = async (client, member) => {
     return;
   }
 
-  client.db.users.ensure(member.id, client.config.usersDefaults);
+  client.users.ensure(member.id, client.config.usersDefaults);
 
   member.roles.cache.forEach((r) => {
-    client.db.users.push(member.id, r.id, 'roles');
+    client.users.push(member.id, r.id, 'roles');
   });
 
   const serverAge = client.humanTimeBetween(Date.now(), member.joinedTimestamp);
@@ -20,7 +20,7 @@ module.exports = async (client, member) => {
   rolesArray.forEach((r) => {
     // Check if it's managed, since we can't add those roles back with the bot later
     if (!r.managed) {
-      client.db.users.push(member.id, r.id, 'roles');
+      client.users.push(member.id, r.id, 'roles');
     }
   });
 

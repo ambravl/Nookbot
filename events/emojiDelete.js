@@ -1,3 +1,3 @@
 module.exports = async (client, emoji) => {
-  client.db.emoji.delete(emoji.id);
+  client.emoji.delete(emoji.id);
 };

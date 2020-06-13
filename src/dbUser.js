@@ -13,31 +13,31 @@
 * roleID
 * emojiID
 * */
-module.exports = (db) => {
+module.exports = (client) => {
   const { Client } = require('pg');
   const schema = require('./db-schema.json');
 
-  db.initialize = function() {
-    db.c = new Client({
+  client.initialize = function() {
+    client.db = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false,
       },
     });
-    db.c.connect();
+    client.db.connect();
 
-    db.tableList = [];
+    client.tableList = [];
     for (let table in schema) {
       if (schema.hasOwnProperty(table)) {
-        db.tableList.push(table);
-        db[table] = new Table(table, schema[table][0], schema[table][1]);
+        client.tableList.push(table);
+        client[table] = new Table(table, schema[table][0], schema[table][1]);
         console.log(`Attempting to create table object for ${table}...`);
       }
     }
   };
 
-  db.drop = function () {
-    db.c.query(`DELETE FROM ${db.tableList.join(';DELETE FROM ')}`, (err, res) => {
+  client.dropDB = function () {
+    client.db.query(`DELETE FROM ${db.tableList.join(';DELETE FROM ')}`, (err, res) => {
       if(err) throw err;
       return res;
     })
@@ -45,9 +45,9 @@ module.exports = (db) => {
 
   // i know there are multiple loops, i need to loop through nested shit wtf do you expect me to do
   // noinspection FunctionWithMultipleLoopsJS
-  db.create = function () {
+  client.createDB = function () {
     let creationQuery = "";
-    for (let table in db.tableList){
+    for (let table in client.tableList){
       creationQuery += "CREATE TABLE" + table + "(";
       for(let column in schema[table]){
         if(schema[table].hasOwnProperty(column)){
@@ -56,7 +56,7 @@ module.exports = (db) => {
       }
       creationQuery  = creationQuery.slice(0, -1) + ");";
     }
-    db.c.query(creationQuery, (err, res) => {
+    client.db.query(creationQuery, (err, res) => {
       if(err) throw err;
       return res;
     });
@@ -71,7 +71,7 @@ module.exports = (db) => {
 
     query(query, mainID) {
       const whereQuery = mainID ? query + ` WHERE ${this.mainColumn} IS ${mainID}` : query;
-      db.c.query(whereQuery, (err, res) => {
+      client.db.query(whereQuery, (err, res) => {
         if (err) throw err;
         console.log(`Ran query "${whereQuery}" with a result of ${res}`);
         return res;

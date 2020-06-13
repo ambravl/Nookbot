@@ -10,12 +10,12 @@ module.exports = async (client, oldState, newState) => {
   }
 
   // Check if this is related to a session channel
-  if ((oldState.channelID && client.db.voiceSessions.has(oldState.channelID))
+  if ((oldState.channelID && client.voiceSessions.has(oldState.channelID))
       && oldState.channel.members.size === 0) {
     // Session is empty, delete it
     oldState.channel.delete('[Auto] Last member left session channel.').then((delChannel) => {
       // Delete voiceSessions entry
-      client.db.voiceSessions.delete(delChannel.id);
+      client.voiceSessions.delete(delChannel.id);
     }).catch((error) => {
       console.error(error);
     });

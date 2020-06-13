@@ -30,9 +30,9 @@ require('./src/functions')(client);
 
 client.config = require('./config');
 
-require('./src/dbUser')(client.db);
+require('./src/dbUser')(client);
 
-client.db.initialize();
+client.initialize();
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
@@ -80,7 +80,7 @@ fs.readdir('./commands/', (err, folders) => {
           });
         }
 
-        client.db.enabledCommands.ensure(commandName, true);
+        client.enabledCommands.ensure(commandName, true);
       });
     });
   }

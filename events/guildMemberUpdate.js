@@ -14,8 +14,8 @@ module.exports = async (client, oldMember, newMember) => {
       .addField('**Nickname Update**', `**Before:**${oldMember.nickname ? oldMember.nickname.replace(/(\*|~|_|`|<|\|)/g, '\\$1') : oldMember.user.username.replace(/(\*|~|_|`|<|\|)/g, '\\$1')}
 **+After:**${newMember.nickname ? newMember.nickname.replace(/(\*|~|_|`|<|\|)/g, '\\$1') : newMember.user.username.replace(/(\*|~|_|`|<|\|)/g, '\\$1')}`);
 
-    client.db.users.ensure(newMember.id, client.config.usersDefaults);
-    client.db.users.push(newMember.id, { timestamp: Date.now(), nickname: newMember.nickname || newMember.user.username }, 'nicknames');
+    client.users.ensure(newMember.id, client.config.usersDefaults);
+    client.users.push(newMember.id, { timestamp: Date.now(), nickname: newMember.nickname || newMember.user.username }, 'nicknames');
 
     oldMember.guild.channels.cache.get(client.config.actionLog).send(embed);
   }
