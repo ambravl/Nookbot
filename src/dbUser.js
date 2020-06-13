@@ -14,24 +14,26 @@
 * emojiID
 * */
 module.exports = (db) => {
+  const { Client } = require('pg');
   db.schema = require('./db-schema.json');
-  db.c = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
-  db.c.connect();
 
+  db.initialize = function() {
+    db.c = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    });
+    db.c.connect();
 
-  db.tableList = [];
-
-  for(let table in db.schema){
-    if(db.schema.hasOwnProperty(table)){
-      db.tableList.push(table);
-      db[table] = new Table(table, db.schema[table][0], db.schema[table][1])
+    db.tableList = [];
+    for (let table in db.schema) {
+      if (db.schema.hasOwnProperty(table)) {
+        db.tableList.push(table);
+        db[table] = new Table(table, db.schema[table][0], db.schema[table][1])
+      }
     }
-  }
+  };
 
   db.drop = function () {
     db.c.query(`DELETE FROM ${db.tableList.join(';DELETE FROM ')}`, (err, res) => {

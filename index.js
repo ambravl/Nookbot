@@ -4,7 +4,6 @@
 const Discord = require('discord.js');
 const Enmap = require('enmap');
 const fs = require('fs');
-const { Client } = require('pg');
 
 const client = new Discord.Client({
   messageCacheMaxSize: 500,
@@ -31,7 +30,9 @@ require('./src/functions')(client);
 
 client.config = require('./config');
 
-client.db = require('./src/dbUser');
+require('./src/dbUser')(client.db);
+
+client.db.initialize();
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
