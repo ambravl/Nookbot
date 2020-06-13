@@ -59,8 +59,7 @@ module.exports = (client) => {
   client.createDB = function () {
     let creationQuery = "";
     console.log(client.tableList);
-    for (let table in client.tableList){
-      if(client.tableList.hasOwnProperty(table)) {
+    client.tableList.forEach(table => {
         console.log(`table name: ${table}`);
         creationQuery += `CREATE TABLE ${table} (`;
         for (let column in schema[table]) {
@@ -69,8 +68,7 @@ module.exports = (client) => {
           }
         }
         creationQuery = creationQuery.slice(0, -1) + ");";
-      }
-    }
+    });
     console.log(`Attempting to create databases...`);
     console.log(creationQuery);
     client.db.query(creationQuery, (err, res) => {
