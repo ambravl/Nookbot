@@ -26,14 +26,15 @@ module.exports.run = async (client, message, args, level) => {
     member = message.author;
   }
 
-  const { infractions } = client.userDB.ensure(member.id, client.config.userDBDefaults);
+  const { infractions } = client.db.users.ensure(member.id, client.config.usersDefaults);
   let msg = `__**${member.guild ? member.user.tag : `${member.username}#${member.discriminator}`}'s Bee Stings**__`;
   let expPoints = 0;
   let expMsg = '';
   let curPoints = 0;
   let curMsg = '';
   const time = Date.now();
-  infractions.forEach((i) => {
+  infractions.forEach((j) => {
+    const i = JSON.parse(j);
     // Only allow mods to see zero point stings, called notes, on a user
     if (i.points > 0 || level >= 2) {
       const moderator = client.users.cache.get(i.moderator);

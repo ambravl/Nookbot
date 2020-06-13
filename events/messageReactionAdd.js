@@ -3,12 +3,15 @@ module.exports = async (client, messageReaction, user) => {
     return;
   }
 
-  const reactionRoleMenu = client.reactionRoleDB.get(messageReaction.message.id);
+  const reactionRoleMenu = client.db.reactionRoles.getProp(messageReaction.message.id, 'type, reactions');
 
   // If not there isn't a type, then this is not a reaction role message.
   if (!reactionRoleMenu) {
     return;
   }
+
+
+  reactionRoleMenu.reactions = JSON.parse(reactionRoleMenu.reactions);
 
   switch (reactionRoleMenu.type) {
     case 'remove': {

@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
   let num0 = parseInt(args[0], 10);
   let num1 = parseInt(args[1], 10);
   let msg = '';
-  const emojiDBSize = client.emojiDB.count;
+  const emojiSize = client.db.emoji.count();
   const emojiRegex = /<a?:\w+:([\d]+)>/g;
   let emojiMatch;
   const emojiList = [];
@@ -13,7 +13,7 @@ module.exports.run = (client, message, args) => {
         return client.error(message.channel, 'Not a Number!', 'You must supply a number for the amount of top ranked emojis to display.');
       }
 
-      client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+      client.db.emoji.map((v, k) => ({ id: k, uses: v }))
         .sort((a, b) => b.uses - a.uses)
         .slice(0, num1)
         .forEach((e, i) => {
@@ -30,11 +30,11 @@ module.exports.run = (client, message, args) => {
         return client.error(message.channel, 'Not a Number!', 'You must supply a number for the amount of bottom ranked emojis to display.');
       }
 
-      client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+      client.db.emoji.map((v, k) => ({ id: k, uses: v }))
         .sort((a, b) => b.uses - a.uses)
         .slice(-num1)
         .forEach((e, i) => {
-          msg += `\n#${emojiDBSize - num1 + i + 1} - ${message.guild.emojis.cache.get(e.id).name} - ${e.uses}`;
+          msg += `\n#${emojiSize - num1 + i + 1} - ${message.guild.emojis.cache.get(e.id).name} - ${e.uses}`;
         });
 
       if (!msg) {
@@ -47,7 +47,7 @@ module.exports.run = (client, message, args) => {
         return client.error(message.channel, 'Not a Number!', 'You must supply a number for the minimum amount of uses an emoji must have to be displayed.');
       }
 
-      client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+      client.db.emoji.map((v, k) => ({ id: k, uses: v }))
         .sort((a, b) => b.uses - a.uses)
         .filter((e) => e.uses >= num1)
         .forEach((e, i) => {
@@ -64,11 +64,11 @@ module.exports.run = (client, message, args) => {
         return client.error(message.channel, 'Not a Number!', 'You must supply a number for the maximum amount of uses an emoji must have to be displayed.');
       }
 
-      client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+      client.db.emoji.map((v, k) => ({ id: k, uses: v }))
         .sort((a, b) => b.uses - a.uses)
         .filter((e) => e.uses <= num1)
         .forEach((e, i, a) => {
-          msg += `\n#${emojiDBSize - a.length + i + 1} - ${message.guild.emojis.cache.get(e.id).name} - ${e.uses}`;
+          msg += `\n#${emojiSize - a.length + i + 1} - ${message.guild.emojis.cache.get(e.id).name} - ${e.uses}`;
         });
 
       if (!msg) {
@@ -87,7 +87,7 @@ module.exports.run = (client, message, args) => {
           num1 = temp;
         }
 
-        client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+        client.db.emoji.map((v, k) => ({ id: k, uses: v }))
           .sort((a, b) => b.uses - a.uses)
           .slice(num1 - 1, num0)
           .forEach((e, i) => {
@@ -101,16 +101,16 @@ module.exports.run = (client, message, args) => {
       }
 
       while ((emojiMatch = emojiRegex.exec(args.join(' ')))) {
-        if (client.emojiDB.has(emojiMatch[1])) {
+        if (client.db.emoji.has(emojiMatch[1])) {
           // Decrement it so it doesn't show a new usage since we want to check what its real usage is
-          client.emojiDB.dec(emojiMatch[1]);
-          emojiList.push({ id: emojiMatch[1], uses: client.emojiDB.get(emojiMatch[1]) });
+          client.db.emoji.dec(emojiMatch[1]);
+          emojiList.push({ id: emojiMatch[1], uses: client.db.emoji.get(emojiMatch[1]) });
         }
       }
 
       if (emojiList.length !== 0) {
         const emojiIDs = emojiList.map((v) => v.id);
-        client.emojiDB.map((v, k) => ({ id: k, uses: v }))
+        client.db.emoji.map((v, k) => ({ id: k, uses: v }))
           .sort((a, b) => b.uses - a.uses)
           .forEach((e, i) => {
             if (emojiIDs.includes(e.id)) {

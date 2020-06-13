@@ -29,16 +29,14 @@ const config = {
 
   banAppealLink: 'LINK',
 
-  // UserDB
-  userDBDefaults: {
+  // users
+  usersDefaults: {
     friendCode: '',
-    island: {
       islandName: '',
       fruit: '',
       characterName: '',
       hemisphere: '',
       profileName: '',
-    },
     positiveRep: 0,
     negativeRep: 0,
     posRepList: [],
@@ -46,7 +44,7 @@ const config = {
     roles: [],
     nicknames: [],
     usernames: [],
-    infractions: [],
+    infractions: [[]],
     lastMessageTimestamp: 0,
   },
 

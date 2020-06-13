@@ -5,14 +5,14 @@ module.exports.run = async (client, message, args) => {
     return client.error(message.channel, 'Invalid Number!', 'Please provide a valid case number to apply medicine to!');
   }
 
-  if (client.infractionDB.has(caseNum.toString())) {
-    const userID = client.infractionDB.get(caseNum);
-    // Remove the caseNum => userID entry in infractionDB
-    client.infractionDB.delete(caseNum.toString());
+  if (client.db.infractions.has(caseNum.toString())) {
+    const userID = client.db.infractions.get(caseNum);
+    // Remove the caseNum => userID entry in infractions
+    client.db.infractions.delete(caseNum.toString());
     // Remove the infraction from the user
-    const infs = client.userDB.get(userID, 'infractions');
+    const infs = client.db.users.get(userID, 'infractions');
     const infRemoved = infs.filter((inf) => inf.case === caseNum)[0];
-    client.userDB.set(userID, infs.filter((inf) => inf.case !== caseNum), 'infractions');
+    client.db.users.set(userID, infs.filter((inf) => inf.case !== caseNum), 'infractions');
     // Notify that the infraction was removed
     const user = await client.users.fetch(userID);
     return client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);

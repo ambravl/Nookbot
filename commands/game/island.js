@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Island Name!', 'Island names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.islandName');
+      client.db.users.set(message.author.id, name, 'island.islandName');
 
       return client.success(message.channel, 'Successfully set the name of your island!', `Island Name: **${name}**`);
     }
@@ -43,7 +43,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Fruit!', "Your island's native fruit must be one of apples, cherries, oranges, peaches, or pears!");
       }
 
-      client.userDB.set(message.author.id, fruit, 'island.fruit');
+      client.db.users.set(message.author.id, fruit, 'island.fruit');
 
       return client.success(message.channel, "Successfully set your island's native fruit!", `Fruit: **${fruit}**`);
     }
@@ -64,7 +64,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Character Name!', 'Character names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.characterName');
+      client.db.users.set(message.author.id, name, 'island.characterName');
 
       return client.success(message.channel, "Successfully set your character's name!", `Character Name: **${name}**`);
     }
@@ -87,7 +87,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Hemisphere!', 'The hemisphere must be either northern or southern!');
       }
 
-      client.userDB.set(message.author.id, hemisphere, 'island.hemisphere');
+      client.db.users.set(message.author.id, hemisphere, 'island.hemisphere');
 
       return client.success(message.channel, 'Successfully set the hemisphere for your island!', `Hemisphere: **${hemisphere}**`);
     }
@@ -105,7 +105,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Switch Profile Name!', 'Switch profile names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.profileName');
+      client.db.users.set(message.author.id, name, 'island.profileName');
 
       return client.success(message.channel, 'Successfully set your Switch profile name!', `Profile Name: **${name}**`);
     }
@@ -123,7 +123,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       code = `SW-${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
-      client.userDB.set(message.author.id, code, 'friendcode');
+      client.db.users.set(message.author.id, code, 'friendcode');
 
       return client.success(message.channel, 'Successfully set your Switch friend code!', `Friend Code: **${code}**`);
     }
@@ -181,12 +181,12 @@ module.exports.run = async (client, message, args, level, Discord) => {
         case 'in':
         case 'townname':
         case 'tn':
-          client.userDB.set(memberID, '', 'island.islandName');
+          client.db.users.set(memberID, '', 'island.islandName');
           return client.success(message.channel, 'Successfully cleared the name of your island!', 'To set your island name again, use `.island islandname <name>`!');
         case 'fruit':
         case 'fr':
         case 'f':
-          client.userDB.set(memberID, '', 'island.fruit');
+          client.db.users.set(memberID, '', 'island.fruit');
           return client.success(message.channel, "Successfully cleared your island's native fruit!", "To set your island's native fruit again, use `.island fruit <fruit>`!");
         case 'charactername':
         case 'character':
@@ -195,32 +195,32 @@ module.exports.run = async (client, message, args, level, Discord) => {
         case 'villagername':
         case 'vn':
         case 'islandername':
-          client.userDB.set(memberID, '', 'island.characterName');
+          client.db.users.set(memberID, '', 'island.characterName');
           return client.success(message.channel, "Successfully cleared your character's name!", "To set your character's name again, use `.island charactername <name>`!");
         case 'hemisphere':
         case 'hem':
         case 'hm':
         case 'hemi':
-          client.userDB.set(memberID, '', 'island.hemisphere');
+          client.db.users.set(memberID, '', 'island.hemisphere');
           return client.success(message.channel, 'Successfully cleared the hemisphere for your island!', 'To set the hemisphere for your island again, use `.island hemisphere <hemisphere>`!');
         case 'profilename':
         case 'profile':
         case 'pn':
         case 'switchname':
         case 'sn':
-          client.userDB.set(memberID, '', 'island.profileName');
+          client.db.users.set(memberID, '', 'island.profileName');
           return client.success(message.channel, 'Successfully cleared your Switch profile name!', 'To set your Switch profile name again, use `.island profilename <name>`!');
         case 'friendcode':
         case 'fc':
         case 'code':
-          if (client.userDB.has(memberID, 'friendcode')) {
-            client.userDB.delete(memberID, 'friendcode');
+          if (client.db.users.has(memberID, 'friendcode')) {
+            client.db.users.delete(memberID, 'friendcode');
             return client.success(message.channel, 'Successfully cleared your Switch friend code!', 'To set your Switch friend code again, use `.island friendcode <code>`!');
           }
           return client.error(message.channel, 'No Friend Code To Remove!', 'You did not have a friend code in the database. You can set it by typing \`.fc set <code>\`!');
         case 'all':
         case 'every':
-          client.userDB.set(memberID, {
+          client.db.users.set(memberID, {
             islandName: '',
             fruit: '',
             characterName: '',
@@ -244,7 +244,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       // Return user's island information if they have any stored
-      const { friendcode, island } = client.userDB.ensure(member.id, client.config.userDBDefaults);
+      const { friendcode, island } = client.db.users.ensure(member.id, client.config.usersDefaults);
 
       const msg = [];
       if (friendcode) {

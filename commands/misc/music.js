@@ -15,11 +15,11 @@ module.exports.run = async (client, message, args, level, Discord) => {
         }
 
         // Clear the database of old videos
-        client.playlist.deleteAll();
+        client.db.playlist.deleteAll();
 
         // Add the new playlist to the database
         playlistObj.items.forEach((video) => {
-          client.playlist.set(video.id, video.title.toLowerCase()
+          client.db.playlist.set(video.id, video.title.toLowerCase()
             .replace(/animal|crossing|ost|orginal|soundtrack|[^\w]/gi, ' ')
             .replace(/\s+/g, ' ')
             .trim());
@@ -95,14 +95,14 @@ Playing: ${client.songQueue.playing ? client.emoji.checkMark : client.emoji.redX
       // If there are more arguments, we need to find the song they searched and add it to the queue
       if (args.length > 1) {
         // Grab the list of video titles
-        const titles = client.playlist.map((v) => v);
+        const titles = client.db.playlist.map((v) => v);
         // Sort the playlist based on the search, and return the top result
         const search = args.slice(1).join(' ').toLowerCase()
           .replace(/animal|crossing|ost|orginal|soundtrack|[^\w]/gi, ' ')
           .replace(/\s+/g, ' ')
           .trim();
         const titleName = findBest(search, titles).bestMatch.target;
-        const songID = client.playlist.findKey((v) => v === titleName);
+        const songID = client.db.playlist.findKey(titleName);
         const info = await infoFromID(songID);
         // If no songs are in the queue, start playing
         if (client.songQueue.songs.length === 0) {
@@ -118,7 +118,7 @@ Playing: ${client.songQueue.playing ? client.emoji.checkMark : client.emoji.redX
         if (client.songQueue.songs.length === 0) {
           client.songQueue.playing = true;
           client.songQueue.shuffle = true;
-          const info = await infoFromID(client.playlist.randomKey());
+          const info = await infoFromID(client.db.playlist.randomKey());
           client.songQueue.songs.push(info);
           updateInfo();
         }
@@ -145,7 +145,7 @@ Playing: ${client.songQueue.playing ? client.emoji.checkMark : client.emoji.redX
                 client.songQueue.songs.shift();
                 // If the queue is empty and shuffle mode is on, pick a random song and add it to the queue
                 if (client.songQueue.songs.length === 0 && client.songQueue.shuffle) {
-                  infoFromID(client.playlist.randomKey()).then((i) => {
+                  infoFromID(client.db.playlist.randomKey()).then((i) => {
                     client.songQueue.songs.push(i);
                     if (reason === 'skip') {
                       updateInfo('Song Skipped!', 'The current song was skipped!');

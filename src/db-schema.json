@@ -1,0 +1,58 @@
+{
+"enabledCommands":  {
+ "name": "text",
+ "enabled": "boolean"
+},
+ "users":  {
+   "memberID": "bigint",
+   "friendCode": "text",
+   "islandName": "text",
+    "fruit": "fruit",
+    "characterName": "text",
+    "hemisphere": "boolean",
+    "profileName": "text",
+   "positiveRep": "smallint",
+   "negativeRep": "smallint",
+   "posRepList": "bigint[]",
+   "negRepList": "bigint[]",
+   "roles": "bigint[]",
+   "nicknames": "text[]",
+   "usernames": "text[]",
+   "infractions": "text[]",
+   "lastMessageTimestamp": "timestampz"
+ },
+ "emoji":  {
+  "emojiID": "bigint",
+  "uses": "integer"
+ },
+ "adoptees":  {
+  "name": "text",
+  "adopters": "text[]"
+ },
+ "tags":  {
+  "tag": "text",
+  "content": "text"
+ },
+ "playlist":  {
+  "videoID": "text",
+  "title": "text"
+ },
+ "infractions":  {
+  "caseNumber": "serial",
+  "userID": "bigint"
+ },
+ "voiceSessions":  {
+  "channelID": "bigint",
+  "identifier": "smallint"
+ },
+ "mutedUsers":  {
+  "memberID": "bigint",
+  "time": "integer"
+ },
+ "reactionRoles": {
+   "messageID": "bigint",
+   "channelID": "bigint",
+   "type": "roleType",
+   "reactions": "text[]"
+ }
+}

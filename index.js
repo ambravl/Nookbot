@@ -4,7 +4,7 @@
 const Discord = require('discord.js');
 const Enmap = require('enmap');
 const fs = require('fs');
-require('dotenv').config();
+const { Client } = require('pg');
 
 const client = new Discord.Client({
   messageCacheMaxSize: 500,
@@ -24,11 +24,14 @@ const client = new Discord.Client({
     ],
   },
 });
+
 const { botVersion } = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
 client.config = require('./config');
+
+client.db = require('./src/dbUser');
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
@@ -76,7 +79,7 @@ fs.readdir('./commands/', (err, folders) => {
           });
         }
 
-        client.enabledCommands.ensure(commandName, true);
+        client.db.enabledCommands.ensure(commandName, true);
       });
     });
   }
@@ -118,8 +121,6 @@ client.songQueue = {
 client.imageOnlyFilterCount = 0;
 client.newlineLimitFilterCount = 0;
 client.noMentionFilterCount = 0;
-
-Object.assign(client, Enmap.multi(['enabledCommands', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
 
 client.login(client.token).then(() => {
   console.log('Bot successfully logged in.');

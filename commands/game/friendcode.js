@@ -14,9 +14,9 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       code = `SW-${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
-      client.userDB.set(message.author.id, code, 'friendcode');
+      client.db.users.set(message.author.id, code, 'friendcode');
 
-      const name = client.userDB.get(message.author.id, 'island.profileName');
+      const name = client.db.users.get(message.author.id, 'island.profileName');
 
       const embed = new Discord.MessageEmbed()
         .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
@@ -29,20 +29,20 @@ module.exports.run = async (client, message, args, level, Discord) => {
     case 'del':
     case 'delete':
     case 'remove':
-      if (client.userDB.has(message.author.id, 'friendcode')) {
-        client.userDB.delete(message.author.id, 'friendcode');
+      if (client.db.users.has(message.author.id, 'friendcode')) {
+        client.db.users.delete(message.author.id, 'friendcode');
         return client.success(message.channel, 'Successfully Deleted!', "I've successfully deleted your friend code! You can set it again by typing \`.fc set <code>\`!");
       }
       return client.error(message.channel, 'No Friend Code To Remove!', 'You did not have a friend code in the database. You can set it by typing \`.fc set <code>\`!');
     default: {
       if (args.length === 0) {
         // Return user's friend code if they have one
-        const fc = client.userDB.ensure(message.author.id, client.config.userDBDefaults).friendCode;
+        const fc = client.db.users.ensure(message.author.id, client.config.usersDefaults).friendCode;
         if (!fc) {
           return client.error(message.channel, 'No Code Found!', 'You have not set a friend code! You can do so by running \`.fc set <code>\`!');
         }
 
-        const name = client.userDB.get(message.author.id, 'island.profileName');
+        const name = client.db.users.get(message.author.id, 'island.profileName');
 
         const embed = new Discord.MessageEmbed()
           .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
@@ -56,12 +56,12 @@ module.exports.run = async (client, message, args, level, Discord) => {
       const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' '));
 
       if (member) {
-        const fc = client.userDB.ensure(member.user.id, client.config.userDBDefaults).friendCode;
+        const fc = client.db.users.ensure(member.user.id, client.config.usersDefaults).friendCode;
         if (!fc) {
           return client.error(message.channel, 'No Code Found!', `${member.displayName} has not set their friend code!`);
         }
 
-        const name = client.userDB.get(member.user.id, 'island.profileName');
+        const name = client.db.users.get(member.user.id, 'island.profileName');
 
         const embed = new Discord.MessageEmbed()
           .setAuthor(`${member.displayName}'s Friend Code`, member.user.displayAvatarURL())

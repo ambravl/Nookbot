@@ -17,16 +17,16 @@ module.exports = async (client, message) => {
   }
 
   // User activity tracking
-  client.userDB.set(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
+  client.db.users.set(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
 
   // Emoji finding and tracking
   const regex = /<a?:\w+:([\d]+)>/g;
   const msg = message.content;
   let regMatch;
   while ((regMatch = regex.exec(msg)) !== null) {
-    // If the emoji ID is in our emojiDB, then increment its count
-    if (client.emojiDB.has(regMatch[1])) {
-      client.emojiDB.inc(regMatch[1]);
+    // If the emoji ID is in our emoji, then increment its count
+    if (client.db.emoji.has(regMatch[1])) {
+      client.db.emoji.inc(regMatch[1]);
     }
   }
 

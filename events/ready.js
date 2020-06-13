@@ -15,16 +15,15 @@ module.exports = (client) => {
 
       // Emoji usage tracking database init
       guild.emojis.cache.forEach((e) => {
-        // If EmojiDB does not have the emoji, add it.
-        if (!client.emojiDB.has(e.id)) {
-          client.emojiDB.set(e.id, 0);
+        // If emoji does not have the emoji, add it.
+        if (!client.db.emoji.has(e.id)) {
+          client.db.emoji.set(e.id, 0);
         }
       });
       // Sweep emojis from the DB that are no longer in the guild emojis
-      client.emojiDB.sweep((v, k) => !guild.emojis.cache.has(k));
+      client.db.emoji.sweep((v, k) => !guild.emojis.cache.has(k));
 
       setInterval(() => {
-        client.memberStats.set(client.memberStats.autonum, { time: Date.now(), members: guild.memberCount });
         client.user.setActivity(`ACNH with ${guild.memberCount} users!`);
       }, 30000);
 
@@ -34,47 +33,47 @@ module.exports = (client) => {
       });
 
       // Clear any session channels from the server if they have no members
-      client.sessionDB.keyArray().forEach((sesID) => {
+      client.db.voiceSessions.keyArray().forEach((sesID) => {
         const sessionChannel = client.channels.cache.get(sesID);
         if (sessionChannel && sessionChannel.members.size === 0
             && !sessionChannel.deleted && sessionChannel.deletable) {
           // Session is empty, delete the channel and database entry
           sessionChannel.delete('[Auto] Purged empty session channels on ready event.').then((delChannel) => {
-            // Delete sessionDB entry
-            client.sessionDB.delete(delChannel.id);
+            // Delete voiceSessions entry
+            client.db.voiceSessions.delete(delChannel.id);
           }).catch((error) => {
             console.error(error);
           });
         }
       });
 
-      // Reschedule any unmutes from muteDB
+      // Reschedule any unmutes from mutedUsers
       const now = Date.now();
-      client.muteDB.keyArray().forEach((memID) => {
-        const unmuteTime = client.muteDB.get(memID);
+      client.db.mutedUsers.keyArray().forEach((memID) => {
+        const unmuteTime = client.db.mutedUsers.get(memID);
         guild.members.fetch(memID).then((member) => {
           if (unmuteTime < now) {
             // Immediately unmute
-            client.muteDB.delete(memID);
+            client.db.mutedUsers.delete(memID);
             member.roles.remove('495854925054607381', 'Scheduled unmute through reboot.');
           } else {
             // Schedule unmute
             setTimeout(() => {
-              if ((client.muteDB.get(memID) || 0) < Date.now()) {
-                client.muteDB.delete(memID);
+              if ((client.db.mutedUsers.get(memID) || 0) < Date.now()) {
+                client.db.mutedUsers.delete(memID);
                 member.roles.remove('495854925054607381', 'Scheduled unmute through reboot.');
               }
             }, unmuteTime - now);
           }
         }).catch(() => {
           // Probably no longer a member, don't schedule their unmute and remove entry from DB.
-          client.muteDB.delete(memID);
+          client.db.mutedUsers.delete(memID);
         });
       });
 
       // Cache messages for reaction roles
-      client.reactionRoleDB.keyArray().forEach((msgID) => {
-        const { channel } = client.reactionRoleDB.get(msgID);
+      client.db.reactionRoles.keyArray().forEach((msgID) => {
+        const { channel } = client.db.reactionRoles.getProp(msgID, 'channelID');
         client.channels.cache.get(channel).messages.fetch(msgID);
       });
 

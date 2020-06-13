@@ -8,17 +8,7 @@ module.exports.run = (client, message, args) => {
   const size = Math.max(Math.min(8, parseInt(args[0], 10) || 8), 2);
 
   if (message.guild.channels.cache.size < 300) {
-    const sessionNumArr = client.sessionDB.array().sort((a, b) => a - b);
-    let lastNum = 0;
-    // Get the smallest positive number missing from the open sessions.
-    sessionNumArr.find((s) => {
-      if (lastNum + 1 < s) {
-        return true;
-      }
-      lastNum = s;
-      return false;
-    });
-    lastNum += 1;
+    const lastNum = client.db.voiceSessions.query(`SELECT MAX(identifier) AS num FROM voiceSessions`).rows[0].num + 1;
     message.guild.channels.create(`session-${lastNum}`, {
       type: 'voice',
       bitrate: 384000,
@@ -27,15 +17,15 @@ module.exports.run = (client, message, args) => {
       position: lastNum,
       reason: '[Auto] Created by session command.',
     }).then((sessionChannel) => {
-      // Create sessionDB entry
-      client.sessionDB.set(sessionChannel.id, lastNum);
+      // Create voiceSessions entry
+      client.db.voiceSessions.set(sessionChannel.id, lastNum);
       // Notify the user
       client.success(message.channel, 'Session Created!', `A voice channel called **session-${lastNum}** was created with **${size}** available slots! If no one is in the voice channel after 1 minute, it will be deleted.`);
       // Start a timer for 1 minute to delete the channel if no one is in it
       setTimeout(() => {
         if (sessionChannel.members.size === 0 && !sessionChannel.deleted && sessionChannel.deletable) {
           sessionChannel.delete('[Auto] No one joined this session channel.');
-          client.sessionDB.delete(sessionChannel.id);
+          client.db.voiceSessions.delete(sessionChannel.id);
         }
       }, 60000);
     }).catch((error) => {

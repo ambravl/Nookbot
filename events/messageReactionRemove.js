@@ -3,13 +3,13 @@ module.exports = async (client, messageReaction, user) => {
     return;
   }
 
-  const reactionRoleMenu = client.reactionRoleDB.get(messageReaction.message.id);
+  let reactionRoleMenu = client.db.reactionRoles.getProp(messageReaction.message.id, 'reactions');
 
   // If not there isn't a type, then this is not a reaction role message.
   if (!reactionRoleMenu) {
     return;
   }
-
+  reactionRoleMenu.reactions = JSON.parse(reactionRoleMenu);
   const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
 
   if (roleID) {

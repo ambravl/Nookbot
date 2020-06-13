@@ -2,14 +2,14 @@ module.exports.run = async (client, message, args, level, Discord) => {
   if (args.length === 0) {
     let listTags = '';
 
-    client.tags.indexes.sort().forEach((t, i) => {
+    client.db.tags.keyArray.sort().forEach((t, i) => {
       if (i !== 0) listTags += `, ${t}`;
       else listTags += t;
     });
 
     const embed = new Discord.MessageEmbed()
       .setColor('#1de9b6')
-      .setTitle(`Tags (${client.tags.count})`)
+      .setTitle(`Tags (${client.db.tags.count()})`)
       .setDescription(listTags.slice(0, 2000) || 'No tags.')
       .setFooter('Use ".t name" to show a tag');
 
@@ -50,13 +50,13 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       // Check if the tag name they want to create already exists
-      if (client.tags.has(args[1].toLowerCase())) {
+      if (client.db.tags.has(args[1].toLowerCase())) {
         client.error(message.channel, 'Tag Already Exists!', 'That tag name is already used!');
         return;
       }
 
       // Finally add the tag to the database
-      client.tags.set(args[1].toLowerCase(), args.slice(2).join(' '));
+      client.db.tags.set(args[1].toLowerCase(), args.slice(2).join(' '));
       client.success(message.channel, 'Tag Created!', `The tag **${args[1].toLowerCase()}** has been created!`);
       return;
     case 'edit':
@@ -81,8 +81,8 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       // Check if the tag name they want to edit exists and edit it if it does
-      if (client.tags.has(args[1].toLowerCase())) {
-        client.tags.set(args[1].toLowerCase(), args.slice(2).join(' '));
+      if (client.db.tags.has(args[1].toLowerCase())) {
+        client.db.tags.set(args[1].toLowerCase(), args.slice(2).join(' '));
         client.success(message.channel, 'Tag Edited!', `The tag **${args[1].toLowerCase()}** has been edited!`);
       } else {
         client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to edit does not exist!');
@@ -106,16 +106,16 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       // Check if the tag name they want to delete exists and delete it if it does
-      if (client.tags.has(args[1].toLowerCase())) {
-        client.tags.delete(args[1].toLowerCase());
+      if (client.db.tags.has(args[1].toLowerCase())) {
+        client.db.tags.delete(args[1].toLowerCase());
         client.success(message.channel, 'Tag Deleted!', `The tag **${args[1].toLowerCase()}** has been deleted!`);
       } else {
         client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to delete does not exist!');
       }
       return;
     default:
-      if (client.tags.has(args[0].toLowerCase())) {
-        message.channel.send(client.tags.get(args[0].toLowerCase()));
+      if (client.db.tags.has(args[0].toLowerCase())) {
+        message.channel.send(client.db.tags.get(args[0].toLowerCase()));
       } else {
         client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to display does not exist!');
       }

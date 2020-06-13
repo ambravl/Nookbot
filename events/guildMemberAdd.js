@@ -26,7 +26,7 @@ module.exports = async (client, member) => {
   }
 
   // Role persistence
-  const storedMember = client.userDB.ensure(member.id, client.config.userDBDefaults);
+  const storedMember = client.db.users.ensure(member.id, client.config.usersDefaults);
   if (storedMember.roles.length !== 0) {
     storedMember.roles.forEach((r) => {
       const role = member.guild.roles.cache.get(r);
@@ -34,7 +34,7 @@ module.exports = async (client, member) => {
         member.roles.add(role);
       }
     });
-    client.userDB.setProp(member.id, 'roles', []);
+    client.db.users.setProp(member.id, 'roles', []);
   }
 
   const time = Date.now();
