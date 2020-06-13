@@ -81,7 +81,7 @@ module.exports = (client) => {
     }
 
     get(mainID) {
-      let res = this.query(`SELECT ${this.secondaryColumn} FROM ${this.name}`, mainID);
+      let res = this.query(`SELECT "${this.secondaryColumn}" FROM ${this.name}`, mainID);
       if (!res || res.rows === null) return undefined;
       res = res.rows[0][this.secondaryColumn];
       console.log(res);
@@ -100,7 +100,7 @@ module.exports = (client) => {
     };
 
     set(mainID, setColumn, setValue) {
-      if(this.query(`SELECT ${this.mainColumn} FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
+      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
       return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${setColumn}) VALUES (${mainID}, ${setValue})`);
     };
 
@@ -130,7 +130,7 @@ module.exports = (client) => {
     };
 
     keyArray() {
-      const valuePairs = this.query(`select ${this.mainColumn} from ${this.name}`);
+      const valuePairs = this.query(`select "${this.mainColumn}" from ${this.name}`);
       let keyArray = [];
       for (let row of valuePairs.rows) {
         keyArray.push(row[this.mainColumn]);
@@ -139,7 +139,7 @@ module.exports = (client) => {
     };
 
     count() {
-      return this.query(`SELECT COUNT(${this.mainColumn} AS count FROM ${this.name}`).rows[0].count;
+      return this.query(`SELECT COUNT("${this.mainColumn}") AS dracula FROM ${this.name}`).rows[0].dracula;
     }
 
     map(method) {
@@ -152,7 +152,7 @@ module.exports = (client) => {
     };
 
     getProp(mainID, column) {
-      return this.query(`SELECT ${column} FROM ${this.name}`, mainID).rows[0];
+      return this.query(`SELECT "${column}" FROM ${this.name}`, mainID).rows[0];
     };
 
     removeFrom(mainID, column, remove) {
@@ -178,7 +178,7 @@ module.exports = (client) => {
     };
 
     findKey(value) {
-      return this.query(`SELECT ${this.mainColumn} FROM ${this.name} WHERE "${this.secondaryColumn}" = '${value}'`).rows[0][this.mainColumn];
+      return this.query(`SELECT "${this.mainColumn}" FROM ${this.name} WHERE "${this.secondaryColumn}" = '${value}'`).rows[0][this.mainColumn];
     };
 
     add(value) {
@@ -186,7 +186,7 @@ module.exports = (client) => {
     };
 
     randomKey() {
-      const theWholeDamnDB = this.query(`SELECT ${this.mainColumn} FROM ${this.name}`);
+      const theWholeDamnDB = this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`);
       return theWholeDamnDB[Math.floor(Math.random() * theWholeDamnDB.rows.length)];
     };
   }
