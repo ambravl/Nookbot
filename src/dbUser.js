@@ -54,7 +54,7 @@ module.exports = (client) => {
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
-    client.db.query(`DROP TABLE ${client.tableList.join(", ").replace('emojiDB', 'emoji')}; ${creationQuery}`, (err) => {
+    client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err) => {
       if(err){
         console.log(`Got error while trying to run query [DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}], error: ${err}`);
       }
