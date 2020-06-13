@@ -16,14 +16,12 @@ module.exports = (client) => {
           break;
       }
     });
-  });
   let permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`);
     client.levelCache = {};
     for (let i = 0; i < permLevels.length; i += 1) {
       const thisLevel = permLevels[i];
       client.levelCache[thisLevel.name] = thisLevel.level;
     }
-  });
   client.levelCheck = (level, client, message) => {
     if(level.level === 0) return true;
     if(level.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
