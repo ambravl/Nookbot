@@ -33,7 +33,8 @@ module.exports = (client) => {
     for (let table in schema) {
       if (schema.hasOwnProperty(table)) {
         client.tableList.push(table);
-        client[table] = new Table(table, schema[table][0], schema[table][1]);
+        let columns = Object.keys(schema[table]);
+        client[table] = new Table(table, columns[0], columns[1]);
         console.log(`Attempting to create table object for ${table}...`);
       }
     }
