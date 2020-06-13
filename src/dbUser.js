@@ -58,8 +58,10 @@ module.exports = (client) => {
   // noinspection FunctionWithMultipleLoopsJS
   client.createDB = function () {
     let creationQuery = "";
+    console.log(client.tableList);
     for (let table in client.tableList){
       if(client.tableList.hasOwnProperty(table)) {
+        console.log(`table name: ${table}`);
         creationQuery += `CREATE TABLE ${table} (`;
         for (let column in schema[table]) {
           if (schema[table].hasOwnProperty(column)) {
