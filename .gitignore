@@ -1,9 +1,8 @@
 # Node crap
 node_modules
 
-# Configs
-config.js
-configtest.js
+# .env for local testing
+.env
 
 # Data
 data

@@ -1,44 +1,19 @@
 /* eslint-disable max-len */
 const config = {
-  token: '',
-
-  // Twitter
-  twitterAPIKey: '',
-  twitterAPISecret: '',
-  twitterAccessToken: '',
-  twitterAccessTokenSecret: '',
-  followedTwitterUsers: [],
-
-  // Webhooks
-  twitterHookID: '',
-  twitterHookToken: '',
-
   // Raid Settings
   raidJoinsPerSecond: 10,
   raidJoinCount: 10,
 
   // Settings
   prefix: '.',
-  verifiedRole: 'role ID',
-  reddRole: 'role ID',
-  headReddRole: 'role ID',
-  modRole: 'role ID',
-  headModRole: 'role ID',
-  adminRole: 'role ID',
-  staffChat: 'channel ID',
-  modMail: 'channel ID',
-  reportMail: 'channel ID',
-  actionLog: 'channel ID',
-  joinLeaveLog: 'channel ID',
-  modLog: 'channel ID',
-  musicText: 'channel ID',
-  music: 'channel ID',
-  sesReqText: 'channel ID',
-  sesCategory: 'channel ID',
-  calendar: 'channel ID',
+  staffChat: '720568062490705931',
+  modMail: '720568062490705931',
+  actionLog: '720568062490705931',
+  joinLeaveLog: '720568062490705931',
+  modLog: '720568062490705931',
 
   // Image-Only channels
-  imageOnlyChannels: ['channelID'],
+  imageOnlyChannels: ['718192476828991550'],
 
   // Newline Limit Settings
   newlineLimitChannels: [],
@@ -46,7 +21,7 @@ const config = {
   imageLinkLimit: 3,
 
   // No-Mention channels
-  noMentionChannels: ['channelID'],
+  noMentionChannels: ['718192476828991550'],
 
   // Reputation Settings
   negativeRepLimit: 20,
@@ -56,7 +31,7 @@ const config = {
 
   // UserDB
   userDBDefaults: {
-    friendcode: '',
+    friendCode: '',
     island: {
       islandName: '',
       fruit: '',
@@ -76,15 +51,7 @@ const config = {
   },
 
   // Bot Perms and Stuff
-  ownerID: 'userID',
-
-  admins: ['userID', 'userID'],
-
-  ignoreMember: ['userID'],
-
-  ignoreChannel: ['channelID'],
-
-  support: ['userID', 'userID'],
+  ownerID: '258373545258778627',
 
   // Guild Perms and Stuff
   permLevels: [
@@ -180,12 +147,7 @@ const config = {
     {
       level: 7,
       name: 'Server Owner',
-      check: (client, message) => {
-        if (message.guild && message.author.id === message.guild.ownerID) {
-          return true;
-        }
-        return false;
-      },
+      check: (client, message) => !!(message.guild && message.author.id === message.guild.ownerID),
     },
     {
       level: 8,

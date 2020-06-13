@@ -78,13 +78,6 @@ module.exports = (client) => {
         client.channels.cache.get(channel).messages.fetch(msgID);
       });
 
-      try {
-        client.startTwitterFeed();
-      } catch (err) {
-        // The stream function returned an error
-        console.error(err);
-      }
-
       // Logging a ready message on first boot
       console.log(`Ready sequence finished, with ${guild.memberCount} users, in ${guild.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
     }, 1000);
