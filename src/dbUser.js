@@ -98,7 +98,7 @@ module.exports = (client) => {
     };
 
     set(mainID, setColumn, setValue) {
-      if(this.query(`SELECT ${this.mainColumn}`, mainID).rows) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
+      if(this.query(`SELECT ${this.mainColumn}`, mainID)) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
       return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${setColumn}) VALUES (${mainID}, ${setValue})`);
     };
 
