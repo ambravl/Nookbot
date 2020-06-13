@@ -72,7 +72,10 @@ module.exports = (client) => {
     console.log(`Attempting to create databases...`);
     console.log(creationQuery);
     client.db.query(creationQuery, (err, res) => {
-      if(err) throw err;
+      if(err) {
+        console.error(`Got an error while running query ${creationQuery}`);
+        throw err;
+      }
       console.log(`Result of creation: ${res}`);
       let commands = [];
       for(let command in client.commands){
