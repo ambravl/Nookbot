@@ -6,13 +6,13 @@ module.exports = (client) => {
   client.permLevel = (message) => {
     let permName = 'User';
     let permlvl = 0;
-    const permOrder = client.config.permLevels.slice(0)
+    const permOrder = client.permLevels.slice(0)
       .sort((p, c) => (p.level < c.level ? 1 : -1));
 
     while (permOrder.length) {
       const currentlvl = permOrder.shift();
 
-      if (client.config.levelCheck(currentlvl, client, message)) {
+      if (client.levelCheck(currentlvl, client, message)) {
         permName = currentlvl.name;
         permlvl = currentlvl.level;
         break;

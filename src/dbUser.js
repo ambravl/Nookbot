@@ -102,13 +102,6 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
 (9, 'Bot Admin', 9), 
 (10, 'Bot Owner', 10)`, (err) => {
         if(err) console.error(`Got error while creating permission database: ${err}`);
-        client.config = require('../config');
-
-        client.levelCache = {};
-        for (let i = 0; i < client.config.permLevels.length; i += 1) {
-          const thisLevel = client.config.permLevels[i];
-          client.levelCache[thisLevel.name] = thisLevel.level;
-        }
       })
     })
   };

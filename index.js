@@ -29,6 +29,7 @@ const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
 require('./src/dbUser')(client);
+require('../config')(client);
 
 client.initialize();
 
@@ -83,6 +84,13 @@ fs.readdir('./commands/', (err, folders) => {
     });
   }
 });
+
+
+client.levelCache = {};
+for (let i = 0; i < client.permLevels.length; i += 1) {
+  const thisLevel = client.permLevels[i];
+  client.levelCache[thisLevel.name] = thisLevel.level;
+}
 
 client.firstReady = false;
 

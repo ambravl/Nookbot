@@ -15,8 +15,8 @@ module.exports = (client) => {
         break;
     }
   });
-  config.permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`).rows;
-  config.levelCheck = (level, client, message) => {
+  client.permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`).rows;
+  client.levelCheck = (level, client, message) => {
     if(level.level === 0) return true;
     if(level.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
     if(message.guild){
