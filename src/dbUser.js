@@ -46,7 +46,7 @@ module.exports = (client) => {
   client.dropDB = function () {
     for(let table in client.tableList){
       if(client.tableList.hasOwnProperty(table)){
-        client.db.query(`DELETE FROM ${table}`, (err, res) => {
+        client.db.query(`DROP TABLE ${table}`, (err, res) => {
           if(err) console.error(err);
           return res;
         });
