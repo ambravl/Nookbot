@@ -54,7 +54,7 @@ module.exports = (client) => {
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
-    client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err, res) => {
+    client.db.query(`DROP TABLE ${client.tableList.join(", ").replace('users', 'userDB')}; ${creationQuery}`, (err, res) => {
       if(err) throw err;
       console.log(`Successfully reset database, result is ${res}`);
       let commands = [];
@@ -68,53 +68,6 @@ module.exports = (client) => {
         console.log(`result of creation: ${re}`);
       });
     })
-  };
-
-  client.dropDB = function () {
-    client.tableList.forEach(table =>{
-      if(client.tableList.hasOwnProperty(table)){
-        client.db.query(`DROP TABLE ${table}`, (err, res) => {
-          if(err) console.error(`Error while dropping ${table}: ${err}`);
-          return res;
-        });
-      }
-    });
-  };
-
-  // i know there are multiple loops, i need to loop through nested shit wtf do you expect me to do
-  // noinspection FunctionWithMultipleLoopsJS
-  client.createDB = function () {
-    let creationQuery = "";
-    client.tableList.forEach(table => {
-        console.log(`table name: ${table}`);
-        creationQuery += `CREATE TABLE ${table} (`;
-        for (let column in schema[table]) {
-          if (schema[table].hasOwnProperty(column)) {
-            creationQuery += column + " " + schema[table][column] + ",";
-          }
-        }
-        creationQuery = creationQuery.slice(0, -1) + ");";
-    });
-    console.log(`Attempting to create databases...`);
-    console.log(creationQuery);
-    client.db.query(creationQuery, (err, res) => {
-      if(err) {
-        console.error(`Got an error while running query ${creationQuery}`);
-        console.error(`Error: ${err}`);
-        throw err;
-      }
-      console.log(`Result of creation: ${res}`);
-      let commands = [];
-      for(let command in client.commands){
-        if(client.commands.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
-      }
-      commands = commands.join(", ");
-      console.log("Attempting to create enabledCommands DB...");
-      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES ${commands}`, (err, re) => {
-        if(err) throw err;
-        console.log(`result of creation: ${re}`);
-      });
-    });
   };
 
   class Table {
