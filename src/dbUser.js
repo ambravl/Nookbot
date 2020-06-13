@@ -100,7 +100,7 @@ module.exports = (client) => {
     };
 
     set(mainID, setColumn, setValue) {
-      if(this.query(`SELECT ${this.mainColumn}`, mainID)) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
+      if(this.query(`SELECT ${this.mainColumn} FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
       return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${setColumn}) VALUES (${mainID}, ${setValue})`);
     };
 
@@ -178,7 +178,7 @@ module.exports = (client) => {
     };
 
     findKey(value) {
-      return this.query(`SELECT ${this.mainColumn} WHERE "${this.secondaryColumn}" = '${value}'`).rows[0][this.mainColumn];
+      return this.query(`SELECT ${this.mainColumn} FROM ${this.name} WHERE "${this.secondaryColumn}" = '${value}'`).rows[0][this.mainColumn];
     };
 
     add(value) {
