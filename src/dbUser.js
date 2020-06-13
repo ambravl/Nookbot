@@ -74,6 +74,7 @@ module.exports = (client) => {
     client.db.query(creationQuery, (err, res) => {
       if(err) {
         console.error(`Got an error while running query ${creationQuery}`);
+        console.error(`Error: ${err}`);
         throw err;
       }
       console.log(`Result of creation: ${res}`);
@@ -123,7 +124,8 @@ module.exports = (client) => {
     };
 
     set(mainID, setColumn, setValue) {
-      return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
+      if(this.query(`SELECT ${this.mainColumn}`, mainID).rows) return this.query(`UPDATE ${this.name} SET ${setColumn} = ${setValue}`, mainID);
+      return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${setColumn}) VALUES (${mainID}, ${setValue})`);
     };
 
     math(mainID, operation, modifier, column) {
