@@ -55,7 +55,9 @@ module.exports = (client) => {
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
     client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err) => {
-      if(err) throw err;
+      if(err){
+        console.log(`Got error while trying to run query [DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}], error: ${err}`);
+      }
       console.log(`Successfully reset database`);
     })
   };
