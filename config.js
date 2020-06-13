@@ -1,19 +1,25 @@
 module.exports = (client) => {
-  let config = client.configDB.query(`SELECT * FROM configDB`).rows;
-  const testing = true;
-  const valueCol = testing ? "testing_value" : "config_value";
-  config.forEach(row => {
-    switch(row.config_type){
-      case 'int':
-        client.config[row.config_name] = parseInt(row[valueCol]);
-        break;
-      case 'array':
-        client.config[row.config_name] = row[valueCol].split(",");
-        break;
-      default:
-        client.config[row.config_name] = row[valueCol];
-        break;
+  client.configDB.query(`SELECT * FROM configDB`, (err, res) => {
+    if(err) {
+      console.error(`Encountered error when reading the configuration database, error: ${err}`);
+      throw err;
     }
+    let config = res.rows;
+    const testing = true;
+    const valueCol = testing ? "testing_value" : "config_value";
+    config.forEach(row => {
+      switch(row.config_type){
+        case 'int':
+          client.config[row.config_name] = parseInt(row[valueCol]);
+          break;
+        case 'array':
+          client.config[row.config_name] = row[valueCol].split(",");
+          break;
+        default:
+          client.config[row.config_name] = row[valueCol];
+          break;
+      }
+    });
   });
   client.permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`).rows;
   client.levelCheck = (level, client, message) => {
