@@ -30,7 +30,8 @@ module.exports = (db) => {
     for (let table in db.schema) {
       if (db.schema.hasOwnProperty(table)) {
         db.tableList.push(table);
-        db[table] = new Table(table, db.schema[table][0], db.schema[table][1])
+        db[table] = new Table(table, db.schema[table][0], db.schema[table][1]);
+        console.log(`Attempting to create table object for ${table}...`)
       }
     }
   };
