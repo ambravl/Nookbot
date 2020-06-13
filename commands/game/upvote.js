@@ -11,7 +11,7 @@ module.exports.run = (client, message, args, level) => {
     return client.error(message.channel, 'No Upvoting Yourself!', 'You cannot upvote yourself!');
   }
 
-  const { posRepList, negRepList } = client.userDB.ensure(member.id, client.config.usersDefaults);
+  const { posRepList, negRepList } = client.userDB.ensure(member.id, '');
 
   if (posRepList.includes(message.author.id)) {
     return client.error(message.channel, 'Already Positively Rated!', `You have already given **${member.displayName}** a positive rating! You can never give them another positive rating.`);

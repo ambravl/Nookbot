@@ -26,7 +26,7 @@ module.exports = async (client, member) => {
   }
 
   // Role persistence
-  const storedMember = client.userDB.ensure(member.id, client.config.usersDefaults);
+  const storedMember = client.userDB.ensure(member.id, '');
   if (storedMember.roles.length !== 0) {
     storedMember.roles.forEach((r) => {
       const role = member.guild.roles.cache.get(r);

@@ -5,7 +5,7 @@ module.exports = async (client, member) => {
     return;
   }
 
-  client.userDB.ensure(member.id, client.config.usersDefaults);
+  client.userDB.ensure(member.id, '');
 
   member.roles.cache.forEach((r) => {
     client.userDB.push(member.id, r.id, 'roles');

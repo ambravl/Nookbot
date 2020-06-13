@@ -8,7 +8,7 @@ module.exports = (client, channel) => {
   setTimeout(async () => {
     if (channel.topic !== null) {
       const user = await client.userDB.users(channel.topic.trim());
-      const { infractions } = client.userDB.ensure(user.id, client.config.usersDefaults);
+      const { infractions } = client.userDB.ensure(user.id, '');
       let msg = `__**${user.tag}'s Bee Stings**__`;
       let expPoints = 0;
       let expMsg = '';

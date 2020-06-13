@@ -28,7 +28,7 @@ module.exports.run = async (client, message, args) => {
       }
       const msgArr = [];
       vilAdopters.slice(pingOffset, pingOffset + 10).forEach((memID, i) => {
-        msgArr.push(`#${pingOffset + i + 1} - <@${memID}> - ${client.userDB.ensure(memID, client.config.usersDefaults).friendCode || 'Ask'}`);
+        msgArr.push(`#${pingOffset + i + 1} - <@${memID}> - ${client.userDB.ensure(memID, '').friendCode || 'Ask'}`);
       });
       const extra = vilAdopters.length > 10 ? vilAdopters.length - 10 : 0;
       const msg = `The following members are looking to adopt **${villager.target}**:\nPosition - Member - Friend Code\n${msgArr.join('\n')}${extra !== 0 ? `\nAnd **${extra}** other${extra === 1 ? '' : 's'} not pinged due to the limit of 10 pinged members.` : ''}\nOffered by: <@${message.author.id}>\n•••••`;

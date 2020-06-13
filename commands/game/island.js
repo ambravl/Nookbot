@@ -244,7 +244,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       }
 
       // Return user's island information if they have any stored
-      const { friendcode, island } = client.userDB.ensure(member.id, client.config.usersDefaults);
+      const { friendcode, island } = client.userDB.ensure(member.id, '');
 
       const msg = [];
       if (friendcode) {

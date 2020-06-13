@@ -14,7 +14,7 @@ module.exports.run = (client, message, args, level) => {
     return client.error(message.channel, 'No Downvoting Yourself!', 'You cannot downvote yourself!');
   }
 
-  const { posRepList, negRepList } = client.userDB.ensure(member.id, client.config.usersDefaults);
+  const { posRepList, negRepList } = client.userDB.ensure(member.id, '');
 
   if (negRepList.includes(message.author.id)) {
     return client.error(message.channel, 'Already Negatively Rated!', `You have already given **${member.displayName}** a negative rating! You can never give them another negative rating.`);

@@ -54,5 +54,10 @@
    "channelID": "bigint",
    "type": "text",
    "reactions": "text[]"
- }
+ },
+  "configDB": {
+    "config_name": "text PRIMARY KEY",
+    "config_value": "text",
+    "config_type": "text"
+  }
 }

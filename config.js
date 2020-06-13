@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 const config = {
-
   // Raid Settings
   raidJoinsPerSecond: 10,
   raidJoinCount: 10,
@@ -29,25 +28,6 @@ const config = {
   positiveRepLimit: 20,
 
   banAppealLink: 'LINK',
-
-  // users
-  usersDefaults: {
-    friendCode: '',
-      islandName: '',
-      fruit: '',
-      characterName: '',
-      hemisphere: '',
-      profileName: '',
-    positiveRep: 0,
-    negativeRep: 0,
-    posRepList: [],
-    negRepList: [],
-    roles: [],
-    nicknames: [],
-    usernames: [],
-    infractions: [[]],
-    lastMessageTimestamp: 0,
-  },
 
   // Bot Perms and Stuff
   ownerID: '258373545258778627',

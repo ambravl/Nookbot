@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   }
 
   const userArray = [];
-  client.userDB.ensure(member === parseInt(args[0], 10) ? member : member.id, client.config.usersDefaults).usernames.forEach((u) => {
+  client.userDB.ensure(member === parseInt(args[0], 10) ? member : member.id, '').usernames.forEach((u) => {
     userArray.unshift(`${moment.utc(u.timestamp).format('DD MMM YY HH:mm')} UTC: ${u.username}`);
   });
 

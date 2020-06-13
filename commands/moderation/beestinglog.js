@@ -26,7 +26,7 @@ module.exports.run = async (client, message, args, level) => {
     member = message.author;
   }
 
-  const { infractions } = client.userDB.ensure(member.id, client.config.usersDefaults);
+  const { infractions } = client.userDB.ensure(member.id, '');
   let msg = `__**${member.guild ? member.user.tag : `${member.username}#${member.discriminator}`}'s Bee Stings**__`;
   let expPoints = 0;
   let expMsg = '';
