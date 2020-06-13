@@ -21,7 +21,13 @@ module.exports = (client) => {
       }
     });
   });
-  client.permLevels = client.permissionDB.query(`SELECT * FROM permissionDB`).rows;
+  client.permissionDB.query(`SELECT * FROM permissionDB`, (err, res) => {
+    if(err){
+      console.error(err);
+      throw(err);
+    }
+    client.permLevels = res.rows;
+  });
   client.levelCheck = (level, client, message) => {
     if(level.level === 0) return true;
     if(level.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
