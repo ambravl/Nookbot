@@ -63,8 +63,11 @@ module.exports = (client) => {
       }
       commands = commands.join(", ");
       console.log("Attempting to create enabledCommands DB...");
-      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES ${commands}`, (err, re) => {
-        if(err) throw err;
+      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES (${commands})`, (err, re) => {
+        if(err) {
+          console.error(err);
+          throw(err);
+        }
         console.log(`result of creation: ${re}`);
       });
     })
