@@ -38,9 +38,36 @@ module.exports = (client) => {
     }
 
     if(reload) {
-      client.dropDB();
-      client.createDB();
+      client.resetDB();
     }
+  };
+
+  client.resetDB = function() {
+    let creationQuery = "";
+    client.tableList.forEach(table => {
+      console.log(`table name: ${table}`);
+      creationQuery += `CREATE TABLE ${table} (`;
+      for (let column in schema[table]) {
+        if (schema[table].hasOwnProperty(column)) {
+          creationQuery += column + " " + schema[table][column] + ",";
+        }
+      }
+      creationQuery = creationQuery.slice(0, -1) + ");";
+    });
+    client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err, res) => {
+      if(err) throw err;
+      console.log(`Successfully reset database, result is ${res}`);
+      let commands = [];
+      for(let command in client.commands){
+        if(client.commands.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
+      }
+      commands = commands.join(", ");
+      console.log("Attempting to create enabledCommands DB...");
+      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES ${commands}`, (err, re) => {
+        if(err) throw err;
+        console.log(`result of creation: ${re}`);
+      });
+    })
   };
 
   client.dropDB = function () {
@@ -58,7 +85,6 @@ module.exports = (client) => {
   // noinspection FunctionWithMultipleLoopsJS
   client.createDB = function () {
     let creationQuery = "";
-    console.log(client.tableList);
     client.tableList.forEach(table => {
         console.log(`table name: ${table}`);
         creationQuery += `CREATE TABLE ${table} (`;
