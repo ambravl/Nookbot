@@ -131,6 +131,7 @@ module.exports = (client) => {
 
     keyArray() {
       const valuePairs = this.query(`select "${this.mainColumn}" from ${this.name}`);
+      if(!valuePairs) return [];
       let keyArray = [];
       for (let row of valuePairs.rows) {
         keyArray.push(row[this.mainColumn]);
