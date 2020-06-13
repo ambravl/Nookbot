@@ -54,9 +54,9 @@ module.exports = (client) => {
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
-    client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err, res) => {
+    client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err) => {
       if(err) throw err;
-      console.log(`Successfully reset database, result is ${res}`);
+      console.log(`Successfully reset database`);
       let commands = [];
       for(let command in client.commands.indexes){
         if(client.commands.indexes.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
