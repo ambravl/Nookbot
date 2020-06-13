@@ -100,8 +100,8 @@ module.exports = (client) => {
     };
 
     set(mainID, setColumn, setValue) {
-      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET "${setColumn}" = ${setValue}`, mainID);
-      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${setColumn}") VALUES (${mainID}, ${setValue})`);
+      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET "${setColumn}" = '${setValue}'`, mainID);
+      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${setColumn}") VALUES ('${mainID}', '${setValue}')`);
     };
 
     math(mainID, operation, modifier, column) {
@@ -109,11 +109,11 @@ module.exports = (client) => {
     };
 
     push(mainID, newValue, column) {
-      return this.query(`UPDATE ${this.name} SET "${column}" = "${column}"||${JSON.stringify(newValue)}`, mainID);
+      return this.query(`UPDATE ${this.name} SET "${column}" = "${column}"||'${JSON.stringify(newValue)}'`, mainID);
     };
 
     remove(mainID, toRemove, column) {
-      return this.query(`UPDATE ${this.name} SET "${column}" = array_remove("${column}", ${toRemove})`, mainID);
+      return this.query(`UPDATE ${this.name} SET "${column}" = array_remove("${column}", '${toRemove}')`, mainID);
     };
 
     has(mainID) {
@@ -122,7 +122,7 @@ module.exports = (client) => {
 
     delete(mainID, column) {
       if (!column) return this.query(`DELETE FROM ${this.name}`, mainID);
-      return this.query(`UPDATE ${this.name} SET ${column} = null`, mainID);
+      return this.query(`UPDATE ${this.name} SET "${column}" = null`, mainID);
     };
 
     setProp(mainID, column, value) {
@@ -182,7 +182,7 @@ module.exports = (client) => {
     };
 
     add(value) {
-      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${this.secondaryColumn}") VALUES ( DEFAULT, ${value}) RETURNING "${this.mainColumn}"`);
+      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${this.secondaryColumn}") VALUES ( DEFAULT, '${value}') RETURNING "${this.mainColumn}"`);
     };
 
     randomKey() {
