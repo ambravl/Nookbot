@@ -29,7 +29,7 @@ const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
 require('./src/dbUser')(client);
-require('../config')(client);
+require('./config')(client);
 
 client.initialize();
 
