@@ -28,8 +28,6 @@ const { botVersion } = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
-client.config = require('./config');
-
 require('./src/dbUser')(client);
 
 client.initialize();

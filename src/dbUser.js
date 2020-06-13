@@ -100,7 +100,10 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
 (7, 'Server Owner', 7), 
 (8, 'Bot Support', 8), 
 (9, 'Bot Admin', 9), 
-(10, 'Bot Owner', 10)`)
+(10, 'Bot Owner', 10)`, (err) => {
+        if(err) console.error(`Got error while creating permission database: ${err}`);
+        client.config = require('../config');
+      })
     })
   };
 
