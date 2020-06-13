@@ -26,7 +26,11 @@ module.exports = (client) => {
       console.error(err);
       throw(err);
     }
-    client.permLevels = res.rows;
+    client.levelCache = {};
+    for (let i = 0; i < res.rows.length; i += 1) {
+      const thisLevel = res.rows[i];
+      client.levelCache[thisLevel.name] = thisLevel.level;
+    }
   });
   client.levelCheck = (level, client, message) => {
     if(level.level === 0) return true;
