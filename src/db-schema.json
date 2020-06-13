@@ -19,7 +19,7 @@
    "nicknames": "text[]",
    "usernames": "text[]",
    "infractions": "text[]",
-   "lastMessageTimestamp": "timestamptz"
+   "lastMessageTimestamp": "bigint"
  },
  "emojiDB":  {
   "emojiID": "bigint PRIMARY KEY",
