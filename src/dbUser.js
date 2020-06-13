@@ -37,14 +37,14 @@ module.exports = (client) => {
       }
     }
 
-    if(reload && client.resetDB()) client.cacheConfig();
-    else client.cacheConfig();
+    if(reload) {
+      client.resetDB();
+    }
   };
 
   client.resetDB = function() {
     let creationQuery = "";
     client.tableList.forEach(table => {
-      console.log(`table name: ${table}`);
       creationQuery += `CREATE TABLE ${table} (`;
       for (let column in schema[table]) {
         if (schema[table].hasOwnProperty(column)) {
@@ -53,14 +53,16 @@ module.exports = (client) => {
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
+    console.log(`Attempting to reset all tables...`);
     client.db.query(`DROP SCHEMA public CASCADE;
 CREATE SCHEMA public;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
       if(err){
-        console.log(`Got error while trying to run query [DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}], error: ${err}`);
+        console.error(`Got error while trying to run reset tables, query was [DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}], error: ${err}`);
+        throw err;
       }
-      console.log(`Successfully reset database`);
+      console.log(`Successfully reset database, attempting to populate configuration database...`);
       client.db.query(`INSERT INTO configDB ("config_name", "config_value", "testing_value", "config_type") VALUES 
 ('raidJoinsPerSecond', '10', '10', 'int'),
 ('raidJoinCount', '10', '10', 'int'),
@@ -87,8 +89,13 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
 ('ignoreMember', '', '435195670702325791', 'array'),
 ('ignoreChannel', '', '716935607934386257', 'array')
 `, (err) => {
-        if(err) console.error(err);
+        if(err) {
+          console.error(`Encountered an error when trying to populate configurations: ${err}`);
+          throw(err);
+        }
+        console.log(`Successfully populated configuration database!`);
       });
+      console.log(`Attempting to populate permission database...`);
       client.db.query(`INSERT INTO permissionDB ("level", "name", "roleID") VALUES (0, 'User', 0), 
 (1, 'Verified', 1), 
 (2, 'Redd', 2), 
@@ -100,8 +107,11 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
 (8, 'Bot Support', 8), 
 (9, 'Bot Admin', 9), 
 (10, 'Bot Owner', 10)`, (err) => {
-        if(err) console.error(`Got error while creating permission database: ${err}`);
-        return true;
+        if(err) {
+          console.error(`Got error while populating permission database: ${err}`);
+          throw err;
+        }
+        console.log(`Successfully populated permission database!`)
       })
     })
   };
