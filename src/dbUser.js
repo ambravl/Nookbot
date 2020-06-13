@@ -63,17 +63,19 @@ module.exports = (client) => {
       }
       creationQuery  = creationQuery.slice(0, -1) + ");";
     }
+    console.log(`Attempting to create databases...`);
     client.db.query(creationQuery, (err, res) => {
       if(err) throw err;
-      console.log(res);
+      console.log(`Result of creation: ${res}`);
       let commands = [];
       for(let command in client.commands){
         if(client.commands.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
       }
       commands = commands.join(", ");
+      console.log("Attempting to create enabledCommands DB...");
       client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES ${commands}`, (err, re) => {
         if(err) throw err;
-        console.log(re);
+        console.log(`result of creation: ${re}`);
       });
     });
   };
