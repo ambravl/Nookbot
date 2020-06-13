@@ -7,7 +7,7 @@
    "memberID": "bigint",
    "friendCode": "text",
    "islandName": "text",
-    "fruit": "fruit",
+    "fruit": "text",
     "characterName": "text",
     "hemisphere": "boolean",
     "profileName": "text",
@@ -52,7 +52,7 @@
  "reactionRoles": {
    "messageID": "bigint",
    "channelID": "bigint",
-   "type": "roleType",
+   "type": "text",
    "reactions": "text[]"
  }
 }
