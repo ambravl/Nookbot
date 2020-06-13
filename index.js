@@ -78,10 +78,11 @@ fs.readdir('./commands/', (err, folders) => {
           });
         }
       });
-
-      client.initialize();
     });
   }
+
+
+  client.initialize();
 });
 
 client.levelCache = {};
