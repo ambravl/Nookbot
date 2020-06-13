@@ -14,6 +14,7 @@
 * emojiID
 * */
 module.exports = (client) => {
+  const firstTime = true;
   const { Client } = require('pg');
   const schema = require('./db-schema.json');
 
@@ -25,6 +26,8 @@ module.exports = (client) => {
       },
     });
     client.db.connect();
+
+    if(firstTime) client.createDB();
 
     client.tableList = [];
     for (let table in schema) {
@@ -80,7 +83,7 @@ module.exports = (client) => {
 
     get(mainID) {
       let res = this.query(`SELECT ${this.secondaryColumn} FROM ${this.name}`, mainID);
-      if (res.rows === null) return undefined;
+      if (!res || res.rows === null) return undefined;
       res = res.rows[0][this.secondaryColumn];
       console.log(res);
       const columnType = schema[this.name][this.secondaryColumn];
