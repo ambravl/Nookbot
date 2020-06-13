@@ -15,7 +15,7 @@
 * */
 module.exports = (db) => {
   const { Client } = require('pg');
-  db.schema = require('./db-schema.json');
+  const schema = require('./db-schema.json');
 
   db.initialize = function() {
     db.c = new Client({
@@ -27,11 +27,11 @@ module.exports = (db) => {
     db.c.connect();
 
     db.tableList = [];
-    for (let table in db.schema) {
-      if (db.schema.hasOwnProperty(table)) {
+    for (let table in schema) {
+      if (schema.hasOwnProperty(table)) {
         db.tableList.push(table);
-        db[table] = new Table(table, db.schema[table][0], db.schema[table][1]);
-        console.log(`Attempting to create table object for ${table}...`)
+        db[table] = new Table(table, schema[table][0], schema[table][1]);
+        console.log(`Attempting to create table object for ${table}...`);
       }
     }
   };
@@ -49,9 +49,9 @@ module.exports = (db) => {
     let creationQuery = "";
     for (let table in db.tableList){
       creationQuery += "CREATE TABLE" + table + "(";
-      for(let column in db.schema[table]){
-        if(db.schema[table].hasOwnProperty(column)){
-          creationQuery += column + " " + db.schema[table][column] + ",";
+      for(let column in schema[table]){
+        if(schema[table].hasOwnProperty(column)){
+          creationQuery += column + " " + schema[table][column] + ",";
         }
       }
       creationQuery  = creationQuery.slice(0, -1) + ");";
@@ -83,7 +83,7 @@ module.exports = (db) => {
       if (res.rows === null) return undefined;
       res = res.rows[0][this.secondaryColumn];
       console.log(res);
-      const columnType = db.schema[this.name][this.secondaryColumn];
+      const columnType = schema[this.name][this.secondaryColumn];
       if(columnType ===  "boolean") return res === "t";
       if(columnType.search("[") !== -1) return res.slice(1, -1).split(", ");
     };
