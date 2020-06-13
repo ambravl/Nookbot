@@ -32,6 +32,8 @@ client.config = require('./config');
 
 require('./src/dbUser')(client);
 
+client.initialize();
+
 client.version = `v${botVersion}`;
 client.emoji = emoji;
 client.token = process.env.TOKEN;
@@ -77,12 +79,11 @@ fs.readdir('./commands/', (err, folders) => {
             client.aliases.set(alias, commandName);
           });
         }
+
+        client.enabledCommands.ensure(commandName, true);
       });
     });
   }
-
-
-  client.initialize();
 });
 
 client.levelCache = {};

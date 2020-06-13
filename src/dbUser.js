@@ -57,19 +57,6 @@ module.exports = (client) => {
     client.db.query(`DROP TABLE ${client.tableList.join(", ")}; ${creationQuery}`, (err) => {
       if(err) throw err;
       console.log(`Successfully reset database`);
-      let commands = [];
-      for(let command in client.commands.indexes){
-        if(client.commands.indexes.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
-      }
-      commands = commands.join(", ");
-      console.log("Attempting to create enabledCommands DB...");
-      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES (${commands})`, (err, re) => {
-        if(err) {
-          console.error(`Got error while running query [INSERT INTO enabledCommands (name, enabled) VALUES (${commands})], error: ${err}`);
-          throw(err);
-        }
-        console.log(`result of creation: ${re}`);
-      });
     })
   };
 
@@ -103,7 +90,11 @@ module.exports = (client) => {
 
     ensure(mainID, defaultValue) {
       const res = this.get(mainID);
-      return res === undefined ? defaultValue : res;
+      if(res === undefined){
+        this.set(mainID, this.secondaryColumn, defaultValue);
+        return defaultValue;
+      }
+      return res;
     };
 
     set(mainID, setColumn, setValue) {
