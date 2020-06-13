@@ -44,7 +44,7 @@ module.exports = (client) => {
   };
 
   client.dropDB = function () {
-    client.db.query(`DELETE FROM ${db.tableList.join(';DELETE FROM ')}`, (err, res) => {
+    client.db.query(`DELETE FROM ${client.tableList.join(';DELETE FROM ')}`, (err, res) => {
       if(err) throw err;
       return res;
     })
