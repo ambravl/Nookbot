@@ -47,7 +47,7 @@ module.exports = (client) => {
     for(let table in client.tableList){
       if(client.tableList.hasOwnProperty(table)){
         client.db.query(`DROP TABLE ${table}`, (err, res) => {
-          if(err) console.error(err);
+          if(err) console.error(`Error while dropping ${table}: ${err}`);
           return res;
         });
       }
