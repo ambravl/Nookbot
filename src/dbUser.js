@@ -58,7 +58,7 @@ module.exports = (client) => {
       if(err) throw err;
       console.log(`Successfully reset database, result is ${res}`);
       let commands = [];
-      for(let command in client.commands){
+      for(let command in client.commands.keyArray()){
         if(client.commands.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
       }
       commands = commands.join(", ");
