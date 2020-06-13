@@ -84,12 +84,6 @@ fs.readdir('./commands/', (err, folders) => {
   }
 });
 
-client.levelCache = {};
-for (let i = 0; i < client.config.permLevels.length; i += 1) {
-  const thisLevel = client.config.permLevels[i];
-  client.levelCache[thisLevel.name] = thisLevel.level;
-}
-
 client.firstReady = false;
 
 client.invites = {};
