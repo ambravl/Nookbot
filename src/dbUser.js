@@ -74,9 +74,10 @@ module.exports = (client) => {
 
     query(query, mainID) {
       const whereQuery = mainID ? query + ` WHERE ${this.mainColumn} IS ${mainID}` : query;
+      console.log(`Running query: ${whereQuery}`);
       client.db.query(whereQuery, (err, res) => {
         if (err) throw err;
-        console.log(`Ran query "${whereQuery}" with a result of ${res}`);
+        console.log(`Query result: ${res}`);
         return res;
       })
     }
