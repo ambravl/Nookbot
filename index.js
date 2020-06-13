@@ -29,9 +29,9 @@ const emoji = require('./src/emoji');
 require('./src/functions')(client);
 
 require('./src/dbUser')(client);
-require('./config')(client);
 
 client.initialize();
+require('./config')(client);
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
