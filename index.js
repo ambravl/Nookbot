@@ -31,7 +31,7 @@ require('./src/functions')(client);
 require('./src/dbUser')(client);
 
 client.initialize();
-require('./config')(client);
+// require('./config')(client);
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
