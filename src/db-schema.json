@@ -1,6 +1,6 @@
 {
 "enabledCommands":  {
- "name": "text PRIMARY KEY",
+ "commandName": "text PRIMARY KEY",
  "enabled": "boolean"
 },
  "userDB":  {
