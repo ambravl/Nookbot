@@ -78,7 +78,7 @@ module.exports = (client) => {
     }
 
     query(query, mainID) {
-      const whereQuery = mainID ? query + ` WHERE ${this.mainColumn} = ${mainID}` : query;
+      const whereQuery = mainID ? query + ` WHERE ${this.mainColumn} = "${mainID}"` : query;
       client.db.query(whereQuery, (err, res) => {
         if (err){
           console.error(`Got error while running query "${whereQuery}", error is ${err}`);
@@ -183,7 +183,7 @@ module.exports = (client) => {
     };
 
     findKey(value) {
-      return this.query(`SELECT ${this.mainColumn} WHERE ${this.secondaryColumn} = ${value}`).rows[0][this.mainColumn];
+      return this.query(`SELECT ${this.mainColumn} WHERE ${this.secondaryColumn} = "${value}"`).rows[0][this.mainColumn];
     };
 
     add(value) {
