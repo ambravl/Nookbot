@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 const config = {
+
   // Raid Settings
   raidJoinsPerSecond: 10,
   raidJoinCount: 10,

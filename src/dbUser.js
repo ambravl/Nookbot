@@ -14,7 +14,7 @@
 * emojiID
 * */
 module.exports = (client) => {
-  const firstTime = true;
+  const reload = true;
   const { Client } = require('pg');
   const schema = require('./db-schema.json');
 
@@ -27,7 +27,10 @@ module.exports = (client) => {
     });
     client.db.connect();
 
-    if(firstTime) client.createDB();
+    if(reload) {
+      client.dropDB();
+      client.createDB();
+    }
 
     client.tableList = [];
     for (let table in schema) {
@@ -62,7 +65,16 @@ module.exports = (client) => {
     }
     client.db.query(creationQuery, (err, res) => {
       if(err) throw err;
-      return res;
+      console.log(res);
+      let commands = [];
+      for(let command in client.commands){
+        if(client.commands.hasOwnProperty(command)) commands.push(`(${command[0]}, true)`);
+      }
+      commands = commands.join(", ");
+      client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES ${commands}`, (err, re) => {
+        if(err) throw err;
+        console.log(re);
+      });
     });
   };
 
