@@ -15,7 +15,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Island Name!', 'Island names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.islandName');
+      client.userDB.set(message.author.id, name, 'islandName');
 
       return client.success(message.channel, 'Successfully set the name of your island!', `Island Name: **${name}**`);
     }
@@ -43,7 +43,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Fruit!', "Your island's native fruit must be one of apples, cherries, oranges, peaches, or pears!");
       }
 
-      client.userDB.set(message.author.id, fruit, 'island.fruit');
+      client.userDB.set(message.author.id, fruit, 'fruit');
 
       return client.success(message.channel, "Successfully set your island's native fruit!", `Fruit: **${fruit}**`);
     }
@@ -64,7 +64,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Character Name!', 'Character names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.characterName');
+      client.userDB.set(message.author.id, name, 'characterName');
 
       return client.success(message.channel, "Successfully set your character's name!", `Character Name: **${name}**`);
     }
@@ -87,7 +87,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Hemisphere!', 'The hemisphere must be either northern or southern!');
       }
 
-      client.userDB.set(message.author.id, hemisphere, 'island.hemisphere');
+      client.userDB.set(message.author.id, hemisphere, 'hemisphere');
 
       return client.success(message.channel, 'Successfully set the hemisphere for your island!', `Hemisphere: **${hemisphere}**`);
     }
@@ -105,7 +105,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         return client.error(message.channel, 'Invalid Switch Profile Name!', 'Switch profile names cannot be longer than 10 characters!');
       }
 
-      client.userDB.set(message.author.id, name, 'island.profileName');
+      client.userDB.set(message.author.id, name, 'profileName');
 
       return client.success(message.channel, 'Successfully set your Switch profile name!', `Profile Name: **${name}**`);
     }
@@ -181,12 +181,12 @@ module.exports.run = async (client, message, args, level, Discord) => {
         case 'in':
         case 'townname':
         case 'tn':
-          client.userDB.set(memberID, '', 'island.islandName');
+          client.userDB.set(memberID, '', 'islandName');
           return client.success(message.channel, 'Successfully cleared the name of your island!', 'To set your island name again, use `.island islandname <name>`!');
         case 'fruit':
         case 'fr':
         case 'f':
-          client.userDB.set(memberID, '', 'island.fruit');
+          client.userDB.set(memberID, '', 'fruit');
           return client.success(message.channel, "Successfully cleared your island's native fruit!", "To set your island's native fruit again, use `.island fruit <fruit>`!");
         case 'charactername':
         case 'character':
@@ -195,20 +195,20 @@ module.exports.run = async (client, message, args, level, Discord) => {
         case 'villagername':
         case 'vn':
         case 'islandername':
-          client.userDB.set(memberID, '', 'island.characterName');
+          client.userDB.set(memberID, '', 'characterName');
           return client.success(message.channel, "Successfully cleared your character's name!", "To set your character's name again, use `.island charactername <name>`!");
         case 'hemisphere':
         case 'hem':
         case 'hm':
         case 'hemi':
-          client.userDB.set(memberID, '', 'island.hemisphere');
+          client.userDB.set(memberID, '', 'hemisphere');
           return client.success(message.channel, 'Successfully cleared the hemisphere for your island!', 'To set the hemisphere for your island again, use `.island hemisphere <hemisphere>`!');
         case 'profilename':
         case 'profile':
         case 'pn':
         case 'switchname':
         case 'sn':
-          client.userDB.set(memberID, '', 'island.profileName');
+          client.userDB.set(memberID, '', 'profileName');
           return client.success(message.channel, 'Successfully cleared your Switch profile name!', 'To set your Switch profile name again, use `.island profilename <name>`!');
         case 'friendcode':
         case 'fc':
@@ -250,20 +250,20 @@ module.exports.run = async (client, message, args, level, Discord) => {
       if (friendcode) {
         msg.push(`Friend Code: **${friendcode}**`);
       }
-      if (island.profileName) {
-        msg.push(`Switch Profile Name: **${island.profileName}**`);
+      if (profileName) {
+        msg.push(`Switch Profile Name: **${profileName}**`);
       }
-      if (island.characterName) {
-        msg.push(`Character Name: **${island.characterName}**`);
+      if (characterName) {
+        msg.push(`Character Name: **${characterName}**`);
       }
-      if (island.islandName) {
-        msg.push(`Island Name: **${island.islandName}**`);
+      if (islandName) {
+        msg.push(`Island Name: **${islandName}**`);
       }
-      if (island.fruit) {
-        msg.push(`Fruit: **${island.fruit}**`);
+      if (fruit) {
+        msg.push(`Fruit: **${fruit}**`);
       }
-      if (island.hemisphere) {
-        msg.push(`Hemisphere: **${island.hemisphere}**`);
+      if (hemisphere) {
+        msg.push(`Hemisphere: **${hemisphere}**`);
       }
 
       if (msg.length === 0) {
@@ -304,5 +304,5 @@ module.exports.help = {
   category: 'game',
   description: 'Island information display',
   usage: 'island <islandname|fruit|charactername|hemisphere|profilename|friendcode> <name|fruit|hemisphere|code>',
-  details: '<islandname> => Set the name of your island.\n<fruit> => Set the fruit that is native on your island.\n<charactername> => Set the name of your character on the island.\n<hemisphere> => Set the hemisphere your island is in.\n<profilename> => Set the name of your Switch profile.\n<friendcode> => Set your Switch friendcode.',
+  details: '<islandname> => Set the name of your \n<fruit> => Set the fruit that is native on your \n<charactername> => Set the name of your character on the \n<hemisphere> => Set the hemisphere your island is in.\n<profilename> => Set the name of your Switch profile.\n<friendcode> => Set your Switch friendcode.',
 };

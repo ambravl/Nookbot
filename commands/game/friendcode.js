@@ -16,7 +16,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       code = `SW-${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
       client.userDB.set(message.author.id, code, 'friendcode');
 
-      const name = client.userDB.get(message.author.id, 'island.profileName');
+      const name = client.userDB.get(message.author.id, 'profileName');
 
       const embed = new Discord.MessageEmbed()
         .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
@@ -42,7 +42,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
           return client.error(message.channel, 'No Code Found!', 'You have not set a friend code! You can do so by running \`.fc set <code>\`!');
         }
 
-        const name = client.userDB.get(message.author.id, 'island.profileName');
+        const name = client.userDB.get(message.author.id, 'profileName');
 
         const embed = new Discord.MessageEmbed()
           .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
@@ -61,7 +61,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
           return client.error(message.channel, 'No Code Found!', `${member.displayName} has not set their friend code!`);
         }
 
-        const name = client.userDB.get(member.user.id, 'island.profileName');
+        const name = client.userDB.get(member.user.id, 'profileName');
 
         const embed = new Discord.MessageEmbed()
           .setAuthor(`${member.displayName}'s Friend Code`, member.user.displayAvatarURL())
