@@ -54,7 +54,7 @@ module.exports = (client) => {
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
     });
-    client.db.query(`DROP TABLE ${client.tableList.join(", ").replace('users', 'userDB')}; ${creationQuery}`, (err, res) => {
+    client.db.query(`DROP TABLE ${client.tableList.join(", ").replace('userDB', 'users')}; ${creationQuery}`, (err, res) => {
       if(err) throw err;
       console.log(`Successfully reset database, result is ${res}`);
       let commands = [];
