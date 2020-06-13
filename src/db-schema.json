@@ -3,7 +3,7 @@
  "name": "text PRIMARY KEY",
  "enabled": "boolean"
 },
- "users":  {
+ "userDB":  {
    "memberID": "bigint PRIMARY KEY",
    "friendCode": "text",
    "islandName": "text",

@@ -14,25 +14,25 @@ module.exports.run = (client, message, args, level) => {
     return client.error(message.channel, 'No Downvoting Yourself!', 'You cannot downvote yourself!');
   }
 
-  const { posRepList, negRepList } = client.users.ensure(member.id, client.config.usersDefaults);
+  const { posRepList, negRepList } = client.userDB.ensure(member.id, client.config.usersDefaults);
 
   if (negRepList.includes(message.author.id)) {
     return client.error(message.channel, 'Already Negatively Rated!', `You have already given **${member.displayName}** a negative rating! You can never give them another negative rating.`);
   }
 
   if (posRepList.includes(message.author.id)) {
-    client.users.math(member.id, '-', 1, 'positiveRep');
-    client.users.remove(member.id, message.author.id, 'posRepList');
-    client.users.math(member.id, '+', 1, 'negativeRep');
-    client.users.push(member.id, message.author.id, 'negRepList');
+    client.userDB.math(member.id, '-', 1, 'positiveRep');
+    client.userDB.remove(member.id, message.author.id, 'posRepList');
+    client.userDB.math(member.id, '+', 1, 'negativeRep');
+    client.userDB.push(member.id, message.author.id, 'negRepList');
     if (negRepList.length + 1 === client.config.negativeRepLimit) {
       message.guild.channels.cache.get(client.config.staffChat).send(`Negative Reputation Threshold Reached!\n**${member.user.tag}** (${member}) has reached **${client.config.negativeRepLimit}** negative reports!`);
     }
     return client.success(message.channel, 'Downvoted!', `Successfully changed your rating to downvote **${member.displayName}**!`);
   }
 
-  client.users.math(member.id, '+', 1, 'negativeRep');
-  client.users.push(member.id, message.author.id, 'negRepList');
+  client.userDB.math(member.id, '+', 1, 'negativeRep');
+  client.userDB.push(member.id, message.author.id, 'negRepList');
   if (negRepList.length + 1 === client.config.negativeRepLimit) {
     message.guild.channels.cache.get(client.config.staffChat).send(`Negative Reputation Threshold Reached!\n**${member.user.tag}** (${member}) has reached **${client.config.negativeRepLimit}** negative reports!`);
   }

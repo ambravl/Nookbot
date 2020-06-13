@@ -10,9 +10,9 @@ module.exports.run = async (client, message, args) => {
     // Remove the caseNum => userID entry in infractions
     client.infractions.delete(caseNum.toString());
     // Remove the infraction from the user
-    const infs = client.users.get(userID, 'infractions');
+    const infs = client.userDB.get(userID, 'infractions');
     const infRemoved = infs.filter((inf) => inf.case === caseNum)[0];
-    client.users.set(userID, infs.filter((inf) => inf.case !== caseNum), 'infractions');
+    client.userDB.set(userID, infs.filter((inf) => inf.case !== caseNum), 'infractions');
     // Notify that the infraction was removed
     const user = await client.users.fetch(userID);
     return client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);

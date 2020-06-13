@@ -40,7 +40,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
 
   let curPoints = 0;
   const time = Date.now();
-  client.users.ensure(member.id, client.config.usersDefaults).infractions.forEach((i) => {
+  client.userDB.ensure(member.id, client.config.usersDefaults).infractions.forEach((i) => {
     // If (points * 1 week) + time of infraction > current time, then the points are still valid
     if ((i.points * 604800000) + i.date > time) {
       curPoints += i.points;
@@ -120,7 +120,7 @@ If you wish to contact the moderators about your warning, please send a message 
   const caseNum = client.infractions.add(member.id);
 
   // Create infraction in the users to store important information
-  client.users.push(member.id, {
+  client.userDB.push(member.id, {
     case: caseNum,
     action: action,
     points: newPoints,
