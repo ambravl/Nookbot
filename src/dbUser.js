@@ -128,6 +128,7 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
           console.error(`Got error while running query "${whereQuery}", error is ${err}`);
           throw err;
         }
+        console.log(`Ran [${whereQuery}] with a result size of ${res ? res.rows.length : res}`);
         return res;
       })
     }
