@@ -58,7 +58,8 @@
   "configDB": {
     "config_name": "text PRIMARY KEY",
     "config_value": "text",
-    "config_type": "text"
+    "config_type": "text",
+    "testing_value": "text"
   },
   "permissionDB": {
     "roleID": "bigint PRIMARY KEY",
