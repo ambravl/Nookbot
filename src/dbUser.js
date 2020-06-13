@@ -49,7 +49,7 @@ module.exports = (client) => {
       creationQuery += `CREATE TABLE ${table} (`;
       for (let column in schema[table]) {
         if (schema[table].hasOwnProperty(column)) {
-          creationQuery += `"${column}" ${schema[table][column]}, `;
+          creationQuery += `"${column}" ${schema[table][column]},`;
         }
       }
       creationQuery = creationQuery.slice(0, -1) + ");";
