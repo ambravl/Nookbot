@@ -27,6 +27,8 @@ module.exports = (client) => {
     });
     client.db.connect();
 
+    if(reload) client.resetDB();
+
     client.tableList = [];
     for (let table in schema) {
       if (schema.hasOwnProperty(table)) {
@@ -35,10 +37,6 @@ module.exports = (client) => {
         client[table] = new Table(table, columns[0], columns[1]);
         console.log(`Attempting to create table object for ${table}...`);
       }
-    }
-
-    if(reload) {
-      client.resetDB();
     }
   };
 
