@@ -65,7 +65,7 @@ module.exports = (client) => {
       console.log("Attempting to create enabledCommands DB...");
       client.db.query(`INSERT INTO enabledCommands (name, enabled) VALUES (${commands})`, (err, re) => {
         if(err) {
-          console.error(err);
+          console.error(`Got error while running query [INSERT INTO enabledCommands (name, enabled) VALUES (${commands})], error: ${err}`);
           throw(err);
         }
         console.log(`result of creation: ${re}`);
@@ -87,7 +87,6 @@ module.exports = (client) => {
           console.error(`Got error while running query "${whereQuery}", error is ${err}`);
           throw err;
         }
-        console.log(`Query result: ${res}`);
         return res;
       })
     }
