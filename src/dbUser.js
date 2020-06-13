@@ -44,10 +44,14 @@ module.exports = (client) => {
   };
 
   client.dropDB = function () {
-    client.db.query(`DELETE FROM ${client.tableList.join(';DELETE FROM ')}`, (err, res) => {
-      if(err) throw err;
-      return res;
-    })
+    for(let table in client.tableList){
+      if(client.tableList.hasOwnProperty(table)){
+        client.db.query(`DELETE FROM ${table}`, (err, res) => {
+          if(err) console.error(err);
+          return res;
+        });
+      }
+    }
   };
 
   // i know there are multiple loops, i need to loop through nested shit wtf do you expect me to do
