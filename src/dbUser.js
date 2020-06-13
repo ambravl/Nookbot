@@ -37,9 +37,8 @@ module.exports = (client) => {
       }
     }
 
-    if(reload) {
-      client.resetDB();
-    }
+    if(reload && client.resetDB()) client.cacheConfig();
+    else client.cacheConfig();
   };
 
   client.resetDB = function() {
@@ -102,6 +101,7 @@ GRANT ALL ON SCHEMA public TO public; ${creationQuery}`, (err) => {
 (9, 'Bot Admin', 9), 
 (10, 'Bot Owner', 10)`, (err) => {
         if(err) console.error(`Got error while creating permission database: ${err}`);
+        return true;
       })
     })
   };
