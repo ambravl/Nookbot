@@ -44,14 +44,14 @@ module.exports = (client) => {
   };
 
   client.dropDB = function () {
-    for(let table in client.tableList){
+    client.tableList.forEach(table =>{
       if(client.tableList.hasOwnProperty(table)){
         client.db.query(`DROP TABLE ${table}`, (err, res) => {
           if(err) console.error(`Error while dropping ${table}: ${err}`);
           return res;
         });
       }
-    }
+    });
   };
 
   // i know there are multiple loops, i need to loop through nested shit wtf do you expect me to do
