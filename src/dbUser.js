@@ -60,7 +60,7 @@ module.exports = (client) => {
     let creationQuery = "";
     for (let table in client.tableList){
       if(client.tableList.hasOwnProperty(table)) {
-        creationQuery += "CREATE TABLE" + table + "(";
+        creationQuery += `CREATE TABLE ${table} (`;
         for (let column in schema[table]) {
           if (schema[table].hasOwnProperty(column)) {
             creationQuery += column + " " + schema[table][column] + ",";
