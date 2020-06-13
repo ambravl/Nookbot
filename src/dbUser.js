@@ -59,15 +59,18 @@ module.exports = (client) => {
   client.createDB = function () {
     let creationQuery = "";
     for (let table in client.tableList){
-      creationQuery += "CREATE TABLE" + table + "(";
-      for(let column in schema[table]){
-        if(schema[table].hasOwnProperty(column)){
-          creationQuery += column + " " + schema[table][column] + ",";
+      if(client.tableList.hasOwnProperty(table)) {
+        creationQuery += "CREATE TABLE" + table + "(";
+        for (let column in schema[table]) {
+          if (schema[table].hasOwnProperty(column)) {
+            creationQuery += column + " " + schema[table][column] + ",";
+          }
         }
+        creationQuery = creationQuery.slice(0, -1) + ");";
       }
-      creationQuery  = creationQuery.slice(0, -1) + ");";
     }
     console.log(`Attempting to create databases...`);
+    console.log(creationQuery);
     client.db.query(creationQuery, (err, res) => {
       if(err) throw err;
       console.log(`Result of creation: ${res}`);
