@@ -25,10 +25,6 @@ module.exports = (client) => {
       },
     });
     client.db.connect();
-    client.db.query(`INSERT INTO configDB ("config_name", "config_value", "testing_value", "config_type") VALUES ('raidJoinsPerSecond', '10', '10', 'int'), ('raidJoinCount', '10', '10', 'int'), ('prefix', '.', '.', 'text'), ('staffChat', '718581551331409971', '720568062490705931', 'text'), ('modMail', '720057587768229989', '720568062490705931', 'text'), ('reportMail', '720058757954011231', '720568062490705931', 'text'), ('actionLog', '720057918791090212', '720568062490705931', 'text'), ('joinLeaveLog', '720057918791090212', '720568062490705931', 'text'), ('modLog', '720057897626632242', '720568062490705931', 'text'), ('musicText', '720055418923122788', '720568062490705931', 'text'), ('music', '718645777399808001', '721429219187359794', 'text'), ('sesReqText', '', '720568062490705931', 'text'), ('sesCategory', '', '698388740040556586', 'text'), ('calendar', '720054742562242600', '720568062490705931', 'text'), ('imageOnlyChannels', '717588460160155779', '718192476828991550', 'array'), ('newlineLimitChannels', '', '718192476828991550', 'array'), ('newlineLimit', '10', '10', 'int'), ('imageLinkLimit', '3', '3', 'int'),('noMentionChannels', '', '720568062490705931', 'array'), ('negativeRepLimit', '20', '20', 'int'), ('positiveRepLimit', '20', '20', 'int'), ('banAppealLink', '', '720568062490705931', 'text'), ('ignoreMember', '', '435195670702325791', 'array'), ('ignoreChannel', '', '716935607934386257', 'array'); INSERT INTO permissionDB ("level", "name", "roleID") VALUES (0, 'User', 0), (1, 'Verified', 1), (2, 'Redd', 2), (3, 'Head Redd', 3), (4, 'Mod', 718580735253938196), (5, 'Head Mod', 5), (6, 'Admin', 6), (7, 'Server Owner', 7), (8, 'Bot Support', 8), (9, 'Bot Admin', 9), (10, 'Bot Owner', 10)`, (err) => {
-      if(err) console.error(`Got error while populating databases: ${err}`);
-      console.log('Populated databases!');
-    });
 
     client.tableList = [];
     for (let table in schema) {

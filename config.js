@@ -1,4 +1,5 @@
 module.exports = (client) => {
+  client.config = {};
     let config = client.configDB.query('SELECT * FROM configDB').rows;
     console.log(`config has ${config.length} rows`);
     const testing = true;
