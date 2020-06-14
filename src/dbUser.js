@@ -44,32 +44,58 @@ module.exports = (client) => {
       this.secondaryColumn = secondaryColumn;
     }
 
-    query(query, mainID) {
+    async query(query, mainID) {
       const whereQuery = mainID ? query + ` WHERE "${this.mainColumn}" = '${mainID}'` : query;
-      client.db.query(whereQuery, (err, res) => {
-        if (err){
-          console.error(`Got error while running query "${whereQuery}", error is ${err}`);
-          throw err;
-        }
+      try {
+        const res = await client.db.query(whereQuery);
         console.log(`Ran [${whereQuery}] with a result size of ${res ? res.rows.length : res}`);
         return res;
-      })
+      } catch (err) {
+        console.error(`Got error while running query "${whereQuery}", error is ${err}`);
+        throw err;
+      }
     }
 
-    get(mainID) {
-      let res = this.query(`SELECT "${this.secondaryColumn}" FROM ${this.name}`, mainID);
-      if (!res || res.rows === null) return undefined;
-      res = res.rows[0][this.secondaryColumn];
-      console.log(`Got value ${res} from key ${mainID}`);
-      const columnType = schema[this.name][this.secondaryColumn];
-      if(columnType ===  "boolean") return res === "t";
-      if(columnType.search("[") !== -1) return res.slice(1, -1).split(", ");
-      return res;
+    makeQuery(queryType, args){
+      let query;
+      switch (queryType) {
+        case 'select':
+          query = `SELECT "${args[0]}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+          break;
+        case 'selectAll':
+          query = `SELECT "${args[0]}" FROM ${this.name}`;
+          break;
+        case 'update':
+          query =  `UPDATE ${this.name} SET "${args[0]}" = $1 WHERE "${this.mainColumn}" = $2`;
+          break;
+        case 'insert':
+          query = `INSERT INTO ${this.name} ("${args.join('", "')}") VALUES ($${args.map((k, i) => i+1).join(', $')})`;
+          break;
+        default:
+          query = args[0];
+      }
+      return query;
+    }
+
+    async get(mainID) {
+      try {
+        let res = await client.db.query(this.makeQuery('select', this.secondaryColumn), [mainID]);
+        if (!res || res.rows === null) return undefined;
+        res = res.rows[0][this.secondaryColumn];
+        console.log(`Got value ${res} from key ${mainID}`);
+        const columnType = schema[this.name][this.secondaryColumn];
+        if(columnType ===  "boolean") return res === "t";
+        if(columnType.search("[") !== -1) return res.slice(1, -1).split(", ");
+        return res;
+      } catch (err) {
+        console.error(err);
+        return undefined;
+      }
     };
 
     ensure(mainID, defaultValue) {
       const res = this.get(mainID);
-      if(res.rows.length < 1){
+      if(res === undefined){
         console.log(mainID);
         this.set(mainID, defaultValue, this.secondaryColumn);
         return defaultValue;
@@ -78,7 +104,7 @@ module.exports = (client) => {
     };
 
     set(mainID, setValue, setColumn) {
-      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID).rows.length < 1) return this.query(`UPDATE ${this.name} SET "${setColumn}" = '${setValue}'`, mainID);
+      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID) ) return this.query(`UPDATE ${this.name} SET "${setColumn}" = '${setValue}'`, mainID);
       return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${setColumn}") VALUES ('${mainID}', '${setValue}')`);
     };
 
