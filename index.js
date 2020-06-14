@@ -30,7 +30,11 @@ require('./src/functions')(client);
 
 require('./src/dbUser')(client);
 
-client.initialize();
+try {
+  client.initialize();
+} catch(err) {
+  console.error(`I tried so hard and got so far but in the end ${err}`);
+}
 require('./config')(client);
 
 client.version = `v${botVersion}`;
