@@ -69,6 +69,7 @@ module.exports = (client) => {
     ensure(mainID, defaultValue) {
       const res = this.get(mainID);
       if(res === undefined){
+        console.log(mainID);
         this.set(mainID, defaultValue, this.secondaryColumn);
         return defaultValue;
       }
