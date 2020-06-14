@@ -30,12 +30,13 @@ require('./src/functions')(client);
 
 require('./src/dbUser')(client);
 
-try {
-  client.initialize();
-} catch(err) {
-  console.error(`I tried so hard and got so far but in the end ${err}`);
+async function initializeDB(){
+  await client.initialize();
+  require('./config')(client);
+
 }
-require('./config')(client);
+
+initializeDB();
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
