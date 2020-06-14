@@ -64,6 +64,7 @@ module.exports = (client) => {
       const columnType = schema[this.name][this.secondaryColumn];
       if(columnType ===  "boolean") return res === "t";
       if(columnType.search("[") !== -1) return res.slice(1, -1).split(", ");
+      return res;
     };
 
     ensure(mainID, defaultValue) {
