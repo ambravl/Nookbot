@@ -69,7 +69,7 @@ module.exports = (client) => {
 
     ensure(mainID, defaultValue) {
       const res = this.get(mainID);
-      if(res === undefined){
+      if(res.rows.length < 1){
         console.log(mainID);
         this.set(mainID, defaultValue, this.secondaryColumn);
         return defaultValue;
@@ -78,7 +78,7 @@ module.exports = (client) => {
     };
 
     set(mainID, setValue, setColumn) {
-      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID)) return this.query(`UPDATE ${this.name} SET "${setColumn}" = '${setValue}'`, mainID);
+      if(this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`, mainID).rows.length < 1) return this.query(`UPDATE ${this.name} SET "${setColumn}" = '${setValue}'`, mainID);
       return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${setColumn}") VALUES ('${mainID}', '${setValue}')`);
     };
 
