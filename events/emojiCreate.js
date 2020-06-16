@@ -1,3 +1,3 @@
 module.exports = async (client, emoji) => {
-  client.emojiDB.set(emoji.id, 0);
+  client.emojiDB.insert(emoji.id, 0);
 };

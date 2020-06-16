@@ -13,16 +13,6 @@ module.exports = (client) => {
       clearInterval(intv);
       console.log('Guild successfully loaded.');
 
-      // Emoji usage tracking database init
-      guild.emojis.cache.forEach((e) => {
-        // If emoji does not have the emoji, add it.
-        if (!client.emojiDB.has(e.id)) {
-          client.emojiDB.set(e.id, 0);
-        }
-      });
-      // Sweep emojis from the DB that are no longer in the guild emojis
-      client.emojiDB.sweep((v, k) => !guild.emojis.cache.has(k));
-
       setInterval(() => {
         client.user.setActivity(`ACNH with ${guild.memberCount} users!`);
       }, 30000);
@@ -49,32 +39,32 @@ module.exports = (client) => {
 
       // Reschedule any unmutes from mutedUsers
       const now = Date.now();
-      client.mutedUsers.keyArray().forEach((memID) => {
-        const unmuteTime = client.mutedUsers.get(memID);
-        guild.members.fetch(memID).then((member) => {
-          if (unmuteTime < now) {
-            // Immediately unmute
-            client.mutedUsers.delete(memID);
-            member.roles.remove('495854925054607381', 'Scheduled unmute through reboot.');
-          } else {
-            // Schedule unmute
-            setTimeout(() => {
-              if ((client.mutedUsers.get(memID) || 0) < Date.now()) {
-                client.mutedUsers.delete(memID);
-                member.roles.remove('495854925054607381', 'Scheduled unmute through reboot.');
-              }
-            }, unmuteTime - now);
-          }
-        }).catch(() => {
-          // Probably no longer a member, don't schedule their unmute and remove entry from DB.
-          client.mutedUsers.delete(memID);
-        });
-      });
+      client.mutedUsers.cacheDB().then((res) => {
+        res.rows.forEach((row) => {
+          const unmuteTime = row.time;
+          guild.members.fetch(row.memberID).then((member) => {
+            if(unmuteTime < now) {
+              // Immediately unmute
+              client.mutedUsers.delete(row.memberID);
+              member.roles.remove(client.config.mutedRole, 'Scheduled unmute through reboot.');
+            }
+            else{
+              // Schedule unmute
+              setTimeout(() => {
+                if((row.time || 0 )< Date.now()) {
+                  client.mutedUsers.delete(row.memberID);
+                  member.roles.remove(client.config.mutedRole, 'Scheduled unmute through reboot.');
+
+                }
+              }, unmuteTime - now);
+            }
+          }).catch(() => { client.mutedUsers.delete(row.memberID) });
+        })
+      }).catch((err) => { client.handle(err, 'scheduled unmute') });
 
       // Cache messages for reaction roles
-      client.reactionRoles.keyArray().forEach((msgID) => {
-        const { channel } = client.reactionRoles.getProp(msgID, 'channelID');
-        client.channels.cache.get(channel).messages.fetch(msgID);
+      client.reactionRoles.cacheDB().rows.forEach((msg) => {
+        client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
       });
 
       // Logging a ready message on first boot

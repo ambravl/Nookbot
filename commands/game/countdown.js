@@ -25,24 +25,7 @@ module.exports.run = (client, message, args, level) => {
 
   const units = ['day', 'hour', 'minute'];
 
-  // Grab the top 3 units of time that aren't 0
-  let outTimes = '';
-  let c = 0;
-  for (let t = 0; t < units.length; t++) {
-    if (times[t] > 0) {
-      outTimes += `${c === 1 ? '|' : ''}${c === 2 ? '=' : ''}${times[t]} ${units[t]}${times[t] === 1 ? '' : 's'}`;
-      c += 1;
-      if (c === 3) {
-        break;
-      }
-    }
-  }
-
-  if (outTimes.includes('=')) {
-    outTimes = outTimes.replace('|', ', ').replace('=', ', and ');
-  } else {
-    outTimes = outTimes.replace('|', ' and ');
-  }
+  const outTimes = client.compareTimes(times, units);
 
   return message.channel.send(`**Animal Crossing: New Horizons** releases in **${outTimes}**! (UTC${offset >= 0 ? '+' : ''}${offset})`);
 };

@@ -4,28 +4,23 @@ const moment = require('moment');
 
 module.exports = (client) => {
   client.permLevel = (message) => {
-    let permName = 'User';
-    let permlvl = 0;
-    const permOrder = client.permLevels.slice(0)
-      .sort((p, c) => (p.level < c.level ? 1 : -1));
-
-    while (permOrder.length) {
-      const currentlvl = permOrder.shift();
-
-      if (client.levelCheck(currentlvl, client, message)) {
-        permName = currentlvl.name;
-        permlvl = currentlvl.level;
-        break;
-      }
+    let permission;
+    let i = 0;
+    while(i < client.levelCache.length){
+      let currentLevel = client.levelCache[i];
+      if(client.levelCheck(currentLevel, client, message)) permission = currentLevel;
+      else i = client.levelCache.length;
+      i++;
     }
-    return [permName, permlvl];
+    return permission;
   };
 
-  client.clean = async (clientParam, text) => {
+  client.clean = async (clientParam, txt) => {
+    let text = txt;
     if (text && text.constructor.name === 'Promise') {
       text = await text;
     }
-    if (typeof evaled !== 'string') {
+    if (typeof text !== 'string') {
       // eslint-disable-next-line global-require
       text = require('util').inspect(text, { depth: 1 });
     }
@@ -46,13 +41,28 @@ module.exports = (client) => {
     channel.send(`${client.emoji.redX} **${err}**\n${msg}`, { split: true });
   };
 
-  client.humanTimeBetween = (time1, time2) => {
-    if (time1 < time2) {
-      const temp = time1;
-      time1 = time2;
-      time2 = temp;
+  client.compareTimes = (times, units) => {
+
+    // Grab the top 3 units of time that aren't 0
+    let outTimes = '';
+    let c = 0;
+    for (let t = 0; t < units.length && c !== 3; t++) {
+      if (times[t] > 0) {
+        outTimes += `${c === 1 ? '|' : ''}${c === 2 ? '=' : ''}${times[t]} ${units[t]}${times[t] === 1 ? '' : 's'}`;
+        c += 1;
+      }
     }
-    const timeDif = moment.duration(moment(time1).diff(moment(time2)));
+
+    if (outTimes.includes('=')) {
+      return outTimes.replace('|', ', ').replace('=', ', and ');
+    } else {
+      return outTimes.replace('|', ' and ');
+    }
+
+  };
+
+  client.humanTimeBetween = (time1, time2) => {
+    const timeDif = moment.duration(moment(time1 < time2 ? time2 : time1).diff(moment(time1 < time2 ? time1 : time2)));
 
     const times = [
       timeDif.years(),
@@ -65,35 +75,16 @@ module.exports = (client) => {
 
     const units = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 
-    // Grab the top 3 units of time that aren't 0
-    let outTimes = '';
-    let c = 0;
-    for (let t = 0; t < units.length; t++) {
-      if (times[t] > 0) {
-        outTimes += `${c === 1 ? '|' : ''}${c === 2 ? '=' : ''}${times[t]} ${units[t]}${times[t] === 1 ? '' : 's'}`;
-        c += 1;
-        if (c === 3) {
-          break;
-        }
-      }
-    }
-
-    if (outTimes.includes('=')) {
-      outTimes = outTimes.replace('|', ', ').replace('=', ', and ');
-    } else {
-      outTimes = outTimes.replace('|', ' and ');
-    }
-
-    return outTimes || '0 seconds';
+    return client.compareTimes(times, units) || '0 seconds';
   };
 
   client.regexCount = (regexp, str) => {
     if (typeof regexp !== 'string') {
       return 0;
     }
-    regexp = regexp === '.' ? `\\${regexp}` : regexp;
-    regexp = regexp === '' ? '.' : regexp;
-    return ((str || '').match(new RegExp(regexp, 'g')) || []).length;
+    let re = regexp === '.' ? `\\${regexp}` : regexp;
+    re = re === '' ? '.' : re;
+    return ((str || '').match(new RegExp(re, 'g')) || []).length;
   };
 
   client.reactPrompt = async (message, question, opt) => {
@@ -181,22 +172,20 @@ module.exports = (client) => {
   client.raidModeActivate = async (guild) => {
     // Enable Raid Mode
     client.raidMode = true;
-    // Save @everyone role and staff/actionlog channels here for ease of use.
+    // Save @everyone role and staff/action log channels here for ease of use.
     const { everyone } = guild.roles;
-    const staffChat = guild.channels.cache.get(client.config.staffChat);
-    const joinLeaveLog = guild.channels.cache.get(client.config.joinLeaveLog);
+    const staffChat = guild.channels.cache.get(client.config["staffChat"]);
+    const joinLeaveLog = guild.channels.cache.get(client.config["joinLeaveLog"]);
 
-    const generalChat = guild.channels.cache.get('538938170822230026');
-    const acnhChat = guild.channels.cache.get('494376688877174785');
+    const announcements = guild.channels.cache.get(client.config["announcementsChannel"]);
     const raidMsg = "**Raid Ongoing**!\nWe're sorry to inconvenience everyone, but we've restricted all message sending capabilities due to a suspected raid. Don't worry though, you'll be back to chatting about your favorite game in no time, yes yes!";
     const noMoreRaidMsg = "**Raid Mode Has Been Lifted**!\nWe've determined that it's safe to lift raid mode precautions and allow everyone to send messages again! Channels should open up again immediately, yes yes!";
 
-    await generalChat.send(raidMsg);
-    await acnhChat.send(raidMsg);
+    await announcements.send(raidMsg);
 
     // Create a Permissions object with the permissions of the @everyone role, but remove Send Messages.
     const perms = new Discord.Permissions(everyone.permissions).remove('SEND_MESSAGES');
-    everyone.setPermissions(perms);
+    await everyone.setPermissions(perms);
 
     // Send message to staff with prompts
     client.raidMessage = await staffChat.send(`**##### RAID MODE ACTIVATED #####**
@@ -241,13 +230,11 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
               client.raidJoins = [];
               client.raidMessage = null;
               client.raidMembersPrinted = 0;
-
-              generalChat.send(noMoreRaidMsg);
-              acnhChat.send(noMoreRaidMsg);
               // Allow users to send messages again.
               perms.add('SEND_MESSAGES');
               everyone.setPermissions(perms);
               clearInterval(interval);
+              announcements.send(noMoreRaidMsg);
             }
           }, 100); // 100 ms is 10 bans a second, hopefully not too many.
         } else {
@@ -259,11 +246,10 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
           client.raidMessage = null;
           client.raidMembersPrinted = 0;
           // Allow users to send messages again.
-          generalChat.send(noMoreRaidMsg);
-          acnhChat.send(noMoreRaidMsg);
 
           perms.add('SEND_MESSAGES');
-          everyone.setPermissions(perms);
+          await everyone.setPermissions(perms);
+          announcements.send(noMoreRaidMsg);
         }
       })
       .catch(console.error);
