@@ -23,8 +23,8 @@ module.exports = (client) => {
       });
 
       // Clear any session channels from the server if they have no members
-      client.voiceSessions.keyArray().forEach((sesID) => {
-        const sessionChannel = client.channels.cache.get(sesID);
+      client.voiceSessions.cacheDB().forEach((session) => {
+        const sessionChannel = client.channels.cache.get(session.channelID);
         if (sessionChannel && sessionChannel.members.size === 0
             && !sessionChannel.deleted && sessionChannel.deletable) {
           // Session is empty, delete the channel and database entry
