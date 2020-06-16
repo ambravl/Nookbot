@@ -18,7 +18,7 @@ module.exports = (client) => {
           return console.error(error);
         }
         files.forEach((file) => {
-          const props = require(`./commands/${folders[i]}/${file}`);
+          const props = require(`../commands/${folders[i]}/${file}`);
           const commandName = props.help.name;
           if (!file.endsWith('.js')) {
             return;
