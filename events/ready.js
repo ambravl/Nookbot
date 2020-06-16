@@ -23,19 +23,23 @@ module.exports = (client) => {
       });
 
       // Clear any session channels from the server if they have no members
-      client.voiceSessions.cacheDB().forEach((session) => {
-        const sessionChannel = client.channels.cache.get(session.channelID);
-        if (sessionChannel && sessionChannel.members.size === 0
-            && !sessionChannel.deleted && sessionChannel.deletable) {
-          // Session is empty, delete the channel and database entry
-          sessionChannel.delete('[Auto] Purged empty session channels on ready event.').then((delChannel) => {
-            // Delete voiceSessions entry
-            client.voiceSessions.delete(delChannel.id);
-          }).catch((error) => {
-            console.error(error);
-          });
-        }
-      });
+      client.voiceSessions.cacheDB()
+        .then((sessions) => {
+          sessions.forEach((session) =>
+          {
+            const sessionChannel = client.channels.cache.get(session.channelID);
+            if (sessionChannel && sessionChannel.members.size === 0
+              && !sessionChannel.deleted && sessionChannel.deletable) {
+              // Session is empty, delete the channel and database entry
+              sessionChannel.delete('[Auto] Purged empty session channels on ready event.').then((delChannel) => {
+                // Delete voiceSessions entry
+                client.voiceSessions.delete(delChannel.id);
+              }).catch((error) => {
+                console.error(error);
+              });
+            }
+          })
+            .catch((err) => client.handle(err, 'voice sessions on ready'));
 
       // Reschedule any unmutes from mutedUsers
       const now = Date.now();
