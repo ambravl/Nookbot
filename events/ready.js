@@ -38,7 +38,7 @@ module.exports = (client) => {
                 console.error(error);
               });
             }
-          })
+          })})
             .catch((err) => client.handle(err, 'voice sessions on ready'));
 
       // Reschedule any unmutes from mutedUsers
