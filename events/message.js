@@ -152,8 +152,10 @@ If you believe this member is a mention spammer bot, please ban them with the co
   // eslint-disable-next-line prefer-destructuring
   message.author.permLevel = permissionLevel.level;
 
-  if (permissionLevel.level < client.levelCache[cmd.conf.permLevel].level) {
-    client.error(message.channel, 'Invalid Permissions!', `You do not currently have the proper permssions to run this command!\n**Current Level:** \`${permissionLevel.name}: Level ${permissionLevel.level}\`\n**Level Required:** \`${cmd.conf.permLevel}: Level ${client.levelCache[cmd.conf.permLevel].level}\``);
+  const requiredLevel = client.levelCache.find((level) => {return level.name === cmd.conf.permLevel});
+
+  if (permissionLevel.level < requiredLevel.level) {
+    client.error(message.channel, 'Invalid Permissions!', `You do not currently have the proper permssions to run this command!\n**Current Level:** \`${permissionLevel.name}: Level ${permissionLevel.level}\`\n**Level Required:** \`${requiredLevel.name}: Level ${requiredLevel.level}\``);
     return console.log(`${message.author.tag} (${message.author.id}) tried to use cmd '${cmd.help.name}' without proper perms!`);
   }
 
