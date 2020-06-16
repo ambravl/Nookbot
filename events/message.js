@@ -137,10 +137,6 @@ If you believe this member is a mention spammer bot, please ban them with the co
     return;
   }
 
-  if (permissionLevel.level < 4) {
-    return client.error(message.channel, 'Command Disabled!', 'This command is currently disabled!');
-  }
-
   if (!message.guild && cmd.conf.guildOnly) {
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');
   }
