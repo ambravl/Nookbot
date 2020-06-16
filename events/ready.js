@@ -24,8 +24,8 @@ module.exports = (client) => {
 
       // Clear any session channels from the server if they have no members
       client.voiceSessions.cacheDB()
-        .then((sessions) => {
-          sessions.forEach((session) =>
+        .then((res) => {
+          res.rows.forEach((session) =>
           {
             const sessionChannel = client.channels.cache.get(session.channelID);
             if (sessionChannel && sessionChannel.members.size === 0
@@ -68,7 +68,7 @@ module.exports = (client) => {
 
       // Cache messages for reaction roles
       client.reactionRoles.cacheDB()
-        .then((rows) => {rows.forEach((msg) => {
+        .then((res) => {res.rows.forEach((msg) => {
         client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
       })})
         .catch((err) => {client.handle(err, 'caching reaction roles')});
