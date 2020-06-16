@@ -31,7 +31,7 @@ module.exports = (client) => {
   const { Client } = require('pg');
   client.dbSchema = require('./db-schema.json');
 
-  client.initializeDB = function() {
+  client.initializeDB = async function() {
     client.db = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: {
