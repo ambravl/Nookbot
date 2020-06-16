@@ -6,19 +6,19 @@ module.exports = (client) => {
   client.aliases = new Enmap();
   console.log(process.cwd());
 
-  fs.readdir('../commands/', (err, folders) => {
+  fs.readdir('./commands/', (err, folders) => {
     if (err) {
       return console.error(err);
     }
 
     // Looping over all folders to load all commands
     for (let i = 0; i < folders.length; i++) {
-      fs.readdir(`../commands/${folders[i]}/`, (error, files) => {
+      fs.readdir(`./commands/${folders[i]}/`, (error, files) => {
         if (error) {
           return console.error(error);
         }
         files.forEach((file) => {
-          const props = require(`../commands/${folders[i]}/${file}`);
+          const props = require(`./commands/${folders[i]}/${file}`);
           const commandName = props.help.name;
           if (!file.endsWith('.js')) {
             return;
