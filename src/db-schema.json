@@ -4,7 +4,7 @@
  "enabled": "boolean"
 },
  "userDB":  {
-   "memberID": "bigint PRIMARY KEY",
+   "memberID": "text PRIMARY KEY",
    "friendCode": "text",
    "islandName": "text",
     "fruit": "text",
@@ -22,7 +22,7 @@
    "lastMessageTimestamp": "bigint"
  },
  "emojiDB":  {
-  "emojiID": "bigint PRIMARY KEY",
+  "emojiID": "text PRIMARY KEY",
   "uses": "integer"
  },
  "adoptees":  {
@@ -42,15 +42,15 @@
   "userID": "bigint"
  },
  "voiceSessions":  {
-  "channelID": "bigint PRIMARY KEY",
+  "channelID": "text PRIMARY KEY",
   "identifier": "smallint"
  },
  "mutedUsers":  {
-  "memberID": "bigint PRIMARY KEY",
+  "memberID": "text PRIMARY KEY",
   "time": "integer"
  },
  "reactionRoles": {
-   "messageID": "bigint PRIMARY KEY",
+   "messageID": "text PRIMARY KEY",
    "channelID": "bigint",
    "type": "text",
    "reactions": "text[]"
@@ -62,7 +62,7 @@
     "testing_value": "text"
   },
   "permissionDB": {
-    "roleID": "bigint PRIMARY KEY",
+    "roleID": "text PRIMARY KEY",
     "level": "integer",
     "name": "text"
   }

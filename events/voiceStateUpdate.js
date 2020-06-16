@@ -10,14 +10,15 @@ module.exports = async (client, oldState, newState) => {
   }
 
   // Check if this is related to a session channel
-  if ((oldState.channelID && client.voiceSessions.has(oldState.channelID))
-      && oldState.channel.members.size === 0) {
-    // Session is empty, delete it
-    oldState.channel.delete('[Auto] Last member left session channel.').then((delChannel) => {
-      // Delete voiceSessions entry
-      client.voiceSessions.delete(delChannel.id);
-    }).catch((error) => {
-      console.error(error);
-    });
+  if(oldState.channelID && oldState.channel.members.size === 0){
+    client.voiceSessions.select(oldState.channelID).then((res) => {
+      if(res && res.rows && res.rows.length > 0){
+        // Session is empty, delete it
+        oldState.channel.delete('[Auto] Last member left session channel.').then((delChannel) => {
+          // Delete voiceSessions entry
+          client.voiceSessions.delete(delChannel.id);
+        }).catch((err)=>{client.handle(err, 'deleting voice session')})
+      }
+    }).catch((err) => { client.handle(err, 'searching for voice session in db') })
   }
 };

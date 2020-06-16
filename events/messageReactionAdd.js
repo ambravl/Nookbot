@@ -3,12 +3,14 @@ module.exports = async (client, messageReaction, user) => {
     return;
   }
 
-  const reactionRoleMenu = client.reactionRoles.getProp(messageReaction.message.id, 'type, reactions');
+  let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id);
 
   // If not there isn't a type, then this is not a reaction role message.
-  if (!reactionRoleMenu) {
+  if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
     return;
   }
+
+  reactionRoleMenu = reactionRoleMenu.rows[0];
 
 
   reactionRoleMenu.reactions = JSON.parse(reactionRoleMenu.reactions);

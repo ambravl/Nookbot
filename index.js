@@ -2,7 +2,6 @@
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 const Discord = require('discord.js');
-const Enmap = require('enmap');
 const fs = require('fs');
 
 const client = new Discord.Client({
@@ -23,25 +22,32 @@ const client = new Discord.Client({
     ],
   },
 });
-
+const strings = require('./src/strings.json');
 const { botVersion } = require('./package.json');
 const emoji = require('./src/emoji');
-require('./src/functions')(client);
-
+require('./src/error-handler')(client);
 require('./src/dbUser')(client);
-
-async function initializeDB(){
-  await client.initialize();
-  require('./config')(client);
-
-}
-
-initializeDB();
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
+client.st = strings;
 client.token = process.env.TOKEN;
-console.log(client.token);
+
+client.initialize()
+  .catch((err) => {
+    client.handle(err, 'initialize', Discord)
+  })
+  .then(() => {
+    require('./config')(client);
+  })
+  .catch((err) => {
+    client.handle(err, 'require config', Discord)
+  })
+  .then(() => {
+    require('./src/functions')(client);
+    require('./src/load-commands')(client);
+
+  })
 
 fs.readdir('./events/', (err, files) => {
   if (err) {
@@ -54,41 +60,6 @@ fs.readdir('./events/', (err, files) => {
   });
 });
 
-client.commands = new Enmap();
-client.aliases = new Enmap();
-
-fs.readdir('./commands/', (err, folders) => {
-  if (err) {
-    return console.error(err);
-  }
-
-  // Looping over all folders to load all commands
-  for (let i = 0; i < folders.length; i++) {
-    fs.readdir(`./commands/${folders[i]}/`, (error, files) => {
-      if (error) {
-        return console.error(error);
-      }
-      files.forEach((file) => {
-        const props = require(`./commands/${folders[i]}/${file}`);
-        const commandName = props.help.name;
-        if (!file.endsWith('.js')) {
-          return;
-        }
-
-        console.log(`Attempting to load command ${commandName}`);
-        client.commands.set(commandName, props);
-
-        if (props.conf.aliases) {
-          props.conf.aliases.forEach((alias) => {
-            client.aliases.set(alias, commandName);
-          });
-        }
-
-        client.enabledCommands.ensure(commandName, true);
-      });
-    });
-  }
-});
 
 client.firstReady = false;
 

@@ -1,77 +1,72 @@
-const { findBestMatch: findBest } = require('string-similarity');
-
 module.exports.run = (client, message, args) => {
   switch (args[0] && args[0].toLowerCase()) {
     case 'list':
     case 'l':
-    case 'show': {
+    case 'show':
       const msg = [];
-      client.adoptees.map((v, k) => ({ name: k, adopters: v.adopters })).forEach((v) => {
-        if (v.adopters.includes(message.author.id)) {
-          msg.push(v.name);
+      client.adoptees.selectSearchArray(message.author.id, 'adopters').then((res) => {
+        if(res && res.rows) {
+          res.rows.forEach((row) => {
+            msg.push(row.name);
+          })
         }
       });
 
       if (msg.length > 0) {
-        return message.channel.send(`You are on the list to adopt the following villagers:\n${msg.join(', ')}.`, { split: true });
+        return message.channel.send(`${client.st.adoptList}${msg.join(', ')}.`, { split: true });
       }
-      return client.error(message.channel, 'Not Signed Up!', 'You are not signed up to adopt any villagers!\nYou can sign up to adopt any villager by using the `.adopt <villager name>` command.');
-    }
+      return client.error(message.channel, client.st.notSigned.t, client.st.notSigned.d + '<villager name>` command.');
     case 'delete':
     case 'd':
     case 'cancel':
-    case 'remove': {
+    case 'remove':
       if (args.length === 1) {
         // No villager name was given
-        return client.error(message.channel, 'No Villager Name Given!', 'You must supply a villager name to be removed from the adoption list for that villager!');
+        return client.error(message.channel, client.st.adNoName.t, client.st.adNoName.r);
       }
-
-      const villager = findBest(args.slice(1).join(' ').toProperCase(), client.adoptees.keyArray()).bestMatch;
-      if (villager.rating > 0.1) {
-        // Remove user ID of author from the list of adopters for the given villager if they are on the list already
-        if (client.adoptees.getProp(villager.target, 'adopters').includes(message.author.id)) {
-          client.adoptees.removeFrom(villager.target, 'adopters', message.author.id);
-          return client.success(message.channel, 'Removed from the List!', `Your name was removed from the list of members that wish to adopt **${villager.target}**!`);
-        }
-        return client.error(message.channel, 'Not on the List!', `You were not on the list to adopt **${villager.target}**!`);
-      }
-      return client.error(message.channel, 'Incorrect Villager Name!', 'Could not find a villager with that name!');
-    }
+      client.adoptees.levenshtein(args.slice(1).join(' ').toProperCase())
+        .then((villager) => {
+          // Remove user ID of author from the list of adopters for the given villager if they are on the list already
+          if(!villager) return client.error(message.channel, client.st.adWrongName.t, client.st.adWrongName.d);
+          if(villager.adopters.includes(message.author.id)){
+            client.adoptees.pop(villager.name, message.author.id, 'adopters')
+            return client.success(message.channel, client.st.adRem.t, `${client.st.adRem.d} **${villager.target}**!`);
+          }
+          return client.error(message.channel, client.st.adNoList.t, `${client.st.adNoList.d} **${villager.target}**!`);
+        });
+      break;
     case 'check':
-    case 'peek': {
+    case 'peek':
       if (args.length === 1) {
         // No villager name was given
-        return client.error(message.channel, 'No Villager Name Given!', 'You must supply a villager name to check the adoption list for that villager!');
+        return client.error(message.channel, client.st.adNoName.t, client.st.adNoName.c);
       }
-
-      const villager = findBest(args.slice(1).join(' ').toProperCase(), client.adoptees.keyArray()).bestMatch;
-      if (villager.rating > 0.1) {
-        const vilAdoptersLength = client.adoptees.getProp(villager.target, 'adopters').length;
-        if (vilAdoptersLength > 0) {
-          return message.channel.send(`There are **${vilAdoptersLength}** members who wish to adopt **${villager.target}**!`);
-        }
-        return message.channel.send(`No one is currently on the list to adopt **${villager.target}**!`);
-      }
-      return client.error(message.channel, 'Incorrect Villager Name!', 'Could not find a villager with that name!');
-    }
-    default: {
+      client.adoptees.levenshtein(args.slice(1).join(' ').toProperCase())
+        .then((villager) => {
+          if (!villager) return client.error(message.channel, client.st.adWrongName.t, client.st.adWrongName.d);
+          const vilAdoptersLength = villager.adopters.length;
+          if (vilAdoptersLength > 0)
+            return message.channel.send(`There are **${vilAdoptersLength}** members who wish to adopt **${villager.name}**!`);
+          return message.channel.send(`${client.st.noAdopters} **${villager.name}**!`)
+        })
+        .catch((err) => {client.handle(err, 'ad check', undefined, message)});
+      break;
+    default:
       if (args.length === 0) {
         // No villager name was given
-        return client.error(message.channel, 'No Villager Name Given!', 'You must supply a villager name to be added to the adoption list for that villager!');
+        return client.error(message.channel, client.st.adNoName.t, client.st.adNoName.a);
       }
-
-      const villager = findBest(args.join(' ').toProperCase(), client.adoptees.keyArray()).bestMatch;
-      if (villager.rating > 0.1) {
-        const vilAdopters = client.adoptees.get(villager.target).adopters;
-        if (!vilAdopters.includes(message.author.id)) {
-          // Add them to the list
-          client.adoptees.pushIn(villager.target, 'adopters', message.author.id);
-          return client.success(message.channel, 'Added to the List!', `You will be pinged when someone offers **${villager.target}** for adoption!`);
-        }
-        return client.error(message.channel, 'Already on the List!', `Your name was already on the list to adopt **${villager.target}**!`);
-      }
-      return client.error(message.channel, 'Incorrect Villager Name!', 'Could not find a villager with that name!');
-    }
+      client.adoptees.levenshtein(args.join(' ').toProperCase())
+        .then((villager) => {
+          if(!villager) return client.error(message.channel, client.st.adWrongName.t, client.st.adWrongName.d);
+          if (!villager.adopters.includes(message.author.id)) {
+            // Add them to the list
+            client.adoptees.push(villager.name, message.author.id, 'adopters');
+            return client.success(message.channel, client.st.adAdded.t, `${client.st.adAdded.da}${villager.name}${client.st.adAdded.db}`);
+          }
+          return client.error(message.channel, client.st.adAlready.t, `${client.st.adAlready.d}${villager.target}**!`);
+      })
+        .catch((err) => {client.handle(err, 'adoption add', undefined, message)})
   }
 };
 
