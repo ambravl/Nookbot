@@ -12,12 +12,12 @@ module.exports = (client) => {
 
     // Looping over all folders to load all commands
     for (let i = 0; i < folders.length; i++) {
-      fs.readdir(`./commands/${folders[i]}/`, (error, files) => {
+      fs.readdir(`../commands/${folders[i]}/`, (error, files) => {
         if (error) {
           return console.error(error);
         }
         files.forEach((file) => {
-          const props = require(`./commands/${folders[i]}/${file}`);
+          const props = require(`../commands/${folders[i]}/${file}`);
           const commandName = props.help.name;
           if (!file.endsWith('.js')) {
             return;
