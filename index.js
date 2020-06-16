@@ -33,7 +33,7 @@ client.emoji = emoji;
 client.st = strings;
 client.token = process.env.TOKEN;
 
-client.initialize()
+client.initializeDB()
   .catch((err) => {
     client.handle(err, 'initialize', Discord)
   })
