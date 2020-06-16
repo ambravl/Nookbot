@@ -5,7 +5,7 @@ module.exports = (client) => {
   client.commands = new Enmap();
   client.aliases = new Enmap();
 
-  fs.readdir('./commands/', (err, folders) => {
+  fs.readdir('../commands/', (err, folders) => {
     if (err) {
       return console.error(err);
     }
