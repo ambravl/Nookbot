@@ -8,7 +8,7 @@ module.exports.conf = {
   guildOnly: true,
   aliases: ['repdown', 'down', 'downrep', '-rep', 'rep-'],
   permLevel: 'User',
-  allowedChannels: [client.config.botCommands],
+  allowedChannels: true,
   cooldown: 300,
 };
 

@@ -14,7 +14,7 @@ module.exports.conf = {
   guildOnly: true,
   aliases: ['rep', 'repcheck'],
   permLevel: 'User',
-  allowedChannels: [client.config.botCommands],
+  allowedChannels: true,
 };
 
 module.exports.help = {

@@ -225,7 +225,7 @@ module.exports.conf = {
   guildOnly: true,
   aliases: ['is'],
   permLevel: 'User',
-  allowedChannels: [client.config.botCommands]
+  allowedChannels: true,
 };
 
 module.exports.help = {
