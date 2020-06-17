@@ -9,7 +9,7 @@ module.exports.run = (client, message, args) => {
   client.reactionRoles.insert(link[2], [link[1], 'exclusive'], ['channelID', 'type'])
     .then(() => {
       while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
-        const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1]);
+        const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
         msg.react(emojiArray[0]);
         client.reactionRoles.push(link[2], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
       }
