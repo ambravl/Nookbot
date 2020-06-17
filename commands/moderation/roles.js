@@ -2,17 +2,15 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   if (!link) return;
-  console.log(link[1]);
-  console.log(link[2]);
-  const msg = client.channels.cache.get(link[1]).messages.fetch(link[2]);
+  const msg = client.channels.cache.get(link[2]).messages.fetch(link[3]);
   const emojiRE = /<a?:\w+:([\d]+)([a-zA-Z ]+)>/g;
   let emojiArray;
-  client.reactionRoles.insert(link[2], [link[1], 'exclusive'], ['channelID', 'type'])
+  client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['channelID', 'type'])
     .then(() => {
       while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
         const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
         msg.react(emojiArray[0]);
-        client.reactionRoles.push(link[2], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
+        client.reactionRoles.push(link[3], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
       }
     })
 };
