@@ -41,7 +41,10 @@ module.exports = async (client) => {
     client.db.connect();
     if (client.firstTime) {
       const firstTime = await require('./first-time-setup').run(client);
-      client.db.query(firstTime);
+      client.db.query(firstTime)
+        .catch((err) => {
+          client.handle(new DBError(firstTime, err), 'first time query')
+        })
     }
 
     for (let table in client.dbSchema) {
