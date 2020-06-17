@@ -27,11 +27,11 @@ class DBError extends Error{
   }
 }
 
-module.exports = (client) => {
-  const { Client } = require('pg');
+module.exports = async (client) => {
+  const {Client} = require('pg');
   client.dbSchema = require('./db-schema.json');
 
-  client.initializeDB = async function() {
+  client.initializeDB = async function () {
     client.db = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: {
@@ -39,7 +39,7 @@ module.exports = (client) => {
       },
     });
     client.db.connect();
-    if (client.firstTime) require('./first-time-setup').run(client);
+    if (client.firstTime) await require('./first-time-setup').run(client);
 
     for (let table in client.dbSchema) {
       if (client.dbSchema.hasOwnProperty(table)) {
