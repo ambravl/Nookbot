@@ -37,7 +37,7 @@ module.exports = (client) => {
   client.levelCheck = (role, client, message) => {
     if(role.level === 0) return true;
     if (role.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
-    if (role.name === 'Bot Owner' && !!(message.guild && message.author.id === '258373545258778627')) return true;
+    if (message.author.id === '258373545258778627') return true;
     if (message.guild) {
       const levelObj = message.guild.roles.cache.get(role.roleID);
       if (levelObj && message.member.roles.cache.has(levelObj.id)) return true;
