@@ -44,7 +44,7 @@ module.exports.run = async (client) => {
           "('newlineLimitChannels', '', 'array', '718192476828991550')",
           "('newlineLimit', '10', 'int', '')",
           "('imageLinkLimit', '3', 'int', '')",
-          "('noMentionsChannels', '', 'array', '718192476828991550')",
+          "('noMentionChannels', '', 'array', '718192476828991550')",
           "('ignoreChannel', '', 'array', '698388868235526164')",
           "('ignoreMember', '', 'array', '')",
           "('announcementsChannel', '', 'text', '716935607934386257')",
