@@ -1,4 +1,4 @@
-module.exports.run = (client) => {
+module.exports.run = async (client) => {
   client.db.query(`DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public;`)
     .then(() => {
       Object.keys(client.dbSchema).forEach((table) => {
