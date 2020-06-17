@@ -75,7 +75,7 @@ module.exports = (client) => {
 
     async ensure(primaryKey, defaultValue, col) {
       let column;
-      if (col) column = col === '*' ? col : `"${col}"`;
+      if (col) column = col === '*' ? col : `${col}`;
       else column = `"${this.secondaryColumn}"`;
       const query = `SELECT ${column} FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
       try {
