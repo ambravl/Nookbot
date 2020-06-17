@@ -49,7 +49,8 @@ module.exports.run = async (client) => {
           "('ignoreMember', '', 'array', '')",
           "('announcementsChannel', '', 'text', '716935607934386257')",
           "('positiveRepLimit', '100', 'int', '')",
-          "('negativeRepLimit', '5', 'int', '')"
+          "('negativeRepLimit', '5', 'int', '')",
+          "('botCommands', '718592382194417754', 'text', '720568062490705931')"
         ];
         break;
     }

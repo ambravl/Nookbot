@@ -46,7 +46,7 @@ module.exports.conf = {
   aliases: ['orphan'],
   permLevel: 'User',
   cooldown: 1800, // 30 minutes
-  allowedChannels: ['669696796024504341'],
+  allowedChannels: [client.config.botCommands],
 };
 
 module.exports.help = {

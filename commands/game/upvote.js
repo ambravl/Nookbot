@@ -7,7 +7,7 @@ module.exports.conf = {
   guildOnly: true,
   aliases: ['repup', 'up', 'uprep', '+rep', 'rep+'],
   permLevel: 'User',
-  allowedChannels: ['549858839994826753'],
+  allowedChannels: [client.config.botCommands],
   cooldown: 300,
 };
 
