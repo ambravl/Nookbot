@@ -7,6 +7,9 @@ module.exports.run = (client) => {
           columns.push(`${key} ${client.dbSchema[key]}`)
         });
         client.db.query(`CREATE TABLE ${table} (${columns.join(', ')})`)
+          .catch((err) => {
+            client.handle(err, 'creating first-time tables')
+          })
           .then(() => {
             let insertQuery = [];
             switch (table) {
@@ -63,7 +66,7 @@ module.exports.run = (client) => {
             if (insertQuery) client.db.query(`INSERT INTO ${table} VALUES ${insertQuery.join(', ')}`);
           })
           .catch((err) => {
-            client.handle(err, 'creating first-time tables')
+            client.handle(err, 'inserting into first-time tables')
           });
       })
     })
