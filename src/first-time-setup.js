@@ -50,7 +50,9 @@ module.exports.run = async (client) => {
           "('announcementsChannel', '', 'text', '716935607934386257')",
           "('positiveRepLimit', '100', 'int', '')",
           "('negativeRepLimit', '5', 'int', '')",
-          "('botCommands', '718592382194417754', 'text', '720568062490705931')"
+          "('botCommands', '718592382194417754', 'text', '720568062490705931')",
+          "('giveawayChannel', '717599016665350164', 'text', '716935607934386257')",
+          "('roleChannel', '718647593319530536', 'text', '720568062490705931')"
         ];
         break;
       case 'adoptees':
@@ -61,7 +63,7 @@ module.exports.run = async (client) => {
           const fixedData = data.split('\n');
 
           fixedData.forEach((vil) => {
-            insertQuery.push(`('${vil.trim()}', '')`);
+            insertQuery.push(`('${vil.trim()}', [])`);
           });
         } catch (e) {
           console.error(e);

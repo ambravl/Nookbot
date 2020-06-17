@@ -62,5 +62,10 @@
     "roleID": "text PRIMARY KEY",
     "level": "integer",
     "name": "text"
+  },
+  "giveaways": {
+    "messageID": "text PRIMARY KEY",
+    "timestamp": "timestamptz",
+    "duration": "int"
   }
 }
