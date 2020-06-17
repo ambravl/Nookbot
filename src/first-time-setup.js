@@ -8,11 +8,6 @@ module.exports.run = async (client) => {
     query.push(`CREATE TABLE ${table} (${columns.join(', ')})`);
     let insertQuery;
     switch (table) {
-      case 'enabledCommands':
-        client.commands.indexes.forEach((command) => {
-          insertQuery.push(`('${command}', true)`);
-        });
-        break;
       case 'permissionDB':
         ['User',
           'Verified',
