@@ -1,3 +1,4 @@
+// UGLY
 module.exports.run = (client, message, [command], level) => {
   if (!command) {
     let commands = client.commands.filter((cmd) => client.levelCache[cmd.conf.permLevel].level <= level

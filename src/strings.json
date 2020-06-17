@@ -241,6 +241,37 @@
       }
     }
   },
+  "emojistats": {
+    "success": "**Emoji Statistics**",
+    "none": {
+      "title": "No Matches!",
+      "desc": "No emojis matched your search critera!"
+    },
+    "top": {
+        "title": "Not a Number!",
+        "desc": "You must supply a number for the amount of top ranked emojis to display."
+    },
+    "bottom": {
+        "title": "Not a Number!",
+        "desc": "You must supply a number for the amount of bottom ranked emojis to display"
+    },
+    "more": {
+      "title": "Not a Number!",
+      "desc": "You must supply a number for the minimum amount of uses an emoji must have to be displayed."
+    },
+    "less": {
+      "title": "Not a Number!",
+      "desc": "You must supply a number for the maximum amount of uses an emoji must have to be displayed."
+    },
+    "offset": {
+      "title": "Invalid Numbers!",
+      "desc": "The numbers provided must be greater than 0."
+    },
+    "search": {
+      "title": "Invalid Usage!",
+      "desc": "You used this command incorrectly! Use `.help emojistats` for details on how to use this command."
+    }
+  },
   "raid": {
     "raidAnnouncement": "**Raid Ongoing**!\nWe're sorry to inconvenience everyone, but we've restricted all message sending capabilities due to a suspected raid. Don't worry though, you'll be back to chatting about your favorite game in no time, yes yes!",
     "raidEnded": "**Raid Mode Has Been Lifted**!\nWe've determined that it's safe to lift raid mode precautions and allow everyone to send messages again! Channels should open up again immediately, yes yes!",

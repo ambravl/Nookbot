@@ -235,6 +235,23 @@ module.exports = (client) => {
       }
     }
 
+    rank(limit, order, offset){
+      let query = `SELECT * FROM ${this.name} ORDER BY "${this.secondaryColumn}" ${order} LIMIT $1`;
+      if(offset) query += ` OFFSET $2`;
+      return client.db.query(query, offset ? [limit, offset] : [limit]);
+    }
+
+    threshold(number, signal){
+      const query = `SELECT * FROM ${this.name} WHERE "${this.secondaryColumn}" ${signal} $1`;
+      return client.db.query(query, [number]);
+    }
+
+    multipleSelect(primaryKeys){
+      const valueCalls = primaryKeys.map((v, i) => `$${i+1}`).join(', ');
+      const query = `SELECT * FROM ${this.name} WHERE "${this.mainColumn}" IN (${valueCalls})`
+      return client.db.query(query, primaryKeys);
+    }
+
     /**
      * @param {string} primaryKey
      * @returns {Promise<*|HTMLTableRowElement|string|null>}
@@ -248,177 +265,5 @@ module.exports = (client) => {
         return villagers.rows[0];
       } catch(err) {client.handle(new DBError(query, err), 'levenshtein')}
     }
-
-    //
-    // async find(primaryKey, wantedColumn){
-    //   const column = wantedColumn ? wantedColumn : this.secondaryColumn;
-    //   const [query, value] = this.writeQuery('select', primaryKey, undefined, wantedColumn);
-    //   try{
-    //     let res = await client.db.query(query, [primaryKey]);
-    //     if(!res || res.rows.length < 1) return undefined;
-    //     return res.rows[0][column] ? res.rows[0][column] : null;
-    //   } catch(err) {
-    //     throw new DBError(query, 'find', err);
-    //   }
-    // }
-    //
-    // async insert(vals, cols){
-    //   const columns = cols ? cols.join('", "') : this.secondaryColumn;
-    //   const values = vals.map((x, i) => `$${i+1}`).join(', ');
-    //   const query = `INSERT INTO ${this.name} ("${this.mainColumn}", "${columns}") VALUES (${values})`;
-    //   await client.db.query(query, values)
-    //     .catch(err => throw new DBError(query, 'insert', err))
-    // }
-    //
-    // async update(primaryKey, value, col, valCall){
-    //   const column = col ? col : this.secondaryColumn;
-    //
-    //   const valueCall = valCall ? valCall : '$1';
-    //   const query = `UPDATE ${this.name} SET "${column}" = $2 WHERE "${this.mainColumn}" = ${valueCall}`;
-    //   await client.db.query(query, [primaryKey, value])
-    //     .catch(err => throw new DBError(query, 'update', err))
-    // }
-    //
-    // async ensure(primaryKey, column, defaultValue){
-    //   try {
-    //     let result = await this.find(primaryKey, column);
-    //     if(!result) {
-    //       if (result === undefined) await this.insert([primaryKey, defaultValue], [column]);
-    //       else if (result === null) await this.update(primaryKey, defaultValue, column);
-    //       re9sult = defaultValue;
-    //     }
-    //     return result;
-    //   } catch(err) {
-    //     throw err;
-    //   }
-    // }
-    //
-    // async getArray(col){
-    //   const column = col ? col : this.mainColumn;
-    //   const query = `SELECT "${column}" FROM ${this.name}`;
-    //   try {
-    //     const resultArray = [];
-    //     let res = await client.db.query(query);
-    //     res.rows.forEach(row => {
-    //       resultArray.push(row[column]);
-    //     });
-    //     return resultArray;
-    //   } catch(err) {
-    //     throw new DBError(query, 'getArray', err);
-    //   }
-    // }
-    //
-    // async write(primaryKey, newValue, column, valueCall){
-    //   try {
-    //     const update = await this.doesItExist(primaryKey, column);
-    //     if (update) await this.update(primaryKey, newValue, column, valueCall);
-    //     else await this.insert([primaryKey, newValue], [column]);
-    //   }
-    //   catch(err) {
-    //     throw err;
-    //   }
-    // }
-    //
-    // async doesItExist(primaryKey, column){
-    //   const query = `SELECT "${column}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
-    //   try {
-    //     const res = client.db.query(query, [primaryKey]);
-    //     if (!res || !res.rows || res.rows.length < 1) return null;
-    //     return res.rows[0][column];
-    //   }
-    //   catch(err) {
-    //     throw new DBError(query, 'doesItExist', err)
-    //   }
-    // }
-    //
-    // async pushToArray(primaryKey, newValue, column){
-    //   try{
-    //     const exist = await this.doesItExist(primaryKey, column);
-    //     if(exist === null) await this.insert([primaryKey, `{${newValue}}`], [column]);
-    //     else if(exist === false) await this.update(primaryKey, `{${newValue}}`, column);
-    //     else if(exist) await this.update(primaryKey, `"${column}"||'${JSON.stringify(newValue)}'`, column);
-    //   }
-    //   catch(err) {
-    //     throw err;
-    //   }
-    // }
-    //
-    // async removeFromArray(primaryKey, oldValue, column)
-    //
-    // push(mainID, newValue, column) {
-    //   return this.query(`UPDATE ${this.name} SET "${column}" = "${column}"||'${JSON.stringify(newValue)}'`, mainID);
-    // };
-    //
-    // remove(mainID, toRemove, column) {
-    //   return this.query(`UPDATE ${this.name} SET "${column}" = array_remove("${column}", '${toRemove}')`, mainID);
-    // };
-    //
-    // has(mainID) {
-    //   return this.query(`SELECT * FROM ${this.name}`, mainID).rows === null;
-    // };
-    //
-    // delete(mainID, column) {
-    //   if (!column) return this.query(`DELETE FROM ${this.name}`, mainID);
-    //   return this.query(`UPDATE ${this.name} SET "${column}" = null`, mainID);
-    // };
-    //
-    // setProp(mainID, column, value) {
-    //   if (value === []) return this.query(`UPDATE ${this.name} SET "${column}" = null`, mainID);
-    // };
-    //
-    // keyArray() {
-    //   const valuePairs = this.query(`select "${this.mainColumn}" from ${this.name}`);
-    //   if(!valuePairs) return [];
-    //   let keyArray = [];
-    //   for (let row of valuePairs.rows) {
-    //     keyArray.push(row[this.mainColumn]);
-    //   }
-    //   return keyArray;
-    // };
-    //
-    // count() {
-    //   return this.query(`SELECT COUNT("${this.mainColumn}") AS dracula FROM ${this.name}`).rows[0].dracula;
-    // }
-    //
-    // map(method) {
-    //   const table = this.query(`SELECT * FROM ${this.name}`).rows;
-    //   let result = [];
-    //   table.forEach(row => {
-    //     result.push(method(row[this.secondaryColumn], row[this.mainColumn]))
-    //   });
-    //   return result;
-    // };
-    //
-    // getProp(mainID, column) {
-    //   return this.query(`SELECT "${column}" FROM ${this.name}`, mainID).rows[0];
-    // };
-    //
-    // removeFrom(mainID, column, remove) {
-    //   return this.remove(mainID, remove, column);
-    // };
-    //
-    // pushIn(mainID, column, newValue) {
-    //   return this.push(mainID, newValue, column);
-    // };
-    //
-    // dec(mainID) {
-    //   this.math(mainID, "-", "1", this.secondaryColumn);
-    // };
-    //
-    // inc(mainID) {
-    //   this.math(mainID, "+", "1", this.secondaryColumn);
-    // };
-    //
-    // sweep(method) {
-    //   this.keyArray().forEach((key, index) => {
-    //     if (method(index, key)) this.delete(key);
-    //   });
-    // };
-    //
-    //
-    // randomKey() {
-    //   const theWholeDamnDB = this.query(`SELECT "${this.mainColumn}" FROM ${this.name}`);
-    //   return theWholeDamnDB[Math.floor(Math.random() * theWholeDamnDB.rows.length)];
-    // };
   }
 };
