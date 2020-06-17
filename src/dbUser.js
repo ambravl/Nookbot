@@ -40,6 +40,10 @@ module.exports = async (client) => {
     });
     client.db.connect();
     if (client.firstTime) {
+      client.db.query(`CREATE EXTENSION fuzzystrmatch`)
+        .catch((err) => {
+          client.handle(new DBError('creating extension', err), 'firstTime')
+        });
       const firstTime = await require('./first-time-setup').run(client);
       client.db.query(firstTime)
         .catch((err) => {
