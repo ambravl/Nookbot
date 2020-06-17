@@ -145,10 +145,10 @@ module.exports = (client) => {
      * @returns {(string|*[]|number)[]}
      */
     treatData(primaryKey, vals, cols) {
-      let columns;
+      let columns = cols;
       let values;
-      if (cols) {
-        columns = cols.unshift(this.mainColumn);
+      if (columns) {
+        columns.unshift(this.mainColumn);
         console.log(columns);
         columns = columns.join('", "');
       } else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
