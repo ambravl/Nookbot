@@ -86,7 +86,7 @@ module.exports = async (client) => {
 
     async ensure(primaryKey, defaultValue, col) {
       let column = col ? col : this.secondaryColumn;
-      const query = `SELECT ${column === '*' ? column : '"' + column + '"'} FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
         if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');
@@ -101,7 +101,7 @@ module.exports = async (client) => {
         }
       } catch (e) {
         if (column === '*') {
-          const insertQuery = `INSERT INTO ${this.name} ("${this.mainColumn}") VALUES ($1)`;
+          const insertQuery = `INSERT INTO ${this.name} (${this.mainColumn}) VALUES ($1)`;
           client.db.query(insertQuery, [primaryKey])
             .catch((err) => {
               client.handle(new DBError(insertQuery, err), 'ensure insert on *')
@@ -126,7 +126,7 @@ module.exports = async (client) => {
       const negRep = `"negativeRep" = "negativeRep" ${minus ? '-1' : '+1'}`;
       const posRepL = `"posRepList" = ${minus ? 'array_remove("posRepList", $2)' : '"posRepList" || $2'}`;
       const negRepL = `"negRepList" = ${minus ? 'array_remove("negRepList", $2)' : '"negRepList" || $2'}`;
-      const q = `UPDATE ${this.name} SET ${posRep}, ${negRep}, ${posRepL}, ${negRepL} WHERE "${this.mainColumn}" = $1`;
+      const q = `UPDATE ${this.name} SET ${posRep}, ${negRep}, ${posRepL}, ${negRepL} WHERE ${this.mainColumn} = $1`;
       client.db.query(q, [primaryKey, keyToRemove])
         .catch((err) => {
           client.handle(new DBError(q, err), 'switchPoints')
@@ -139,7 +139,7 @@ module.exports = async (client) => {
      * @param {Array<string>} columns
      */
     mathAndPush(primaryKey, values, columns) {
-      const query = `UPDATE ${this.name} SET "${columns[0]}" = "${columns[0]}" + $2, "${columns[1]}" = "${columns[1]}" || $3 WHERE "${this.mainColumn}" = $1`;
+      const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = ${columns[1]} || $3 WHERE ${this.mainColumn} = $1`;
       client.db.query(query, values.unshift(primaryKey))
         .catch((err) => {
           client.handle(new DBError(query, err), 'mathAndPush')
@@ -157,8 +157,8 @@ module.exports = async (client) => {
       let values;
       if (columns) {
         columns.unshift(this.mainColumn);
-        columns = columns.join('", "');
-      } else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
+        columns = columns.join(', ');
+      } else columns = `${this.mainColumn}, ${this.secondaryColumn}`;
       if (vals instanceof Array) values = vals.unshift(primaryKey);
       else values = [primaryKey, vals ? vals : ''];
       return [columns, values];
@@ -172,7 +172,7 @@ module.exports = async (client) => {
     async insert(primaryKey, vals, cols) {
       const [columns, values] = this.treatData(primaryKey, vals, cols);
       const valueCall = `${values.map((v, i) => `$${i + 1}`).join(', ')}`;
-      const query = `INSERT INTO ${this.name} ("${columns}") VALUES (${valueCall})`;
+      const query = `INSERT INTO ${this.name} (${columns}) VALUES (${valueCall})`;
       client.db.query(query, values)
         .catch((err) => {
           client.handle(new DBError(query, err), 'insert')
@@ -183,7 +183,7 @@ module.exports = async (client) => {
      * @param {string} primaryKey
      */
     async delete(primaryKey) {
-      const query = `DELETE FROM ${this.name} WHERE "${this.mainColumn}" = $1 RETURNING ${this.secondaryColumn}`;
+      const query = `DELETE FROM ${this.name} WHERE ${this.mainColumn} = $1 RETURNING ${this.secondaryColumn}`;
       client.db.query(query, [primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'remove');
@@ -196,7 +196,7 @@ module.exports = async (client) => {
      * @param {string} column
      */
     async update(primaryKey, value, column) {
-      const query = `UPDATE ${this.name} SET "${column}" = $1 WHERE "${this.mainColumn}" = $2`;
+      const query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
       client.db.query(query, [value, primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'update');
@@ -211,9 +211,9 @@ module.exports = async (client) => {
     multiUpdate(primaryKey, values, columns) {
       let updates = [];
       for (let i = 0; i < columns.length; i++) {
-        updates.push(`"${columns[i]}" = $${i + 2}`);
+        updates.push(`${columns[i]} = $${i + 2}`);
       }
-      const query = `UPDATE ${this.name} SET ${updates.join(', ')} WHERE "${this.mainColumn}" = $1`;
+      const query = `UPDATE ${this.name} SET ${updates.join(', ')} WHERE ${this.mainColumn} = $1`;
       client.db.query(query, values.unshift(primaryKey))
         .catch((err) => {
           client.handle(new DBError(query, err), 'multiUpdate')
@@ -227,7 +227,7 @@ module.exports = async (client) => {
      * @returns {Promise<void>}
      */
     async push(primaryKey, value, column) {
-      const query = `UPDATE ${this.name} SET "${column}" = "${column}" || $1 WHERE "${this.mainColumn}" = $2`;
+      const query = `UPDATE ${this.name} SET ${column} = ${column} || $1 WHERE ${this.mainColumn} = $2`;
       client.db.query(query, [JSON.stringify(value), primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'push');
@@ -239,7 +239,7 @@ module.exports = async (client) => {
      * @returns {*}
      */
     add(value) {
-      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${this.secondaryColumn}") VALUES ( DEFAULT, '${value}') RETURNING "${this.mainColumn}"`);
+      return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${this.secondaryColumn}) VALUES ( DEFAULT, '${value}') RETURNING ${this.mainColumn}`);
     };
 
     /**
@@ -248,7 +248,7 @@ module.exports = async (client) => {
      * @param {string} column
      */
     async pop(primaryKey, value, column) {
-      const query = `UPDATE ${this.name} SET "${column}" = array_remove("${column}", $1) WHERE "${this.mainColumn}" = $2`;
+      const query = `UPDATE ${this.name} SET ${column} = array_remove(${column}, $1) WHERE ${this.mainColumn} = $2`;
       client.db.query(query, [value, primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'pop')
@@ -263,7 +263,7 @@ module.exports = async (client) => {
      * @returns {Promise<void>}
      */
     async safeUpdate(primaryKey, value, column, push) {
-      const query = `SELECT "${column}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       client.db.query(query, [primaryKey])
         .then((res) => {
           if (!res || res.rows < 1) {
@@ -292,7 +292,7 @@ module.exports = async (client) => {
      */
     async select(primaryKey, col) {
       let column = col ? col : this.secondaryColumn;
-      const query = `SELECT "${column}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         const res = await client.db.query(query, [primaryKey]);
         if (!res || !res.rows || res.rows.length < 1) return null;
@@ -306,7 +306,7 @@ module.exports = async (client) => {
      * @param {string} primaryKey
      */
     async selectAll(primaryKey) {
-      const query = `SELECT * FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      const query = `SELECT * FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       return client.db.query(query, [primaryKey]);
     }
 
@@ -318,9 +318,9 @@ module.exports = async (client) => {
      * @returns {Promise<void>}
      */
     async math(primaryKey, oldValue, modifier, column) {
-      const query = `UPDATE ${this.name} SET "${column}" = $2 WHERE "${this.mainColumn}" = $1`;
+      const query = `UPDATE ${this.name} SET ${column} = $2 WHERE ${this.mainColumn} = $1`;
       try {
-        const newValue = oldValue ? `"${column}" + ${modifier}` : modifier;
+        const newValue = oldValue ? `${column} + ${modifier}` : modifier;
         client.db.query(query, [primaryKey, newValue])
           .catch(e => {
             client.handle(new DBError(query, e), 'math')
@@ -335,7 +335,7 @@ module.exports = async (client) => {
      * @param {string} column
      */
     async selectSearchArray(value, column) {
-      const query = `SELECT * FROM ${this.name} WHERE $1 = ANY "${column}"`;
+      const query = `SELECT * FROM ${this.name} WHERE $1 = ANY ${column}`;
       return client.db.query(query, [value]);
     }
 
@@ -345,7 +345,7 @@ module.exports = async (client) => {
      * @param {Number} offset
      */
     rank(limit, order, offset) {
-      let query = `SELECT * FROM ${this.name} ORDER BY "${this.secondaryColumn}" ${order} LIMIT $1`;
+      let query = `SELECT * FROM ${this.name} ORDER BY ${this.secondaryColumn} ${order} LIMIT $1`;
       if (offset) query += ` OFFSET $2`;
       return client.db.query(query, offset ? [limit, offset] : [limit]);
     }
@@ -355,7 +355,7 @@ module.exports = async (client) => {
      * @param {'<'|'>'} signal
      */
     threshold(number, signal) {
-      const query = `SELECT * FROM ${this.name} WHERE "${this.secondaryColumn}" ${signal} $1`;
+      const query = `SELECT * FROM ${this.name} WHERE ${this.secondaryColumn} ${signal} $1`;
       return client.db.query(query, [number]);
     }
 
@@ -364,7 +364,7 @@ module.exports = async (client) => {
      */
     multipleSelect(primaryKeys) {
       const valueCalls = primaryKeys.map((v, i) => `$${i + 1}`).join(', ');
-      const query = `SELECT * FROM ${this.name} WHERE "${this.mainColumn}" IN (${valueCalls})`;
+      const query = `SELECT * FROM ${this.name} WHERE ${this.mainColumn} IN (${valueCalls})`;
       return client.db.query(query, primaryKeys);
     }
 
