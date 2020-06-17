@@ -172,7 +172,9 @@ module.exports = async (client) => {
      */
     async insert(primaryKey, vals, cols) {
       const [columns, values] = this.treatData(primaryKey, vals, cols);
-      const valueCall = `${values.map((v, i) => `$${i + 1}`).join(', ')}`;
+      const valueCall = `${values.map((v, i) => {
+        return `$${i + 1}`
+      }).join(', ')}`;
       const query = `INSERT INTO ${this.name} (${columns}) VALUES (${valueCall})`;
       client.db.query(query, values)
         .catch((err) => {
