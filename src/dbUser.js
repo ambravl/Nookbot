@@ -39,7 +39,10 @@ module.exports = async (client) => {
       },
     });
     client.db.connect();
-    if (client.firstTime) await require('./first-time-setup').run(client);
+    if (client.firstTime) {
+      const firstTime = await require('./first-time-setup').run(client);
+      client.db.query(firstTime);
+    }
 
     for (let table in client.dbSchema) {
       if (client.dbSchema.hasOwnProperty(table)) {
