@@ -20,7 +20,7 @@ module.exports.run = async (client) => {
           'Bot Support',
           'Bot Admin',
           'Bot Owner']
-          .forEach((v, i) => insertQuery.push(`(${i}, ${i}, ${v})`));
+          .forEach((v, i) => insertQuery.push(`('${i}', ${i}, '${v}')`));
         break;
       case 'configDB':
         insertQuery = [
