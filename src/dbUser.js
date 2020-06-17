@@ -149,6 +149,7 @@ module.exports = (client) => {
       let values;
       if (cols) {
         columns = cols.unshift(this.mainColumn);
+        console.log(columns);
         columns = columns.join('", "');
       } else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
       if (vals instanceof Array) values = vals.unshift(primaryKey);
