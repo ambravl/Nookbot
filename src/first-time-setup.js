@@ -1,11 +1,11 @@
 module.exports.run = async (client) => {
-  let query = ['DROP SCHEMA public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO postgres; GRANT ALL ON SCHEMA public TO public'];
+  let query = [];
   Object.keys(client.dbSchema).forEach((table) => {
     let columns = [];
     Object.keys(client.dbSchema[table]).forEach((key) => {
       columns.push(`${key} ${client.dbSchema[table][key]}`)
     });
-    query.push(`CREATE TABLE ${table} (${columns.join(', ')})`);
+    query.push(`DROP TABLE${table};CREATE TABLE ${table} (${columns.join(', ')})`);
     let insertQuery = [];
     switch (table) {
       case 'permissionDB':
