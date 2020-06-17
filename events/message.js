@@ -5,6 +5,9 @@ const Discord = require('discord.js');
 const cooldowns = new Discord.Collection();
 
 module.exports = async (client, message) => {
+  console.log(client.config.imageOnlyChannels);
+  console.log(client.config.noMentionChannels);
+  console.log(client.config.newlineLimitChannels);
   // Ignore all bots
   if (message.author.bot) return;
 

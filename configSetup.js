@@ -5,15 +5,17 @@ module.exports = (client) => {
     console.log(`config has ${config.length} rows`);
     const valueCol = client.testing ? "testing_value" : "config_value";
     config.forEach(row => {
+      let configValue = row[valueCol];
+      if (!configValue && valueCol === 'testing_value') configValue = row.config_value;
       switch (row.config_type) {
         case 'int':
-          client.config[row.config_name] = parseInt(row[valueCol]);
+          client.config[row.config_name] = parseInt(configValue);
           break;
         case 'array':
-          client.config[row.config_name] = row[valueCol].split(",");
+          client.config[row.config_name] = configValue.split(",");
           break;
         default:
-          client.config[row.config_name] = row[valueCol];
+          client.config[row.config_name] = configValue;
           break;
       }
     });
