@@ -8,7 +8,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   // Secret update command to redownload the update
   if (args[0] === 'update') {
     if (level >= 9) {
-      return ytpl('PLmJ4dQSfFie-81me0jlzewxPIxKuO2-sI', { limit: 0 }, (err, playlistObj) => {
+      return ytpl(client.config.playlist, {limit: 0}, (err, playlistObj) => {
         if (err) {
           console.error(err);
           return client.error(message.channel, 'Error Loading Playlist!', 'The playlist failed to load and the song was not added.');

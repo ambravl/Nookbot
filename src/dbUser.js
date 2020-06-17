@@ -51,17 +51,31 @@ module.exports = (client) => {
   class Table {
     constructor(tableName, columns) {
       this.name = tableName;
-      this.mainColumn  = columns[0];
+      this.mainColumn = columns[0];
       this.secondaryColumn = columns[1];
     }
 
-    cacheDB(){
+    async dropDB() {
+      client.db.query(`DROP TABLE ${this.name}`)
+        .catch((err) => console.log(err))
+      let columns = [];
+      Object.keys(client.dbSchema[this.name]).forEach((key) => {
+        columns.push(`${key} ${client.dbSchema[this.name][key]}`)
+      });
+      let query = `CREATE TABLE ${this.name} (${columns.join(', ')})`;
+      client.db.query(query)
+        .catch((err) => {
+          client.handle(new DBError(query, err), 'dropDB')
+        });
+    }
+
+    cacheDB() {
       return client.db.query(`SELECT * FROM ${this.name}`);
     }
 
-    async ensure(primaryKey, defaultValue, col){
+    async ensure(primaryKey, defaultValue, col) {
       let column;
-      if(col) column = col === '*' ? col : `"${col}"`;
+      if (col) column = col === '*' ? col : `"${col}"`;
       else column = `"${this.secondaryColumn}"`;
       const query = `SELECT ${column} FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
       try {
@@ -128,7 +142,7 @@ module.exports = (client) => {
     }
 
     async delete(primaryKey){
-      const query = `DELETE FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      const query = `DELETE FROM ${this.name} WHERE "${this.mainColumn}" = $1 RETURNING ${this.secondaryColumn}`;
       client.db.query(query, [primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'remove');
@@ -153,7 +167,7 @@ module.exports = (client) => {
         .catch((err) => {client.handle(new DBError(query, err), 'multiUpdate')})
     }
 
-    async push(primaryKey, value, column){
+    async push(primaryKey, value, column) {
       const query = `UPDATE ${this.name} SET "${column}" = "${column}" || $1 WHERE "${this.mainColumn}" = $2`;
       client.db.query(query, [JSON.stringify(value), primaryKey])
         .catch((err) => {
@@ -161,13 +175,19 @@ module.exports = (client) => {
         })
     }
 
-    async pop(primaryKey, value, column){
-      const query =`UPDATE ${this.name} SET "${column}" = array_remove("${column}", $1) WHERE "${this.mainColumn}" = $2`;
+    add(value) {
+      return this.query(`INSERT INTO ${this.name} ("${this.mainColumn}", "${this.secondaryColumn}") VALUES ( DEFAULT, '${value}') RETURNING "${this.mainColumn}"`);
+    };
+
+    async pop(primaryKey, value, column) {
+      const query = `UPDATE ${this.name} SET "${column}" = array_remove("${column}", $1) WHERE "${this.mainColumn}" = $2`;
       client.db.query(query, [value, primaryKey])
-        .catch((err) => {client.handle(new DBError(query, err), 'pop')});
+        .catch((err) => {
+          client.handle(new DBError(query, err), 'pop')
+        });
     }
 
-    async safeUpdate(primaryKey, value, column, push){
+    async safeUpdate(primaryKey, value, column, push) {
       const query = `SELECT "${column}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
       client.db.query(query, [primaryKey])
         .then((res) => {
@@ -254,16 +274,20 @@ module.exports = (client) => {
 
     /**
      * @param {string} primaryKey
+     * @param {string} col
      * @returns {Promise<*|HTMLTableRowElement|string|null>}
      */
-    async levenshtein(primaryKey){
-      const query = `SELECT *, levenshtein($1, ${this.mainColumn}) AS lv FROM ${this.name} WHERE lv <= 2 ORDER BY lv LIMIT 2`;
+    async levenshtein(primaryKey, col) {
+      let column = col ? col : this.mainColumn;
+      const query = `SELECT *, levenshtein($1, ${column}) AS lv FROM ${this.name} WHERE lv <= 2 ORDER BY lv LIMIT 2`;
       try {
         const villagers = await (client.db.query(query, [primaryKey]));
-        if(!villagers || !villagers.rows || villagers.rows.length < 1) return null;
-        if(villagers.rows.length > 1 && villagers.rows[0].lv === villagers.rows[1].lv) return null;
+        if (!villagers || !villagers.rows || villagers.rows.length < 1) return null;
+        if (villagers.rows.length > 1 && villagers.rows[0].lv === villagers.rows[1].lv) return null;
         return villagers.rows[0];
-      } catch(err) {client.handle(new DBError(query, err), 'levenshtein')}
+      } catch (err) {
+        client.handle(new DBError(query, err), 'levenshtein')
+      }
     }
   }
 };

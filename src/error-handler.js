@@ -14,7 +14,7 @@ module.exports = (client) => {
     .setURL(url ? url : 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
     .setDescription(error)
     .catch((err) => console.error(`Couldn't write message... ${err}`));
-  // FIXME magic number
+  // UGLY magic number
   client.channels.cache.get('720568062490705931').send(embed)
     .catch((err) => console.error(`Couldn't send message! ${err}`));
 }

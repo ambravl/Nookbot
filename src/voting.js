@@ -2,7 +2,7 @@ module.exports.vote = (client, message, args, positive) => {
   let strings = positive ? client.mStrings['upvote'] : client.mStrings['downvote'];
   let list = positive ? 'posRepList' : 'negRepList';
   let rep = positive ? 'positiveRep' : 'negativeRep';
-  let limit = positive ? client.config['positiveRepLimit'] : client.config['negativeRepLimit'];
+  let limit = positive ? client.config.positiveRepLimit : client.config.negativeRepLimit;
   // Attempt to find a member using the arguments provided
   const member = (message.mentions.members.first() ||
     message.guild.members.cache.get(args[0]) ||

@@ -1,5 +1,5 @@
 // eslint-disable-next-line consistent-return
-// FIXME: maybe extract methods?
+// UGLY: maybe extract methods?
 module.exports.run = async (client, message, args, level, Discord) => {
   const strings = client.mStrings.friendCode;
   switch (args[0]) {

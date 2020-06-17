@@ -34,10 +34,6 @@
   "tag": "text PRIMARY KEY",
   "content": "text"
  },
- "playlist":  {
-  "videoID": "text PRIMARY KEY",
-  "title": "text"
- },
  "infractions":  {
   "caseNumber": "serial PRIMARY KEY",
   "userID": "bigint"

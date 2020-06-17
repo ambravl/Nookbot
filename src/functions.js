@@ -118,7 +118,7 @@ module.exports = (client) => {
       counter += 1;
     });
     const confirm = await message.channel.send(body);
-    // FIXME
+    // UGLY
     counter = 0x1F1E6;
     const emojiList = [];
     await client.asyncForEach(opt.slice(0, 20), async () => {
@@ -174,11 +174,11 @@ module.exports = (client) => {
     // Enable Raid Mode
     client.raidMode = true;
     // Save @everyone role and staff/action log channels here for ease of use.
-    const { everyone } = guild.roles;
-    const staffChat = guild.channels.cache.get(client.config["staffChat"]);
-    const joinLeaveLog = guild.channels.cache.get(client.config["joinLeaveLog"]);
+    const {everyone} = guild.roles;
+    const staffChat = guild.channels.cache.get(client.config.staffChat);
+    const joinLeaveLog = guild.channels.cache.get(client.config.joinLeaveLog);
 
-    const announcements = guild.channels.cache.get(client.config["announcementsChannel"]);
+    const announcements = guild.channels.cache.get(client.config.announcementsChannel);
 
     await announcements.send(client.mStrings.raid.raidAnnouncement);
 
@@ -282,7 +282,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
             msg += `\n${mem.user.tag} (${mem.id})`;
           });
           joinLeaveLog.send(msg, { split: true });
-          // FIXME
+          // UGLY
           msg = '';
         }
       }

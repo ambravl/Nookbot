@@ -40,10 +40,12 @@ module.exports.run = async (client, message, args, level, Discord) => {
 
   let curPoints = 0;
   const time = Date.now();
-  client.userDB.ensure(member.id, '').infractions.forEach((i) => {
+  const infractions = await client.userDB.ensure(member.id, '', 'infractions');
+  infractions.forEach((i) => {
+    const infraction = JSON.parse(i);
     // If (points * 1 week) + time of infraction > current time, then the points are still valid
-    if ((i.points * 604800000) + i.date > time) {
-      curPoints += i.points;
+    if ((infraction.points * 604800000) + infraction.date > time) {
+      curPoints += infraction.points;
     }
   });
 
@@ -117,7 +119,7 @@ If you wish to contact the moderators about your warning, please send a message 
   }
 
   // Create infraction in the infractions to get case number
-  const caseNum = client.infractions.add(member.id);
+  const caseNum = await client.infractions.add(member.id);
 
   // Create infraction in the users to store important information
   client.userDB.push(member.id, {
@@ -128,7 +130,7 @@ If you wish to contact the moderators about your warning, please send a message 
     moderator: message.author.id,
     dmSent: dmSent,
     date: time,
-  }, 'infractions', true);
+  }, 'infractions');
 
   // Perform the required action
   if (ban) {
