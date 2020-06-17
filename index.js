@@ -1,6 +1,5 @@
-/* eslint-disable consistent-return,linebreak-style */
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
+const firstTime = true;
+const testing = true;
 const Discord = require('discord.js');
 const fs = require('fs');
 
@@ -22,8 +21,10 @@ const client = new Discord.Client({
     ],
   },
 });
+client.testing = testing;
+client.firstTime = firstTime;
 const strings = require('./src/strings.json');
-const { botVersion } = require('./package.json');
+const {botVersion} = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/error-handler')(client);
 require('./src/dbUser')(client);
@@ -38,7 +39,7 @@ client.initializeDB()
     client.handle(err, 'initialize')
   })
   .then(() => {
-    require('./config')(client);
+    require('./configSetup')(client);
   })
   .catch((err) => {
     client.handle(err, 'require config')

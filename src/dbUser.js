@@ -39,6 +39,7 @@ module.exports = (client) => {
       },
     });
     client.db.connect();
+    if (client.firstTime) require('./first-time-setup').run(client);
 
     for (let table in client.dbSchema) {
       if (client.dbSchema.hasOwnProperty(table)) {
@@ -149,7 +150,6 @@ module.exports = (client) => {
       let values;
       if (columns) {
         columns.unshift(this.mainColumn);
-        console.log(columns);
         columns = columns.join('", "');
       } else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
       if (vals instanceof Array) values = vals.unshift(primaryKey);

@@ -1,10 +1,9 @@
 module.exports = (client) => {
   client.config = {};
   client.configDB.cacheDB().then((res) => {
-    const testing = true;
     let config = res.rows;
     console.log(`config has ${config.length} rows`);
-    const valueCol = testing ? "testing_value" : "config_value";
+    const valueCol = client.testing ? "testing_value" : "config_value";
     config.forEach(row => {
       switch (row.config_type) {
         case 'int':
