@@ -28,7 +28,7 @@
  "adoptees":  {
   "name": "text PRIMARY KEY",
   "adopters": "text[]",
-   "offset": "integer"
+   "curOffset": "integer"
  },
  "tags":  {
   "tag": "text PRIMARY KEY",

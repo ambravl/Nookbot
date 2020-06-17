@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args) => {
   const villager = findBest(args.slice(0, 2).join(' ').toProperCase(), client.adoptees.keyArray()).bestMatch;
   if (villager.rating > 0.1) {
     const vilAdopters = client.adoptees.get(villager.target, 'adopters').filter((m) => message.guild.members.cache.has(m));
-    const curOffset = client.adoptees.get(villager.target, 'offset');
+    const curOffset = client.adoptees.get(villager.target, 'curOffset');
     const pingOffset = Math.min(curOffset, Math.max(vilAdopters.length - 10, 0));
 
     // Clear the list of members that are no longer on the server
@@ -24,9 +24,9 @@ module.exports.run = async (client, message, args) => {
     const decision = await client.reactPrompt(message, `**READ THIS**: If you are using this command just to check the number of people that want **${villager.target}**, **STOP**! Just use the \`.adopt check ${villager.target}\` command in <#549858839994826753>.\n\nDo you wish to ping **${vilAdopters.length > 10 ? `10 (+${vilAdopters.length - 10} not pinged)` : `${vilAdopters.length}`}** members that wish to adopt **${villager.target}**?`);
     if (decision) {
       if (curOffset !== 0 && curOffset + 10 >= vilAdopters.length) {
-        client.adoptees.set(villager.target, 0, 'offset');
+        client.adoptees.set(villager.target, 0, 'curOffset');
       } else if (curOffset + 10 < vilAdopters.length) {
-        client.adoptees.math(villager.target, '+', 10, 'offset');
+        client.adoptees.math(villager.target, '+', 10, 'curOffset');
       }
       const msgArr = [];
       vilAdopters.slice(pingOffset, pingOffset + 10).forEach((memID, i) => {
