@@ -280,14 +280,11 @@
       "desc": "has chosen to ban the raid. It may take some time to finish banning all raid members."
     }
   },
-  "giveaway": {
-    "noMessage": {
-      "title": "No message!",
-      "desc": "You must write a message so I can send it in the giveaway channel!"
-    },
-    "invalid": {
-      "title": "Invalid time!",
-      "desc": "Send something like 1d9h or 9h instead!"
+  "rank": {
+    "up": {
+      "title": "Congratulations,",
+      "descL": "You just leveled up to rank **",
+      "descR": "**! Keep talking to unlock new levels and rewards!"
     }
   }
 }

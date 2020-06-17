@@ -10,6 +10,19 @@ module.exports = async (client, message) => {
 
   // User activity tracking
   client.userDB.update(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
+  if (client.config.rankedChannels.includes(message.channel.id)) {
+    client.userDB.math(message.author.id, '+', 1, 'points')
+      .then((res) => {
+        const roleID = client.ranks[res.rows[0].points];
+        if (roleID) {
+          message.member.roles.add(roleID, '[Auto] Rank Up');
+          const embed = new Discord.MessageEmbed()
+            .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
+            .setDescription(client.mStrings.rank.up.descL + message.guild.roles.cache.get(roleID).name + client.mStrings.rank.up.descR);
+          message.channel.send(embed);
+        }
+      })
+  }
 
   // Emoji finding and tracking
   const regex = /<a?:\w+:([\d]+)>/g;
@@ -19,7 +32,7 @@ module.exports = async (client, message) => {
     // If the emoji ID is in our emoji, then increment its count
     client.emojiDB.select(regMatch[1])
       .then((rows) => {
-        if(rows) client.emojiDB.math(regMatch[1], rows[0].uses, 1, 'uses')
+        if (rows) client.emojiDB.math(regMatch[1], '+', 1, 'uses')
           .catch((err) => client.handle(err, 'emoji increment in message event', message));
       })
       .catch((err) => {

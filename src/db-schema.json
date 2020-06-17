@@ -9,8 +9,8 @@
    "islandName": "text",
     "fruit": "text",
     "characterName": "text",
-    "hemisphere": "boolean",
-    "profileName": "text",
+   "hemisphere": "boolean",
+   "profileName": "text",
    "positiveRep": "smallint",
    "negativeRep": "smallint",
    "posRepList": "bigint[]",
@@ -19,7 +19,8 @@
    "nicknames": "text[]",
    "usernames": "text[]",
    "infractions": "text[]",
-   "lastMessageTimestamp": "bigint"
+   "lastMessageTimestamp": "bigint",
+   "points": "integer"
  },
  "emojiDB":  {
   "emojiID": "text PRIMARY KEY",
@@ -62,5 +63,9 @@
     "roleID": "text PRIMARY KEY",
     "level": "integer",
     "name": "text"
+  },
+  "rankDB": {
+    "roleID": "text PRIMARY KEY",
+    "minPoints": "integer"
   }
 }

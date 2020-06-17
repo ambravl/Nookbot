@@ -48,7 +48,7 @@ client.initializeDB()
     require('./src/functions')(client);
     require('./src/load-commands')(client);
 
-  })
+  });
 
 fs.readdir('./events/', (err, files) => {
   if (err) {
@@ -106,4 +106,8 @@ client.login(client.token).then(() => {
       clearInterval(interval);
     });
   }, 30000);
+});
+
+process.on('SIGTERM', () => {
+  client.db.close();
 });

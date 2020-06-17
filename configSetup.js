@@ -21,6 +21,13 @@ module.exports = (client) => {
     });
   });
 
+  client.rankDB.cacheDB().then((res) => {
+    client.ranks = {};
+    res.rows.forEach(row => {
+      client.ranks[row.points] = row.roleID;
+    })
+  });
+
   client["permissionDB"].cacheDB().then((res) => {
     client.levelCache = [];
     res.rows.forEach(row => {

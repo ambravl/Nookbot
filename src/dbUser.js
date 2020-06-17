@@ -315,22 +315,14 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
-     * @param {string} oldValue
+     * @param {string} operation
      * @param {Number} modifier
      * @param {string} column
      * @returns {Promise<void>}
      */
-    async math(primaryKey, oldValue, modifier, column) {
-      const query = `UPDATE ${this.name} SET ${column} = $2 WHERE ${this.mainColumn} = $1`;
-      try {
-        const newValue = oldValue ? `${column} + ${modifier}` : modifier;
-        client.db.query(query, [primaryKey, newValue])
-          .catch(e => {
-            client.handle(new DBError(query, e), 'math')
-          });
-      } catch (err) {
-        client.handle(new DBError(query, err), 'math')
-      }
+    math(primaryKey, operation, modifier, column) {
+      const query = `UPDATE ${this.name} SET ${column} = ${column} ${operation} ${modifier} WHERE ${this.mainColumn} = $1 RETURNING ${column}`;
+      return client.db.query(query, [primaryKey, newValue]);
     };
 
     /**

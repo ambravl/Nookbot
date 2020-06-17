@@ -26,7 +26,10 @@ module.exports.run = async (client, message, args) => {
       if (curOffset !== 0 && curOffset + 10 >= vilAdopters.length) {
         client.adoptees.set(villager.target, 0, 'curOffset');
       } else if (curOffset + 10 < vilAdopters.length) {
-        client.adoptees.math(villager.target, '+', 10, 'curOffset');
+        client.adoptees.math(villager.target, '+', 10, 'curOffset')
+          .catch((err) => {
+            client.handle(err, 'adopt curOffset', message)
+          })
       }
       const msgArr = [];
       vilAdopters.slice(pingOffset, pingOffset + 10).forEach((memID, i) => {
