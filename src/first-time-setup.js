@@ -6,9 +6,10 @@ module.exports.run = (client) => {
         Object.keys(client.dbSchema[table]).forEach((key) => {
           columns.push(`${key} ${client.dbSchema[key]}`)
         });
-        client.db.query(`CREATE TABLE ${table} (${columns.join(', ')})`)
+        const query = `CREATE TABLE ${table} (${columns.join(', ')})`;
+        client.db.query(query)
           .catch((err) => {
-            client.handle(err, 'creating first-time tables')
+            client.handle(err, query)
           })
           .then(() => {
             let insertQuery = [];
