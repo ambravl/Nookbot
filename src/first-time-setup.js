@@ -53,7 +53,7 @@ module.exports.run = async (client) => {
         ];
         break;
     }
-    if (insertQuery) query.push(`INSERT INTO ${table} VALUES (${insertQuery.join(', ')})`);
+    if (insertQuery && insertQuery.length > 0) query.push(`INSERT INTO ${table} VALUES (${insertQuery.join(', ')})`);
   });
   return query.join('; ')
 };
