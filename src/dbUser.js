@@ -89,29 +89,30 @@ module.exports = async (client) => {
       const query = `SELECT ${column === '*' ? column : '"' + column + '"'} FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
-        if (column !== '*') {
-          if (res && res.rows && res.rows.length > 0) {
-            res = res.rows[0][column];
-            if (res) return res;
-            this.update(primaryKey, defaultValue, column)
-              .catch((err) => {
-                client.handle(err, 'ensure update')
-              });
-          }
-          this.insert(primaryKey, defaultValue, [column])
+        if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');
+        if (column === '*') return res.rows[0];
+        else {
+          res = res.rows[0][column];
+          if (res) return res;
+          this.update(primaryKey, defaultValue, column)
             .catch((err) => {
-              client.handle(err, 'ensure insert');
+              client.handle(err, 'ensure update')
             });
         }
-        else if(!res || !res.rows || res.rows.length < 1){
-          client.db.query(`INSERT INTO ${this.name} ("${this.mainColumn}") VALUES ($1)`, primaryKey)
+      } catch (e) {
+        if (column === '*') {
+          const insertQuery = `INSERT INTO ${this.name} ("${this.mainColumn}") VALUES ($1)`;
+          client.db.query(insertQuery, [primaryKey])
             .catch((err) => {
-              client.handle(err, 'ensure insert on *')
+              client.handle(new DBError(insertQuery, err), 'ensure insert on *')
             });
-        } else return res.rows[0];
-        return defaultValue;
-      } catch (err) {
-        client.handle(new DBError(query, err), "ensure's select");
+        } else {
+          this.insert(primaryKey, defaultValue, [column])
+            .catch((err) => {
+              client.handle(new DBError(e.message, err), 'ensure insert');
+            });
+          return defaultValue;
+        }
       }
     }
 
