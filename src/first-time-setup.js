@@ -63,7 +63,7 @@ module.exports.run = async (client) => {
           const fixedData = data.split('\n');
 
           fixedData.forEach((vil) => {
-            insertQuery.push(`('${vil.trim()}', {})`);
+            insertQuery.push(`('${vil.trim()}', '{}')`);
           });
         } catch (e) {
           console.error(e);
