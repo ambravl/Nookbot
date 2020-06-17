@@ -1,3 +1,5 @@
+// TODO: low-priority command
+
 const { findBestMatch: findBest } = require('string-similarity');
 
 module.exports.run = async (client, message, args) => {

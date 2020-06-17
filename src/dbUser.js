@@ -60,27 +60,51 @@ module.exports = (client) => {
     }
 
     async ensure(primaryKey, defaultValue, col){
-      const column = col ? col : this.secondaryColumn;
-      const query = `SELECT "${column}" FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
+      let column;
+      if(col) column = col === '*' ? col : `"${col}"`;
+      else column = `"${this.secondaryColumn}"`;
+      const query = `SELECT ${column} FROM ${this.name} WHERE "${this.mainColumn}" = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
-        if (res && res.rows && res.rows.length > 0) {
-          res = res.rows[column];
-          if (res) return res;
-          this.update(primaryKey, defaultValue, column)
-            .catch((err) => {
-              client.handle(err, 'ensure update')
-            });
-          return defaultValue;
-        }
-        this.insert(primaryKey, defaultValue, column)
+        if(column !== '*') {
+          if (res && res.rows && res.rows.length > 0) {
+            res = res.rows[0][column];
+            if (res) return res;
+            this.update(primaryKey, defaultValue, column)
+              .catch((err) => {
+                client.handle(err, 'ensure update')
+              });
+          }
+          this.insert(primaryKey, defaultValue, column)
             .catch((err) => {
               client.handle(err, 'ensure insert');
             });
+        }
+        else if(!res || !res.rows || res.rows.length < 1){
+          client.db.query(`INSERT INTO ${this.name} ("${this.mainColumn}") VALUES ($1)`, primaryKey)
+            .catch((err) => {client.handle(err, 'ensure insert on *')});
+        }
+        else return res.rows[0];
         return defaultValue;
       } catch(err) {
         client.handle(new DBError(query, err), "ensure's select");
       }
+    }
+
+    switchPoints(minus, primaryKey, keyToRemove){
+      const posRep = `"positiveRep" = "positiveRep" ${minus ? '-1': '+1'}`;
+      const negRep = `"negativeRep" = "negativeRep" ${minus ? '-1': '+1'}`;
+      const posRepL = `"posRepList" = ${minus ? 'array_remove("posRepList", $2)' : '"posRepList" || $2'}`;
+      const negRepL = `"negRepList" = ${minus ? 'array_remove("negRepList", $2)' : '"negRepList" || $2'}`;
+      const q = `UPDATE ${this.name} SET ${posRep}, ${negRep}, ${posRepL}, ${negRepL} WHERE "${this.mainColumn}" = $1`;
+      client.db.query(q, [primaryKey, keyToRemove])
+        .catch((err) => {client.handle(new DBError(q, err), 'switchPoints')});
+    }
+
+    mathAndPush(primaryKey, values, columns){
+      const query = `UPDATE ${this.name} SET "${columns[0]}" = "${columns[0]}" + $2, "${columns[1]}" = "${columns[1]}" || $3 WHERE "${this.mainColumn}" = $1`;
+      client.db.query(query, values.unshift(primaryKey))
+        .catch((err) => {client.handle(new DBError(query, err), 'mathAndPush')});
     }
 
     treatData(primaryKey, vals, cols){
@@ -117,6 +141,16 @@ module.exports = (client) => {
         .catch((err) => {
           client.handle(new DBError(query, err), 'update');
         });
+    }
+
+    multiUpdate(primaryKey, values, columns){
+      let updates = [];
+      for(let i = 0; i < columns.length; i++){
+        updates.push(`"${columns[i]}" = $${i+2}`);
+      }
+      const query = `UPDATE ${this.name} SET ${updates.join(', ')} WHERE "${this.mainColumn}" = $1`;
+      client.db.query(query, values.unshift(primaryKey))
+        .catch((err) => {client.handle(new DBError(query, err), 'multiUpdate')})
     }
 
     async push(primaryKey, value, column){
@@ -201,6 +235,10 @@ module.exports = (client) => {
       }
     }
 
+    /**
+     * @param {string} primaryKey
+     * @returns {Promise<*|HTMLTableRowElement|string|null>}
+     */
     async levenshtein(primaryKey){
       const query = `SELECT *, levenshtein($1, ${this.mainColumn}) AS lv FROM ${this.name} WHERE lv <= 2 ORDER BY lv LIMIT 2`;
       try {

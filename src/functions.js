@@ -118,6 +118,7 @@ module.exports = (client) => {
       counter += 1;
     });
     const confirm = await message.channel.send(body);
+    // FIXME
     counter = 0x1F1E6;
     const emojiList = [];
     await client.asyncForEach(opt.slice(0, 20), async () => {
@@ -149,7 +150,7 @@ module.exports = (client) => {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
+  // FIXME
   client.searchMember = (name, threshold = 0.5) => undefined;
 
   client.clearSongQueue = () => {
@@ -178,16 +179,15 @@ module.exports = (client) => {
     const joinLeaveLog = guild.channels.cache.get(client.config["joinLeaveLog"]);
 
     const announcements = guild.channels.cache.get(client.config["announcementsChannel"]);
-    const raidMsg = "**Raid Ongoing**!\nWe're sorry to inconvenience everyone, but we've restricted all message sending capabilities due to a suspected raid. Don't worry though, you'll be back to chatting about your favorite game in no time, yes yes!";
-    const noMoreRaidMsg = "**Raid Mode Has Been Lifted**!\nWe've determined that it's safe to lift raid mode precautions and allow everyone to send messages again! Channels should open up again immediately, yes yes!";
 
-    await announcements.send(raidMsg);
+    await announcements.send(client.mStrings.raid.raidAnnouncement);
 
     // Create a Permissions object with the permissions of the @everyone role, but remove Send Messages.
     const perms = new Discord.Permissions(everyone.permissions).remove('SEND_MESSAGES');
     await everyone.setPermissions(perms);
 
     // Send message to staff with prompts
+    // FIXME
     client.raidMessage = await staffChat.send(`**##### RAID MODE ACTIVATED #####**
 <@&495865346591293443> <@&494448231036747777>
 
@@ -209,16 +209,16 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
         if (reaction.emoji.name === client.emoji.checkMark) {
           // A valid user has selected to ban the raid party.
           // Log that the banning is beginning and who approved of the action.
-          client.success(staffChat, 'Banning!', `User ${modUser.tag} has chosen to ban the raid. It may take some time to finish banning all raid members.`);
+          client.success(
+            staffChat,
+            client.mStrings.raid.banned.title,
+            `User ${modUser.tag} ${client.mStrings.raid.banned.description}`
+          );
           client.raidBanning = true;
           // Create a setInterval to ban members without rate limiting.
           const interval = setInterval(() => {
-            if (client.raidJoins.length !== 0) {
-              // Ban the next member
-              client.raidJoins.shift().ban({ days: 1, reason: 'Member of raid.' })
-                .catch(console.error);
-            } else {
-              // We've finished banning, annouce that raid mode is ending.
+            if (client.raidJoins.length === 0) {
+              // We've finished banning, announce that raid mode is ending.
               staffChat.send('Finished banning all raid members. Raid Mode is deactivated.');
               joinLeaveLog.send(`The above ${client.raidMembersPrinted} members have been banned.`);
               // Reset all raid variables
@@ -234,7 +234,11 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
               perms.add('SEND_MESSAGES');
               everyone.setPermissions(perms);
               clearInterval(interval);
-              announcements.send(noMoreRaidMsg);
+              announcements.send(client.mStrings.raid.raidEnded);
+            } else {
+              // Ban the next member
+              client.raidJoins.shift().ban({days: 1, reason: 'Member of raid.'})
+                .catch(console.error);
             }
           }, 100); // 100 ms is 10 bans a second, hopefully not too many.
         } else {
@@ -249,7 +253,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
 
           perms.add('SEND_MESSAGES');
           await everyone.setPermissions(perms);
-          announcements.send(noMoreRaidMsg);
+          announcements.send(client.mStrings.raid.raidEnded);
         }
       })
       .catch(console.error);
@@ -260,6 +264,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
       if (!client.raidMode) {
         clearInterval(updateRaid);
       } else if (!client.raidBanning) {
+        // FIXME
         client.raidMessage.edit(`**##### RAID MODE ACTIVATED #####**
 <@&495865346591293443> <@&494448231036747777>
 
@@ -277,6 +282,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
             msg += `\n${mem.user.tag} (${mem.id})`;
           });
           joinLeaveLog.send(msg, { split: true });
+          // FIXME
           msg = '';
         }
       }

@@ -1,12 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 module.exports.run = (client, message, args, level) => {
   const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' ')) || message.member;
-  const { positiveRep, negativeRep } = client.userDB.ensure(member.id, '');
-
-  if (positiveRep === 0 && negativeRep === 0) {
-    return message.channel.send(`**${member.user.tag}**'s Reputation is **unknown**.`);
-  }
-  return message.channel.send(`**${member.user.tag}**'s Reputation is **${Math.round((positiveRep / ((positiveRep + negativeRep) || 1)) * 100)}%** positive based on **${positiveRep + negativeRep}** total ratings **(+${positiveRep}|-${negativeRep})**.`);
+  client.userDB.ensure(member.id, '', '*')
+    .then((result) => {
+      const { positiveRep, negativeRep } = result;
+      if(!positiveRep && !negativeRep) return message.channel.send(`**${member.user.tag}**'s Reputation is **unknown**.`);
+      return message.channel.send(`**${member.user.tag}**'s Reputation is **${Math.round((positiveRep / ((positiveRep + negativeRep) || 1)) * 100)}%** positive based on **${positiveRep + negativeRep}** total ratings **(+${positiveRep}|-${negativeRep})**.`);
+    })
+    .catch((err) => {client.handle(err, 'rep check', message)});
 };
 
 module.exports.conf = {

@@ -1,79 +1,67 @@
 // eslint-disable-next-line consistent-return
+// FIXME: maybe extract methods?
 module.exports.run = async (client, message, args, level, Discord) => {
+  const strings = client.mStrings.friendCode;
   switch (args[0]) {
     case 'set':
-    case 'add': {
+    case 'add':
       if (args.length === 1) {
-        return client.error(message.channel, 'No Code Given!', 'Please supply your Switch friend code!');
+        return client.error(message.channel, strings.noCode.title, strings.noCode.desc);
       }
 
       let code = args.slice(1).join().replace(/[\D]/g, '');
 
       if (code.length !== 12) {
-        return client.error(message.channel, 'Invalid Code!', 'The code must have 12 digits!');
+        return client.error(message.channel, strings.invalidCode.title, strings.invalidCode.desc);
       }
 
       code = `SW-${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
-      client.userDB.set(message.author.id, code, 'friendcode');
+      client.userDB.safeUpdate(message.author.id, code, 'friendCode')
+        .catch((err) => {client.handle(err, 'adding friend code')});
 
-      const name = client.userDB.get(message.author.id, 'profileName');
+      const name = await client.userDB.select(message.author.id, 'profileName');
 
-      const embed = new Discord.MessageEmbed()
+      const successEmbed = new Discord.MessageEmbed()
         .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
-        .setTitle('Successfully set your friend code!')
+        .setTitle(strings.successful)
         .setColor('#e4000f')
         .setDescription(`**${code}**${name ? `\nSwitch Profile Name: **${name}**` : ''}`);
 
-      return message.channel.send(embed);
-    }
+      return message.channel.send(successEmbed);
     case 'del':
     case 'delete':
     case 'remove':
-      if (client.userDB.has(message.author.id, 'friendcode')) {
-        client.userDB.delete(message.author.id, 'friendcode');
-        return client.success(message.channel, 'Successfully Deleted!', "I've successfully deleted your friend code! You can set it again by typing \`.fc set <code>\`!");
-      }
-      return client.error(message.channel, 'No Friend Code To Remove!', 'You did not have a friend code in the database. You can set it by typing \`.fc set <code>\`!');
-    default: {
-      if (args.length === 0) {
-        // Return user's friend code if they have one
-        const fc = client.userDB.ensure(message.author.id, '').friendCode;
-        if (!fc) {
-          return client.error(message.channel, 'No Code Found!', 'You have not set a friend code! You can do so by running \`.fc set <code>\`!');
-        }
+      client.userDB.update(message.author.id, '', 'friendCode')
+        .catch((err) => {client.handle(err, 'removing friend code that might not exist')});
+      client.success(message.channel, strings.successfulDelete.title, strings.successfulDelete.desc);
+      break;
+    default:
+      const ownFC = args.length === 0;
+      const member = ownFC ? message.author : message.mentions.members.first() ||
+        message.guild.members.cache.get(args[0]) ||
+        client.searchMember(args.join(' '));
 
-        const name = client.userDB.get(message.author.id, 'profileName');
+      const foundUser = await client.userDB.ensure(member.id, '', '*');
 
-        const embed = new Discord.MessageEmbed()
-          .setAuthor(`${message.member.displayName}'s Friend Code`, message.author.displayAvatarURL())
-          .setColor('#e4000f')
-          .setDescription(`**${fc}**${name ? `\nSwitch Profile Name: **${name}**` : ''}`);
+      if(!foundUser) return client.error(message.channel, strings.unknownMember.title, strings.unknownMember.desc);
+      if(!foudUser.friendCode) return client.error(
+        message.channel,
+        strings.noCode.title,
+        args.length === 0 ? strings.noCode.s : `${foundUser.displayName} ${strings.noCode.u}`
+      );
+      const foundEmbed = new Discord.MessageEmbed()
+        .setAuthor(
+          `${ownFC ? message.member.displayName : member.displayName}'s Friend Code`,
+          ownFC ? member.displayAvatarURL() : member.user.displayAvatarURL()
+        )
+        .setColor('#e4000f')
+        .setDescription(
+          `**${foundUser.friendCode}**${foundUser.profileName ? `\n
+          Switch Profile Name: **${foundUser.profileName}**` : ''}`
+        );
 
-        return message.channel.send(embed);
-      }
-
-      // Attempt to find a member using the arguments provided
-      const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' '));
-
-      if (member) {
-        const fc = client.userDB.ensure(member.user.id, '').friendCode;
-        if (!fc) {
-          return client.error(message.channel, 'No Code Found!', `${member.displayName} has not set their friend code!`);
-        }
-
-        const name = client.userDB.get(member.user.id, 'profileName');
-
-        const embed = new Discord.MessageEmbed()
-          .setAuthor(`${member.displayName}'s Friend Code`, member.user.displayAvatarURL())
-          .setColor('#e4000f')
-          .setDescription(`**${fc}**${name ? `\nSwitch Profile Name: **${name}**` : ''}`);
-
-        return message.channel.send(embed);
-      }
-
-      return client.error(message.channel, 'Unknown Member!', 'Could not find a member by that name!');
+      return message.channel.send(foundEmbed);
     }
-  }
 };
 
 module.exports.conf = {

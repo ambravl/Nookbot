@@ -1,302 +1,231 @@
 // eslint-disable-next-line consistent-return
-module.exports.run = async (client, message, args, level, Discord) => {
-  switch (args[0] && args[0].toLowerCase()) {
-    case 'islandname':
-    case 'island':
-    case 'in':
-    case 'townname':
-    case 'tn': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Island Name Given!', 'Please supply the name of your island!');
+module.exports.run = async (client, message, args, level) => {
+    if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
+    let island = new Island(client, message, args);
+    island.run()
+      .catch((err) =>  {client.handle(err, 'island', message)})
+};
+
+// noinspection SpellCheckingInspection
+const islandAliases = {
+  "island": "islandName",
+  "islandname": "islandName",
+  "in":"islandName",
+  "townname":"islandName",
+  "tn":"islandName",
+  "fruit":"fruit",
+  'fr':'fruit',
+  'f':'fruit',
+  'charactername':'characterName',
+  'character':'characterName',
+  'charname':'characterName',
+  'cn':'characterName',
+  'villagername':'characterName',
+  'vn':'characterName',
+  'islandername':'characterName',
+  'hermisphere':'hemisphere',
+  'hem':'hemisphere',
+  'hm':'hemisphere',
+  'hemi':'hemisphere',
+  'profilename':'profileName',
+  'profile':'profileName',
+  'pn':'profileName',
+  'switchname':'profileName',
+  'sn':'profileName',
+  'friendcode':'friendCode',
+  'fc':'friendCode',
+  'code':'friendCode',
+  'remove':'remove',
+  'delete':'remove',
+  'rm':'remove',
+  'del':'remove',
+  'clear':'remove',
+  'clr':'remove',
+  'mod':'mod',
+};
+
+class Island {
+  constructor(client, message, args) {
+    this.client = client;
+    this.type = islandAliases[args[0].toLowerCase()];
+    this.type = this.type ? this.type : 'search';
+    if (this.type === 'mod') {
+      this.message = this.mod(args, message);
+      if (typeof this.message.author === 'string') {
+        this.send(this.message.author);
+        return;
       }
-
-      const name = args.slice(1).join(' ');
-      if (name.length > 10) {
-        return client.error(message.channel, 'Invalid Island Name!', 'Island names cannot be longer than 10 characters!');
-      }
-
-      client.userDB.set(message.author.id, name, 'islandName');
-
-      return client.success(message.channel, 'Successfully set the name of your island!', `Island Name: **${name}**`);
-    }
-    case 'fruit':
-    case 'fr':
-    case 'f': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Fruit Given!', 'Please supply the name of the fruit that is native to your island!');
-      }
-
-      let fruit;
-      if (/apples?/i.test(args[1])) {
-        fruit = 'Apples';
-      } else if (/cherr(y|ies)/i.test(args[1])) {
-        fruit = 'Cherries';
-      } else if (/oranges?/i.test(args[1])) {
-        fruit = 'Oranges';
-      } else if (/peach(es)?/i.test(args[1])) {
-        fruit = 'Peaches';
-      } else if (/pears?/i.test(args[1])) {
-        fruit = 'Pears';
-      }
-
-      if (!fruit) {
-        return client.error(message.channel, 'Invalid Fruit!', "Your island's native fruit must be one of apples, cherries, oranges, peaches, or pears!");
-      }
-
-      client.userDB.set(message.author.id, fruit, 'fruit');
-
-      return client.success(message.channel, "Successfully set your island's native fruit!", `Fruit: **${fruit}**`);
-    }
-    case 'charactername':
-    case 'character':
-    case 'charname':
-    case 'cn':
-    case 'villagername':
-    case 'vn':
-    case 'islandername': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Character Name Given!', 'Please supply the name of your character!');
-      }
-
-      // Assuming villager names ar capped to 10 characters
-      const name = args.slice(1).join(' ');
-      if (name.length > 10) {
-        return client.error(message.channel, 'Invalid Character Name!', 'Character names cannot be longer than 10 characters!');
-      }
-
-      client.userDB.set(message.author.id, name, 'characterName');
-
-      return client.success(message.channel, "Successfully set your character's name!", `Character Name: **${name}**`);
-    }
-    case 'hemisphere':
-    case 'hem':
-    case 'hm':
-    case 'hemi': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Hemisphere Given!', 'Please supply the hemisphere your island is in, either northern or southern!');
-      }
-
-      let hemisphere;
-      if (/north(ern)?/i.test(args[1])) {
-        hemisphere = 'Northern';
-      } else if (/south(ern)?/i.test(args[1])) {
-        hemisphere = 'Southern';
-      }
-
-      if (!hemisphere) {
-        return client.error(message.channel, 'Invalid Hemisphere!', 'The hemisphere must be either northern or southern!');
-      }
-
-      client.userDB.set(message.author.id, hemisphere, 'hemisphere');
-
-      return client.success(message.channel, 'Successfully set the hemisphere for your island!', `Hemisphere: **${hemisphere}**`);
-    }
-    case 'profilename':
-    case 'profile':
-    case 'pn':
-    case 'switchname':
-    case 'sn': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Switch Profile Name Given!', 'Please supply the name of your Switch profile!');
-      }
-
-      const name = args.slice(1).join(' ');
-      if (name.length > 10) {
-        return client.error(message.channel, 'Invalid Switch Profile Name!', 'Switch profile names cannot be longer than 10 characters!');
-      }
-
-      client.userDB.set(message.author.id, name, 'profileName');
-
-      return client.success(message.channel, 'Successfully set your Switch profile name!', `Profile Name: **${name}**`);
-    }
-    case 'friendcode':
-    case 'fc':
-    case 'code': {
-      if (args.length === 1) {
-        return client.error(message.channel, 'No Code Given!', 'Please supply your Switch friend code!');
-      }
-
-      let code = args.slice(1).join().replace(/[\D]/g, '');
-
-      if (code.length !== 12) {
-        return client.error(message.channel, 'Invalid Code!', 'The code must have 12 digits!');
-      }
-
-      code = `SW-${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 12)}`;
-      client.userDB.set(message.author.id, code, 'friendcode');
-
-      return client.success(message.channel, 'Successfully set your Switch friend code!', `Friend Code: **${code}**`);
-    }
-    case 'remove':
-    case 'delete':
-    case 'rm':
-    case 'del':
-    case 'clear':
-    case 'clr':
-    case 'mod': {
-      let memberID;
-      if (args[0].toLowerCase() === 'mod' && level >= 3) {
-        // If the mod subcommand is used, grab the next arguement as a member
-        let member = message.mentions.members.first();
-        if (!member) {
-          if (parseInt(args[1], 10)) {
-            try {
-              member = await client.users.fetch(args[1]);
-            } catch (err) {
-              // Don't need to send a message here
-            }
-          }
-        }
-
-        if (!member) {
-          const searchedMember = client.searchMember(args[1]);
-          if (searchedMember) {
-            const decision = await client.reactPrompt(message, `Would you like to moderate \`${searchedMember.user.tag}\`'s island settings?`);
-            if (decision) {
-              member = searchedMember;
-            } else {
-              message.delete().catch((err) => console.error(err));
-              return client.error(message.channel, 'Island Settings Not Moderated!', 'The prompt timed out, or you selected no.');
-            }
-          }
-        }
-
-        if (!member) {
-          return client.error(message.channel, 'Invalid Member!', 'Please mention a valid member of this server to moderate their island settings!');
-        }
-
-        memberID = member.id;
-      }
-
-      if (!memberID) {
-        memberID = message.author.id;
-      }
-
-      if ((args[0].toLowerCase() === 'mod' && level >= 3) ? args.length === 2 : args.length === 1) {
-        return client.error(message.channel, 'No Value To Remove!', 'Please supply the value you would like to remove! (islandname/fruit/charactername/hemisphere/profilename/friendcode)');
-      }
-      switch ((args[0].toLowerCase() === 'mod' && level >= 3) ? args[2].toLowerCase() : args[1].toLowerCase()) {
-        case 'islandname':
-        case 'island':
-        case 'in':
-        case 'townname':
-        case 'tn':
-          client.userDB.set(memberID, '', 'islandName');
-          return client.success(message.channel, 'Successfully cleared the name of your island!', 'To set your island name again, use `.island islandname <name>`!');
-        case 'fruit':
-        case 'fr':
-        case 'f':
-          client.userDB.set(memberID, '', 'fruit');
-          return client.success(message.channel, "Successfully cleared your island's native fruit!", "To set your island's native fruit again, use `.island fruit <fruit>`!");
-        case 'charactername':
-        case 'character':
-        case 'charname':
-        case 'cn':
-        case 'villagername':
-        case 'vn':
-        case 'islandername':
-          client.userDB.set(memberID, '', 'characterName');
-          return client.success(message.channel, "Successfully cleared your character's name!", "To set your character's name again, use `.island charactername <name>`!");
-        case 'hemisphere':
-        case 'hem':
-        case 'hm':
-        case 'hemi':
-          client.userDB.set(memberID, '', 'hemisphere');
-          return client.success(message.channel, 'Successfully cleared the hemisphere for your island!', 'To set the hemisphere for your island again, use `.island hemisphere <hemisphere>`!');
-        case 'profilename':
-        case 'profile':
-        case 'pn':
-        case 'switchname':
-        case 'sn':
-          client.userDB.set(memberID, '', 'profileName');
-          return client.success(message.channel, 'Successfully cleared your Switch profile name!', 'To set your Switch profile name again, use `.island profilename <name>`!');
-        case 'friendcode':
-        case 'fc':
-        case 'code':
-          if (client.userDB.has(memberID, 'friendcode')) {
-            client.userDB.delete(memberID, 'friendcode');
-            return client.success(message.channel, 'Successfully cleared your Switch friend code!', 'To set your Switch friend code again, use `.island friendcode <code>`!');
-          }
-          return client.error(message.channel, 'No Friend Code To Remove!', 'You did not have a friend code in the database. You can set it by typing \`.fc set <code>\`!');
-        case 'all':
-        case 'every':
-          client.userDB.set(memberID, {
-            islandName: '',
-            fruit: '',
-            characterName: '',
-            hemisphere: '',
-            profileName: '',
-          }, 'island');
-          return client.success(message.channel, 'Successfully cleared your Switch profile name!', 'To set your Switch profile name again, use `.island profilename <name>`!');
-        default:
-          return client.error(message.channel, 'Invalid Value To Remove!', 'Please supply the value you would like to remove! (islandname/fruit/charactername/hemisphere/profilename/friendcode)');
-      }
-    }
-    default: {
-      let member;
-      if (args.length === 0) {
-        member = message.member;
-      } else {
-        member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' '));
-        if (!member) {
-          return client.error(message.channel, 'Unknown Member!', 'Could not find a member by that name!');
-        }
-      }
-
-      // Return user's island information if they have any stored
-      const { friendcode, island } = client.userDB.ensure(member.id, '');
-
-      const msg = [];
-      if (friendcode) {
-        msg.push(`Friend Code: **${friendcode}**`);
-      }
-      if (profileName) {
-        msg.push(`Switch Profile Name: **${profileName}**`);
-      }
-      if (characterName) {
-        msg.push(`Character Name: **${characterName}**`);
-      }
-      if (islandName) {
-        msg.push(`Island Name: **${islandName}**`);
-      }
-      if (fruit) {
-        msg.push(`Fruit: **${fruit}**`);
-      }
-      if (hemisphere) {
-        msg.push(`Hemisphere: **${hemisphere}**`);
-      }
-
-      if (msg.length === 0) {
-        if (member.id === message.author.id) {
-          return client.error(message.channel, 'No Island Information Found!', 'You have not supplied any information about your island! You can do so by running \`.island <islandname|fruit|charactername|hemisphere|profilename|friendcode> <name|fruit|hemisphere|code>\` with any of the options. Ex. \`.island fruit pears\`.');
-        }
-        return client.error(message.channel, 'No Island Information Found!', `${member.displayName} has not supplied any information about their island!`);
-      }
-
-      const embed = new Discord.MessageEmbed()
-        .setAuthor(`${member.displayName}'s Island`, member.user.displayAvatarURL())
-        .setColor('#0ba47d')
-        .setDescription(`${msg.join('\n')}`);
-
-      return message.channel.send(embed);
+      this.type = 'remove';
+      this.info = this.validate(args.shift());
+    } else {
+      this.message = message;
+      this.info = this.validate(args);
     }
   }
-};
+
+  async mod(args, message){
+    let member = message.mentions.members.first();
+      if (!member) {
+        if (parseInt(args[1], 10)) {
+          try {
+            member = await client.users.fetch(args[1]);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      }
+
+      if (!member) {
+        const searchedMember = client.searchMember(args[1]);
+        if (searchedMember) {
+          const decision = await client.reactPrompt(
+            message,
+            `Would you like to moderate \`${searchedMember.user.tag}\`'s island settings?`
+          );
+          if (decision) {
+            member = searchedMember;
+          } else {
+            message.delete().catch((err) => console.error(err));
+            return {channel: message.channel, author: 'noMod'}
+          }
+        }
+      }
+
+      if (!member) {
+        return {channel: message.channel, author: 'invalid'};
+      }
+      return {
+        channel: message.channel,
+        author: member
+      };
+
+  }
+
+  async run(){
+    if (!this.info) this.send('invalid');
+    if (this.info === 'none') this.send('none');
+    else {
+      if(this.type === 'search'){
+        let message = [];
+        this.client.userDB.ensure(this.info.id, '', '*')
+          .then((res) => {
+            ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
+              if(res[category]){
+                message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
+              }
+            });
+            if(message.length < 1){
+              if(this.info.id === message.author.id) this.send('noneSelf');
+              else this.send('noneOther')
+            }
+            else this.send('list', message)
+          })
+
+      }
+      if (this.type === 'remove') {
+        this.type = this.info;
+        this.info = '';
+      }
+      this.set();
+    }
+  }
+
+  validate(message, args){
+    if(this.type !== 'search' && args.length === 1){
+      return 'none';
+    }
+    let info;
+    switch(this.type) {
+      case 'search':
+        if (args) {
+          info = (
+            message.mentions.members.first() ||
+            message.guild.members.cache.get(args[0]) ||
+            client.searchMember(args.join(' '))
+          );
+        } else info = message.member;
+        break;
+      case 'fruit':
+        if (/apples?/i.test(args[1])) {
+          info = 'Apples';
+        } else if (/cherr(y|ies)/i.test(args[1])) {
+          info = 'Cherries';
+        } else if (/oranges?/i.test(args[1])) {
+          info = 'Oranges';
+        } else if (/peach(es)?/i.test(args[1])) {
+          info = 'Peaches';
+        } else if (/pears?/i.test(args[1])) {
+          info = 'Pears';
+        }
+        break;
+      case 'hemisphere':
+        if (/north(ern)?/i.test(args[1])) {
+          info = 'Northern';
+        } else if (/south(ern)?/i.test(args[1])) {
+          info = 'Southern';
+        }
+        break;
+      case 'friendCode':
+        info = args.slice(1).join().replace(/[\D]/g, '');
+
+        if (info.length !== 12) {
+          return undefined;
+        }
+        info = `SW-${info.slice(0, 4)}-${info.slice(4, 8)}-${info.slice(8, 12)}`;
+        break;
+      case 'remove':
+        info = islandAliases[args[1].toLowerCase()];
+        break;
+      default:
+        info = args.slice(1).join(' ');
+          if (info.length > 10) return undefined;
+    }
+    return info;
+  }
+  set(memberID){
+    if(this.type === 'all'){
+      client.userDB.multiUpdate(
+        memberID ? memberID : this.message.author.id,
+        ['','','','','','',],
+        ['islandName', 'fruit', 'characterName', 'hemisphere', 'profileName', 'friendCode']
+      );
+      this.send('remove', 'success');
+    }
+    client.userDB.safeUpdate(memberID ? memberID : this.message.author.id, this.info, this.type)
+      .then(() => {
+        this.send(this.type === '' ? 'clear' : 'success');
+      })
+      .catch((err) => {this.client.handle(err, 'set island info', message)})
+  }
+  send(event, msg){
+    if(event === 'success'){
+      this.client.success(
+        this.message.channel,
+        client.mStrings.island[this.type][event].title,
+        client.mStrings.island[this.type][event].desc + ` **${this.info}**`
+      );
+    }
+    else if(event === 'list'){
+      const embed = new Discord.MessageEmbed()
+        .setAuthor(`${this.member.displayName}'s Island`, this.member.user.displayAvatarURL())
+        .setColor('#0ba47d')
+        .setDescription(`${msg.join('\n')}`);
+      message.channel.send(embed);
+    }
+    else{
+      this.client.error(this.message.channel, client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${client.mStrings.island[this.type][event].desc}`)
+    }
+  }
+  search(){
+    pass;
+  }
+}
 
 module.exports.conf = {
   guildOnly: true,
   aliases: ['is'],
   permLevel: 'User',
-  blockedChannels: [
-    '538938170822230026',
-    '494376688877174785',
-    '661330633510879274',
-    '651611409272274954',
-    '494467780293427200',
-    '669696796024504341',
-    '690093605821480980',
-    '699035146153623642',
-  ],
+  allowedChannels: ['718592382194417754']
 };
 
 module.exports.help = {

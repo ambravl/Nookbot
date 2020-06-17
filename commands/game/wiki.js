@@ -2,14 +2,12 @@ const Discord = require('discord.js');
 const cheerio = require('cheerio');
 const request = require('request');
 
-// eslint-disable-next-line no-unused-vars
-module.exports.run = async (client, message, args, level) => {
+module.exports.run = async (client, message, args) => {
   const search = args.join(' ').toLowerCase();
   const link = `https://duckduckgo.com/?q=%5C${escape(search)}+site%3Anookipedia.com`;
 
   const waitingMsg = await message.channel.send('Please wait while Nookbot counts its bells...');
 
-  // eslint-disable-next-line consistent-return
   request(link, (err, res, html) => {
     if (err || res.statusCode !== 200) {
       console.error(err || `DuckDuckGo Error: Status Code-${res.statusCode} Status Message-${res.statusMessage}`);

@@ -25,7 +25,7 @@ module.exports = async (client, member) => {
   });
 
   client.userDB.safeUpdate(member.id, rolesToPush, 'roles', true)
-    .catch((err) => {client.handle(err, 'guildMemberRemove', Discord)});
+    .catch((err) => {client.handle(err, 'guildMemberRemove')});
 
   const embed = new Discord.MessageEmbed()
     .setAuthor(member.user.tag, member.user.displayAvatarURL())

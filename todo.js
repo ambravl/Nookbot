@@ -18,4 +18,7 @@
 * TODO: write requirements (inc levenshtein) on README.md
 * TODO: lev earned me my switch
 * TODO: add lev config
+* TODO: change command config formatting, maybe make it an embed
+* TODO: fix magic numbers in allowed/blocked channels
+*  might be a good idea to turn it into strings: 'botCommands', etc
 * */

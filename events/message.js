@@ -20,10 +20,10 @@ module.exports = async (client, message) => {
     client.emojiDB.select(regMatch[1])
       .then((rows) => {
         if(rows) client.emojiDB.math(regMatch[1], rows[0].uses, 1, 'uses')
-          .catch((err) => client.handle(err, 'emoji increment in message event', Discord, message));
+          .catch((err) => client.handle(err, 'emoji increment in message event', message));
       })
       .catch((err) => {
-        client.handle(err, 'emoji select in message event', Discord, message);
+        client.handle(err, 'emoji select in message event', message);
       });
   }
 

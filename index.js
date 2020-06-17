@@ -30,18 +30,18 @@ require('./src/dbUser')(client);
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
-client.st = strings;
+client.mStrings = strings;
 client.token = process.env.TOKEN;
 
 client.initializeDB()
   .catch((err) => {
-    client.handle(err, 'initialize', Discord)
+    client.handle(err, 'initialize')
   })
   .then(() => {
     require('./config')(client);
   })
   .catch((err) => {
-    client.handle(err, 'require config', Discord)
+    client.handle(err, 'require config')
   })
   .then(() => {
     require('./src/functions')(client);

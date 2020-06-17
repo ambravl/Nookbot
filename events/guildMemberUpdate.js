@@ -21,7 +21,7 @@ module.exports = async (client, oldMember, newMember) => {
 
     client.userDB.safeUpdate(newMember.id, { timestamp: Date.now(), nickname: newMember.nickname || newMember.user.username }, 'nicknames')
       .catch((err) => {
-        client.handle(err, 'guildMemberUpdate', Discord)
+        client.handle(err, 'guildMemberUpdate')
       });
 
     oldMember.guild.channels.cache.get(client.config.actionLog).send(embed);

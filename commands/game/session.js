@@ -1,8 +1,5 @@
+// TODO: high-priority command, but pretty complex
 module.exports.run = (client, message, args) => {
-  if (message.channel.id !== client.config.sesReqText) {
-    client.error(message.channel, 'Command Not Available in this Channel!', `You will have to use this command in the <#${client.config.sesReqText}> channel!`);
-    return;
-  }
 
   // Number between 2 and 8
   const size = Math.max(Math.min(8, parseInt(args[0], 10) || 8), 2);
