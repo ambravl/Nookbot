@@ -40,10 +40,6 @@ module.exports = async (client) => {
     });
     client.db.connect();
     if (client.firstTime) {
-      client.db.query(`CREATE EXTENSION fuzzystrmatch`)
-        .catch((err) => {
-          client.handle(new DBError('creating extension', err), 'firstTime')
-        });
       const firstTime = await require('./first-time-setup').run(client);
       client.db.query(firstTime)
         .catch((err) => {
@@ -379,7 +375,7 @@ module.exports = async (client) => {
      */
     async levenshtein(primaryKey, col) {
       let column = col ? col : this.mainColumn;
-      const query = `SELECT *, levenshtein($1, ${column}) AS lv FROM ${this.name} WHERE lv <= 2 ORDER BY lv LIMIT 2`;
+      const query = `SELECT * FROM ${this.name} WHERE levenshtein($1, ${column}) <= 2 ORDER BY levenshtein($1, ${column}) LIMIT 2`;
       try {
         const villagers = await (client.db.query(query, [primaryKey]));
         if (!villagers || !villagers.rows || villagers.rows.length < 1) return null;
