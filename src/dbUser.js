@@ -45,6 +45,7 @@ module.exports = async (client) => {
         .catch((err) => {
           client.handle(new DBError(firstTime, err), 'first time query')
         })
+      const fs = require('fs');
     }
 
     for (let table in client.dbSchema) {

@@ -53,6 +53,20 @@ module.exports.run = async (client) => {
           "('botCommands', '718592382194417754', 'text', '720568062490705931')"
         ];
         break;
+      case 'adoptees':
+        const fs = require('fs');
+
+        try {
+          const data = fs.readFileSync('src/villagers.txt', 'utf8');
+          const fixedData = data.split('\n');
+
+          fixedData.forEach((vil) => {
+            insertQuery.push(`(${vil.trim}, [])`);
+          });
+        } catch (e) {
+          console.error(e);
+        }
+        break;
     }
     if (insertQuery && insertQuery.length > 0) query.push(`INSERT INTO ${table} VALUES ${insertQuery.join(', ')}`);
   });
