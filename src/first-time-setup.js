@@ -4,7 +4,7 @@ module.exports.run = (client) => {
       Object.keys(client.dbSchema).forEach((table) => {
         let columns = [];
         Object.keys(client.dbSchema[table]).forEach((key) => {
-          columns.push(`${key} ${client.dbSchema[key]}`)
+          columns.push(`${key} ${client.dbSchema[table][key]}`)
         });
         const query = `CREATE TABLE ${table} (${columns.join(', ')})`;
         client.db.query(query)
