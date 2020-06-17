@@ -147,8 +147,10 @@ module.exports = (client) => {
     treatData(primaryKey, vals, cols) {
       let columns;
       let values;
-      if (cols) columns = `${cols.unshift(this.mainColumn).join('", "')}`;
-      else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
+      if (cols) {
+        columns = cols.unshift(this.mainColumn);
+        columns = columns.join('", "');
+      } else columns = `${this.mainColumn}", "${this.secondaryColumn}`;
       if (vals instanceof Array) values = vals.unshift(primaryKey);
       else values = [primaryKey, vals ? vals : ''];
       return [columns, values];
