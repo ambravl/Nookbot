@@ -15,7 +15,7 @@ module.exports.run = (client, message, args) => {
           msg.react(emojiID)
             .then(() => {
               console.log(`reacted with ${emojiID}`);
-              reactions.push(`{roleID: "${roleID}", emojiID: "${emojiID}"`);
+              reactions.push(`{roleID: "${roleID}", emojiID: "${emojiID}"}`);
             })
             .catch((err) => {
               client.handle(err, 'reactionRole setup reaction', message)
