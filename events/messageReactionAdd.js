@@ -1,8 +1,7 @@
 module.exports = async (client, messageReaction, user) => {
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
-  if (!reactionRoleMenu.roleID) return;
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-  if (!member) return;
+  if (!member || !reactionRoleMenu || !reactionRoleMenu.roleID) return;
   switch (reactionRoleMenu.type) {
     case 'remove':
       if (member && member.roles.cache.has(roleID)) {
