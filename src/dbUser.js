@@ -44,8 +44,7 @@ module.exports = async (client) => {
       client.db.query(firstTime)
         .catch((err) => {
           client.handle(new DBError(firstTime, err), 'first time query')
-        })
-      const fs = require('fs');
+        });
     }
 
     for (let table in client.dbSchema) {
@@ -164,7 +163,7 @@ module.exports = async (client) => {
       if (vals instanceof Array) {
         values = vals;
         values.unshift(primaryKey);
-      } else values = [primaryKey, vals ? vals : ''];
+      } else values = [primaryKey, vals !== undefined && vals !== null ? vals : ''];
       return [columns, values];
     }
 
