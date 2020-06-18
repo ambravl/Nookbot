@@ -2,6 +2,10 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   if (!link) return;
+  console.log(link[0]);
+  console.log(link[1]);
+  console.log(link[2]);
+  console.log(link[3]);
   const msg = client.channels.cache.get(link[2]).messages.fetch(link[3]);
   const emojiRE = /<a?:\w+:([\d]+)([a-zA-Z ]+)>/g;
   let emojiArray;
