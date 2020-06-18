@@ -15,11 +15,12 @@ module.exports = (client) => {
       return;
     }
 
-    reactionRoleMenu = reactionRoleMenu.rows[0];
+    reactionRoleMenu = reactionRoleMenu.rows[0].roles;
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
 
     for (let reaction of reactionRoleMenu.reactions) {
+      console.log(reaction);
       let parse = JSON.parse(reaction);
       if (parse.emojiID === messageReaction.emoji.id || parse.emojiID === messageReaction.emoji.identifier) result.roleID = parse.roleID;
       result.roles.push(parse.roleID);
