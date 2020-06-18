@@ -5,7 +5,7 @@ module.exports.run = async (client) => {
     Object.keys(client.dbSchema[table]).forEach((key) => {
       columns.push(`${key} ${client.dbSchema[table][key]}`)
     });
-    else query.push(`DROP TABLE ${table};CREATE TABLE ${table} (${columns.join(', ')})`);
+    query.push(`DROP TABLE ${table};CREATE TABLE ${table} (${columns.join(', ')})`);
     let insertQuery = [];
     switch (table) {
       case 'permissionDB':
