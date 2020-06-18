@@ -322,7 +322,7 @@ module.exports = async (client) => {
      */
     math(primaryKey, operation, modifier, column) {
       const query = `UPDATE ${this.name} SET ${column} = ${column} ${operation} ${modifier} WHERE ${this.mainColumn} = $1 RETURNING ${column}`;
-      return client.db.query(query, [primaryKey, newValue]);
+      return client.db.query(query, [primaryKey]);
     };
 
     /**
