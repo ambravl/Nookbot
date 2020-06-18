@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   if (!link) return;
-  const msg = client.channels.cache.get(link[1]).messages.fetch(link[2]);
+  const msg = message.guild.channels.cache.get(link[1]).messages.fetch(link[2]);
   const emojiRE = /<a?:\w+:([\d]+)([a-zA-Z ]+)>/g;
   let emojiArray;
   client.reactionRoles.insert(link[2], [link[1], 'exclusive'], ['channelID', 'type'])
