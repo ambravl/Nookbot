@@ -58,7 +58,8 @@ module.exports.run = async (client) => {
           "('negativeRepLimit', '5', 'int', '')",
           "('botCommands', '718592382194417754', 'text', '720568062490705931')",
           "('giveawayChannel', '717599016665350164', 'text', '716935607934386257')",
-          "('roleChannel', '718647593319530536', 'text', '720568062490705931')"
+          "('roleChannel', '718647593319530536', 'text', '720568062490705931')",
+          "('rankedChannels', '', 'array', '720568062490705931')"
         ];
         break;
       case 'adoptees':
