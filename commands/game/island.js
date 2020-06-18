@@ -109,8 +109,8 @@ class Island {
         let message = [];
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
-            ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
-              if(res[category]){
+            ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
+              if (res[category]) {
                 message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
               }
             });
@@ -207,7 +207,7 @@ class Island {
     }
     else if(event === 'list'){
       const embed = new Discord.MessageEmbed()
-        .setAuthor(`${this.member.displayName}'s Island`, this.member.user.displayAvatarURL())
+        .setAuthor(`${this.member.displayName}'s Profile`, this.member.user.displayAvatarURL())
         .setColor('#0ba47d')
         .setDescription(`${msg.join('\n')}`);
       message.channel.send(embed);
@@ -223,7 +223,7 @@ class Island {
 
 module.exports.conf = {
   guildOnly: true,
-  aliases: ['is'],
+  aliases: ['is', 'profile', 'rank'],
   permLevel: 'User',
   allowedChannels: true,
 };
