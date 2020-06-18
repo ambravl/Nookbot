@@ -5,12 +5,17 @@ module.exports.run = (client, message, args) => {
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
+      console.log('fetched message');
       let emojiArray;
       client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['channelID', 'type'])
         .then(() => {
+          console.log('inserted into reaction db');
           while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
             const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
-            msg.react(emojiArray[0]);
+            msg.react(emojiArray[0])
+              .then(() => {
+                console.log(`reacted with ${emojiArray[0]}`)
+              });
             client.reactionRoles.push(link[3], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
           }
         })
