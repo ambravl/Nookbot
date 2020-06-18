@@ -109,5 +109,5 @@ client.login(client.token).then(() => {
 });
 
 process.on('SIGTERM', () => {
-  if (client.db) client.db.close();
+  if (client.db) client.db.end();
 });
