@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   const roleType = args.length === 2 ? args[1] : 'exclusive';
-  const emojiRE = /(?:(?:<a?:\w+:([\d]+)>)|(\p{Emoji})).+?([a-zA-Z ]+)/gu;
+  const emojiRE = RegExp('(?:(?:<a?:\w+:([\d]+)>)|(\p{Emoji})).+?([a-zA-Z ]+)', 'gu');
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
