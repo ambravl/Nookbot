@@ -19,7 +19,6 @@
    "nicknames": "text[]",
    "usernames": "text[]",
    "infractions": "text[]",
-   "lastMessageTimestamp": "bigint",
    "points": "integer"
  },
  "emojiDB":  {

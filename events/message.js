@@ -8,12 +8,11 @@ module.exports = async (client, message) => {
   // Ignore all bots
   if (message.author.bot) return;
 
-  // User activity tracking
-  client.userDB.update(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
-  if (client.config.rankedChannels.includes(message.channel.id)) {
-    client.userDB.math(message.author.id, '+', 1, 'points')
-      .then((res) => {
-        const roleID = client.ranks[res.rows[0].points];
+  client.userDB.ensure(message.author.id, 0, 'points')
+    .then((res) => {
+      if (client.config.rankedChannels.includes(message.channel.id)) {
+        client.userDB.math(message.author.id, '+', 1, 'points')
+        const roleID = client.ranks[res + 1];
         if (roleID) {
           message.member.roles.add(roleID, '[Auto] Rank Up');
           const embed = new Discord.MessageEmbed()
@@ -21,8 +20,8 @@ module.exports = async (client, message) => {
             .setDescription(client.mStrings.rank.up.descL + message.guild.roles.cache.get(roleID).name + client.mStrings.rank.up.descR);
           message.channel.send(embed);
         }
-      })
-  }
+      }
+    });
 
   // Emoji finding and tracking
   const regex = /<a?:\w+:([\d]+)>/g;
