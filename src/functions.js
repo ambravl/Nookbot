@@ -15,7 +15,7 @@ module.exports = (client) => {
       return;
     }
 
-    reactionRoleMenu = reactionRoleMenu.rows[0].roles;
+    reactionRoleMenu = reactionRoleMenu.rows[0];
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
 
