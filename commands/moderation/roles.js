@@ -1,23 +1,29 @@
 module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
-  const emojiRE = /<a?:\w+:([\d]+)([a-zA-Z ]+)>/g;
+  const roleType = args.length === 2 ? args[1] : 'exclusive';
+  const emojiRE = /(?:(?:<a?:\w+:([\d]+)>)|(\p{Emoji})).+?([a-zA-Z ]+)/gu;
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
       console.log('fetched message');
       let emojiArray;
-      client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['channelID', 'type'])
+      client.reactionRoles.insert(link[3], [link[2], roleType], ['channelID', 'type'])
         .then(() => {
           console.log('inserted into reaction db');
           console.log(msg.content);
           while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
-            const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
-            msg.react(emojiArray[0])
-              .then(() => {
-                console.log(`reacted with ${emojiArray[0]}`)
-              });
-            client.reactionRoles.push(link[3], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
+            let emojiID;
+            if (emojiArray[0]) emojiID = emojiArray[0];
+            else if (emojiArray[1]) emojiID = message.guild.emojis.cache.find(emoji => emoji.name === emojiArray[1]).identifier;
+            if (emojiID && emojiArray[2]) {
+              const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[2].trim());
+              msg.react(emojiID)
+                .then(() => {
+                  console.log(`reacted with ${emojiID}`)
+                });
+              client.reactionRoles.push(link[3], {roleID: roleID, emojiID: emojiID}, 'reactions');
+            }
           }
         })
 
