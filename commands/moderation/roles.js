@@ -14,7 +14,9 @@ module.exports.run = (client, message, args) => {
           console.log(msg.content);
           while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
             console.log(emojiArray);
-            console.log(emojiArray[3]);
+            console.log(emojiArray[0]);
+            console.log(emojiArray[1]);
+            console.log(emojiArray[2]);
             let emojiID;
             if (emojiArray[0]) emojiID = emojiArray[0];
             else if (emojiArray[1]) emojiID = message.guild.emojis.cache.find(emoji => emoji.name === emojiArray[1]).identifier;
