@@ -13,6 +13,7 @@ module.exports.run = (client, message, args) => {
           console.log('inserted into reaction db');
           console.log(msg.content);
           while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
+            console.log(emojiArray);
             let emojiID;
             if (emojiArray.groups.emojiID) emojiID = emojiArray.groups.emojiID;
             else if (emojiArray.groups.emoji) emojiID = message.guild.emojis.cache.find(emoji => emoji.name === emojiArray.groups.emoji).identifier;
