@@ -2,8 +2,10 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   if (!link) return;
+  console.log(link[0]);
   console.log(link[1]);
   console.log(link[2]);
+  console.log(link[3]);
   console.log(client.channels.cache.get(link[1]).messages.fetch(link[2]));
   const msg = message.guild.channels.cache.get(link[1]).messages.fetch(link[2]);
   console.log(msg);
