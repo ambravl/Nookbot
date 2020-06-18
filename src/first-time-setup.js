@@ -5,7 +5,6 @@ module.exports.run = async (client) => {
     Object.keys(client.dbSchema[table]).forEach((key) => {
       columns.push(`${key} ${client.dbSchema[table][key]}`)
     });
-    if (table === 'rankDB') query.push(`CREATE TABLE ${table} (${columns.join(', ')})`);
     else query.push(`DROP TABLE ${table};CREATE TABLE ${table} (${columns.join(', ')})`);
     let insertQuery = [];
     switch (table) {
@@ -22,6 +21,12 @@ module.exports.run = async (client) => {
           'Bot Admin',
           'Bot Owner']
           .forEach((v, i) => insertQuery.push(`('${i}', ${i}, '${v}')`));
+        break;
+      case 'rankDB':
+        insertQuery = [
+          "('720379698562990130', 2)",
+          "('718198373072633917', 1)"
+        ];
         break;
       case 'configDB':
         insertQuery = [
