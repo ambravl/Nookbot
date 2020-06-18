@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
   if (!args) return;
   const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   const roleType = args.length === 2 ? args[1] : 'exclusive';
-  const emojiRE = RegExp("(?:(?<emoji>[^\x00-\x7F])|<:\w+:(?<emojiID>\d+)>).+?(?<roleName>[\w ']+)", 'gu');
+  const emojiRE = RegExp("(?:([^\x00-\x7F])|<:\w+:(\d+)>).+?([\w ']+)", 'gu');
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
@@ -14,11 +14,12 @@ module.exports.run = (client, message, args) => {
           console.log(msg.content);
           while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
             console.log(emojiArray);
+            console.log(emojiArray[3]);
             let emojiID;
-            if (emojiArray.groups.emojiID) emojiID = emojiArray.groups.emojiID;
-            else if (emojiArray.groups.emoji) emojiID = message.guild.emojis.cache.find(emoji => emoji.name === emojiArray.groups.emoji).identifier;
-            if (emojiID && emojiArray.groups.roleName) {
-              const roleID = message.guild.roles.cache.find((r) => r.name.toLowerCase() === emojiArray.groups.roleName.trim().toLowerCase());
+            if (emojiArray[0]) emojiID = emojiArray[0];
+            else if (emojiArray[1]) emojiID = message.guild.emojis.cache.find(emoji => emoji.name === emojiArray[1]).identifier;
+            if (emojiID && emojiArray[2]) {
+              const roleID = message.guild.roles.cache.find((r) => r.name.toLowerCase() === emojiArray[2].trim().toLowerCase());
               msg.react(emojiID)
                 .then(() => {
                   console.log(`reacted with ${emojiID}`)
