@@ -108,6 +108,6 @@ client.login(client.token).then(() => {
   }, 30000);
 });
 
-process.on('SIGTERM', () => {
-  if (client.db) client.db.end();
-});
+// process.on('SIGTERM', () => {
+//   if (client.db) client.db.end();
+// });
