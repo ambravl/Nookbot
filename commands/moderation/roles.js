@@ -5,7 +5,7 @@ module.exports.run = (client, message, args) => {
   const msg = client.channels.cache.get(link[2]).messages.fetch(link[3]);
   const emojiRE = /<a?:\w+:([\d]+)([a-zA-Z ]+)>/g;
   let emojiArray;
-  client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['messageID', 'channelID', 'type'])
+  client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['channelID', 'type'])
     .then(() => {
       while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
         const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
