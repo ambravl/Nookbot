@@ -160,8 +160,10 @@ module.exports = async (client) => {
         columns.unshift(this.mainColumn);
         columns = columns.join(', ');
       } else columns = `${this.mainColumn}, ${this.secondaryColumn}`;
-      if (vals instanceof Array) values = vals.unshift(primaryKey);
-      else values = [primaryKey, vals ? vals : ''];
+      if (vals instanceof Array) {
+        values = vals;
+        values.unshift(primaryKey);
+      } else values = [primaryKey, vals ? vals : ''];
       return [columns, values];
     }
 
@@ -172,8 +174,7 @@ module.exports = async (client) => {
      */
     async insert(primaryKey, vals, cols) {
       const [columns, values] = this.treatData(primaryKey, vals, cols);
-      console.log(values);
-      const valueCall = values.length > 2 ? '$1, $2, $3' : '$1, $2';
+      const valueCall = values.length === 3 ? '$1, $2, $3' : '$1, $2';
       const query = `INSERT INTO ${this.name} (${columns}) VALUES (${valueCall})`;
       client.db.query(query, values)
         .catch((err) => {
