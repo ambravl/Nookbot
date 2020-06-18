@@ -3,12 +3,36 @@ const Discord = require('discord.js');
 const moment = require('moment');
 
 module.exports = (client) => {
+  client.handleReaction = async (client, messageReaction, user) => {
+    if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
+      return;
+    }
+
+    let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id);
+
+    // If not there isn't a type, then this is not a reaction role message.
+    if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
+      return;
+    }
+
+    reactionRoleMenu = reactionRoleMenu.rows[0];
+
+    let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
+
+    for (let reaction of reactionRoleMenu.reactions) {
+      let parse = JSON.parse(reaction);
+      if (parse.emojiID === messageReaction.emoji.id || parse.emojiID === messageReaction.emoji.identifier) result.roleID = parse.roleID;
+      result.roles.push(parse.roleID);
+      result.emoji.push(parse.emojiID);
+    }
+    return result;
+  };
   client.permLevel = (message) => {
     let permission;
     let i = 0;
-    while(i < client.levelCache.length){
+    while (i < client.levelCache.length) {
       let currentLevel = client.levelCache[i];
-      if(client.levelCheck(currentLevel, client, message)) permission = currentLevel;
+      if (client.levelCheck(currentLevel, client, message)) permission = currentLevel;
       else i = client.levelCache.length;
       i++;
     }

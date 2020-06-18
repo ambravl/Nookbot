@@ -1,25 +1,11 @@
 module.exports = async (client, messageReaction, user) => {
-  if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
-    return;
-  }
-
-  let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id);
-
-  // If not there isn't a type, then this is not a reaction role message.
-  if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
-    return;
-  }
-
-  reactionRoleMenu = reactionRoleMenu.rows[0];
-
-
-  reactionRoleMenu.reactions = JSON.parse(reactionRoleMenu.reactions);
-  const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
-
-  if (roleID) {
-    const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-    if (member && member.roles.cache.has(roleID)) {
-      member.roles.remove(roleID, '[Auto] Reaction Role Remove');
-    }
+  const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
+  const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
+  if (!member || !reactionRoleMenu || !reactionRoleMenu.roleID) return;
+  if (member.roles.cache.has(reactionRoleMenu.roleID)) {
+    member.roles.remove(reactionRoleMenu.roleID, '[Auto] Reaction Role Remove')
+      .catch((err) => {
+        client.handle(err, 'remove role based on reaction', messageReaction.message)
+      });
   }
 };
