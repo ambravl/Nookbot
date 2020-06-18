@@ -7,8 +7,8 @@ module.exports.run = (client, message, args) => {
   let emojiArray;
   client.reactionRoles.insert(link[3], [link[2], 'exclusive'], ['channelID', 'type'])
     .then(() => {
+      console.log('got here');
       while ((emojiArray = emojiRE.exec(msg.content) !== null)) {
-        console.log('got here');
         const roleID = message.guild.roles.cache.find((r) => r.name === emojiArray[1].trim());
         msg.react(emojiArray[0]);
         client.reactionRoles.push(link[3], {roleID: roleID, emojiID: emojiArray[0]}, 'reactions');
