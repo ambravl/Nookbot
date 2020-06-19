@@ -312,7 +312,26 @@ class Search extends Profile {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
-        const embed = this.makeEmbed(client.mStrings.island, Discord);
+        const embed = new Discord.MessageEmbed()
+          .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
+          .setColor('#0ba47d');
+        if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
+        let embeds;
+        if (this.userInfo) {
+          ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
+            if (this.userInfo[category]) {
+              embeds.push({
+                name: strings[category].name,
+                value: this.userInfo[category],
+                inline: true
+              });
+            }
+          });
+          if (embeds) embed.addFields(embeds);
+        }
+        if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
+          embed.setDescription(client.mStrings.island.search.none);
+        }
         const image = await this.makeImage(message.guild.memberCount);
         message.channel.send(embed, image);
       })
