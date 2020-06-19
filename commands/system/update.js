@@ -1,5 +1,5 @@
 module.exports.run = (client, message, args) => {
-  if (!args || args[0].toLowerCase() === 'users') {
+  if (!args || !args[0] || args[0].toLowerCase() === 'users') {
     message.guild.members.fetch()
       .then(members => {
         members.each(member => client.userDB.ensure(member.id, 0, 'points'))
@@ -8,7 +8,7 @@ module.exports.run = (client, message, args) => {
         client.handle(err, 'user update', message)
       });
   }
-  if (!args || args[0].toLowerCase() === 'emoji')
+  if (!args || !args[0] || args[0].toLowerCase() === 'emoji')
     message.guild.emojis.cache.each(emoji => client.emojiDB.ensure(emoji.id, 0, 'uses'))
 };
 
