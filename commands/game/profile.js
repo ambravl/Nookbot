@@ -223,7 +223,7 @@ class Profile {
         this.send(this.type === '' ? 'clear' : 'success');
       })
       .catch((err) => {
-        this.client.handle(err, 'set island info', this.message)
+        this.client.handle(err, 'set island info')
       })
   }
   send(event, msg){
