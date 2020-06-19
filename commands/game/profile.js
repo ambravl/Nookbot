@@ -69,7 +69,7 @@ class Profile {
       this.info = this.validate(args.shift());
     } else {
       this.message = message;
-      this.info = this.validate(args);
+      this.info = this.validate(args, this.message);
       console.log(this.info);
     }
   }
