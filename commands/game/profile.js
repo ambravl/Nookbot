@@ -310,9 +310,10 @@ class Search extends Profile {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
+        let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankRole);
         const embed = this.makeEmbed(
           client.mStrings.island,
-          message.guild.roles.cache.find((r) => r.name === this.userInfo.rankRole).color,
+          role ? role.color : '#ffffff',
           Discord
         );
         const image = await this.makeImage(message.guild.memberCount);
