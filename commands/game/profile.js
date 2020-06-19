@@ -1,7 +1,6 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
   if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
-  console.log(args[0]);
   if (args[0]) {
     let island = new Profile(client, message, args);
     island.run()
@@ -308,7 +307,6 @@ class Search extends Profile {
   async send(client, message) {
     client.userDB.selectAll(this.user.id)
       .then(async (res) => {
-        console.log(res);
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');

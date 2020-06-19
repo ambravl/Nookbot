@@ -2,7 +2,6 @@ module.exports = (client) => {
   client.config = {};
   client.configDB.cacheDB().then((res) => {
     let config = res.rows;
-    console.log(`config has ${config.length} rows`);
     const valueCol = client.testing ? "testing_value" : "config_value";
     config.forEach(row => {
       let configValue = row[valueCol];

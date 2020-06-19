@@ -143,7 +143,6 @@ If you believe this member is a mention spammer bot, please ban them with the co
   }
 
   const permissionLevel = client.permLevel(message);
-  console.log(permissionLevel);
 
   // Our standard argument/command name definition.
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
