@@ -205,6 +205,44 @@
     "points": {
       "name": "Rank Points"
     },
+    "bio": {
+      "name": "bio",
+      "none": {
+        "title": "No description given!",
+        "desc": "Please supply your bio!"
+      },
+      "invalid": {
+        "title": "Too long!",
+        "desc": "Your bio is longer than 240 characters, or it has a word that's too long. Please change it!"
+      },
+      "success": {
+        "title": "Successfully set your bio!",
+        "desc": "Bio:"
+      },
+      "clear": {
+        "title": "Successfully cleared your bio!",
+        "desc": "To set your bio again, use `.profile bio <bio>`!"
+      }
+    },
+    "background": {
+      "name": "bio",
+      "none": {
+        "title": "No background given!",
+        "desc": "Please supply your background!"
+      },
+      "invalid": {
+        "title": "Invalid background!",
+        "desc": "Your background must either be an image "
+      },
+      "success": {
+        "title": "Successfully set your bio!",
+        "desc": "Bio:"
+      },
+      "clear": {
+        "title": "Successfully cleared your bio!",
+        "desc": "To set your bio again, use `.profile bio <bio>`!"
+      }
+    },
     "remove": {
       "none": {
         "title": "No Value To Remove!",

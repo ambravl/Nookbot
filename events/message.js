@@ -5,6 +5,7 @@ const Discord = require('discord.js');
 const cooldowns = new Discord.Collection();
 
 module.exports = async (client, message) => {
+  console.log(message.attachments);
   // Ignore all bots
   if (message.author.bot) return;
 

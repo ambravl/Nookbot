@@ -8,32 +8,39 @@ module.exports.run = async (client, message, args, level) => {
 
 // noinspection SpellCheckingInspection
 const islandAliases = {
+  "bg": "background",
+  "background": "background",
+  "wallpaper": "background",
+  "bio": "bio",
+  "description": "bio",
+  "desc": "bio",
+  "biography": "bio",
   "island": "islandName",
   "islandname": "islandName",
-  "in":"islandName",
-  "townname":"islandName",
-  "tn":"islandName",
-  "fruit":"fruit",
-  'fr':'fruit',
-  'f':'fruit',
-  'charactername':'characterName',
-  'character':'characterName',
-  'charname':'characterName',
-  'cn':'characterName',
-  'villagername':'characterName',
-  'vn':'characterName',
-  'islandername':'characterName',
-  'hermisphere':'hemisphere',
-  'hem':'hemisphere',
-  'hm':'hemisphere',
-  'hemi':'hemisphere',
-  'profilename':'profileName',
-  'profile':'profileName',
-  'pn':'profileName',
-  'switchname':'profileName',
-  'sn':'profileName',
-  'friendcode':'friendCode',
-  'fc':'friendCode',
+  "in": "islandName",
+  "townname": "islandName",
+  "tn": "islandName",
+  "fruit": "fruit",
+  'fr': 'fruit',
+  'f': 'fruit',
+  'charactername': 'characterName',
+  'character': 'characterName',
+  'charname': 'characterName',
+  'cn': 'characterName',
+  'villagername': 'characterName',
+  'vn': 'characterName',
+  'islandername': 'characterName',
+  'hemisphere': 'hemisphere',
+  'hem': 'hemisphere',
+  'hm': 'hemisphere',
+  'hemi': 'hemisphere',
+  'profilename': 'profileName',
+  'profile': 'profileName',
+  'pn': 'profileName',
+  'switchname': 'profileName',
+  'sn': 'profileName',
+  'friendcode': 'friendCode',
+  'fc': 'friendCode',
   'code':'friendCode',
   'remove':'remove',
   'delete':'remove',
@@ -176,9 +183,24 @@ class Profile {
       case 'remove':
         info = islandAliases[args[1].toLowerCase()];
         break;
+      case 'background':
+        if (message.attachments) {
+          info = message.attachments.first()
+        }
+        if (!args[1].startsWith('http')) return undefined;
+        if (!args[1].endsWith('.png') && !args[1].endsWith('.jpg') && !args[1].endsWith('.gif')) return undefined;
+        info = args[1];
+        break;
+      case 'bio':
+        args.forEach((txt) => {
+          if (txt.length > 45) return undefined;
+        });
+        info = args.slice(1).join(' ');
+        if (info.length > 240) return undefined;
+        break;
       default:
         info = args.slice(1).join(' ');
-          if (info.length > 10) return undefined;
+        if (info.length > 10) return undefined;
     }
     return info;
   }

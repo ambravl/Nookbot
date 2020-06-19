@@ -7,10 +7,12 @@
    "memberID": "text PRIMARY KEY",
    "friendCode": "text",
    "islandName": "text",
-    "fruit": "text",
+   "fruit": "text",
    "characterName": "text",
    "hemisphere": "boolean",
    "profileName": "text",
+   "bio": "text",
+   "background": "text",
    "positiveRep": "smallint",
    "negativeRep": "smallint",
    "posRepList": "bigint[]",
@@ -65,6 +67,7 @@
   },
   "rankDB": {
     "roleID": "text PRIMARY KEY",
-    "minPoints": "integer"
+    "minPoints": "integer",
+    "color": "text"
   }
 }
