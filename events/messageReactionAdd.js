@@ -10,7 +10,10 @@ module.exports = async (client, messageReaction, user) => {
       }
     });
     if (rolesToRemove.length !== 0) {
-      await member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove');
+      member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove')
+        .catch((err) => {
+          client.handle(err, 'removing exclusive reactions', messageReaction.message)
+        })
     }
   }
   // Members can have any number of the roles in this menu.
