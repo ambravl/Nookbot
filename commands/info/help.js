@@ -22,6 +22,7 @@ module.exports.run = (client, message, [command], level) => {
     }
   } else {
     let levels = client.levelCache.map((cmd) => cmd.name);
+    console.log(levels);
     let commands = client.commands.filter((cmd) => levels.indexOf(cmd.conf.permLevel) <= level
       && client.enabledCommands.get(cmd.help.name) === true);
 
