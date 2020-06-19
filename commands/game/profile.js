@@ -224,8 +224,7 @@ class Profile {
 class Search extends Profile {
   constructor(client, message, args) {
     super(client, message, args);
-    this.user = this.validate(args, message);
-    console.log(this.user);
+    this.user = this.validate(message, args);
     client.userDB.selectAll(this.user.id)
       .then((res) => {
         if (!res || !res.rows || res.rows.length === 0) this.userInfo = undefined;
