@@ -293,19 +293,21 @@ class Search extends Profile {
     const embed = new Discord.MessageEmbed()
       .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
       .setColor('#0ba47d');
-    if (this.userInfo.bio) embed.setDescription(this.userInfo.bio);
+    if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
     let embeds;
-    ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
-      if (this.userInfo[category]) {
-        embeds.push({
-          name: strings[category].name,
-          value: this.userInfo[category],
-          inline: true
-        });
-      }
-    });
-    if (embeds) embed.addFields(embeds);
-    if (!embeds && !this.userInfo.bio) {
+    if (this.userInfo) {
+      ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
+        if (this.userInfo[category]) {
+          embeds.push({
+            name: strings[category].name,
+            value: this.userInfo[category],
+            inline: true
+          });
+        }
+      });
+      if (embeds) embed.addFields(embeds);
+    }
+    if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
       embed.setDescription(strings.search.none);
     }
     return embed;
