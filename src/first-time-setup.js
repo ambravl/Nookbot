@@ -24,8 +24,8 @@ module.exports.run = async (client) => {
         break;
       case 'rankDB':
         insertQuery = [
-          "('720379698562990130', 2)",
-          "('718198373072633917', 1)"
+          "('720379698562990130', 2, '#00ff00')",
+          "('718198373072633917', 1, '#ff0000')"
         ];
         break;
       case 'configDB':

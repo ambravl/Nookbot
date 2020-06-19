@@ -115,20 +115,25 @@ class Profile {
     if (this.info === 'none') this.send('none');
     else {
       if(this.type === 'search'){
-        let message = [];
+        let playerInfo = [];
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
             if (res) {
-              ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
+              ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
                 if (res[category]) {
-                  message.push(`${this.client.mStrings.island[category].name}: **${res[category]}**`);
+                  playerInfo.push({
+                    name: this.client.mStrings.island[category].name,
+                    value: res[category],
+                    inline: true
+                  });
                 }
               });
+              if (res.bio) playerInfo.unshift(res.bio);
             }
-            if (message.length < 1) {
-              if (this.info.id === message.author.id) this.send('noneSelf');
+            if (playerInfo.length < 1) {
+              if (this.info.id === playerInfo.author.id) this.send('noneSelf');
               else this.send('noneOther');
-            } else this.send('list', message)
+            } else this.send('list', playerInfo)
           })
 
       } else {
@@ -226,20 +231,24 @@ class Profile {
         this.client.handle(err, 'set island info')
       })
   }
-  send(event, msg){
-    if(event === 'success'){
+
+  send(event, playerInfo) {
+    if (event === 'success') {
       this.client.success(
         this.message.channel,
         this.client.mStrings.island[this.type].success.title,
         this.client.mStrings.island[this.type], success.desc + ` **${this.info}**`
       );
-    }
-    else if(event === 'list'){
+    } else if (event === 'list') {
       const Discord = require('discord.js');
       const embed = new Discord.MessageEmbed()
         .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
-        .setColor('#0ba47d')
-        .setDescription(`${msg.join('\n')}`);
+        .setColor('#0ba47d');
+      if (typeof playerInfo[0] === 'string' || playerInfo[0] instanceof String) {
+        embed.setDescription(playerInfo[0]);
+        playerInfo.shift();
+      }
+      if (playerInfo) embed.addFields(playerInfo);
       this.message.channel.send(embed);
     }
     else{
