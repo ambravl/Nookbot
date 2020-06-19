@@ -139,20 +139,20 @@ class Profile {
     }
   }
 
-  validate(message, args){
-    if(this.type !== 'search' && args.length === 1){
+  validate(args) {
+    if (this.type !== 'search' && args.length === 1) {
       return 'none';
     }
     let info;
-    switch(this.type) {
+    switch (this.type) {
       case 'search':
         if (args) {
           info = (
-            message.mentions.members.first() ||
-            message.guild.members.cache.get(args[0]) ||
+            this.message.mentions.members.first() ||
+            this.message.guild.members.cache.get(args[0]) ||
             client.searchMember(args.join(' '))
           );
-        } else info = message.author;
+        } else info = message.member;
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
@@ -186,8 +186,8 @@ class Profile {
         info = islandAliases[args[1].toLowerCase()];
         break;
       case 'background':
-        if (message.attachments) {
-          info = message.attachments.first().url;
+        if (this.message.attachments) {
+          info = this.message.attachments.first().url;
         } else {
           if (!args[1].startsWith('http')) return undefined;
           if (!args[1].endsWith('.png') && !args[1].endsWith('.jpg') && !args[1].endsWith('.gif')) return undefined;
