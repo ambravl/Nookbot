@@ -2,10 +2,8 @@ module.exports = (client) => {
   client.config = {};
   client.configDB.cacheDB().then((res) => {
     let config = res.rows;
-    const valueCol = client.testing ? "testing_value" : "config_value";
     config.forEach(row => {
-      let configValue = row[valueCol];
-      if (!configValue && valueCol === 'testing_value') configValue = row.config_value;
+      let configValue = row.config_value;
       switch (row.config_type) {
         case 'int':
           client.config[row.config_name] = parseInt(configValue);
