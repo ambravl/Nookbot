@@ -33,7 +33,8 @@ module.exports = (client) => {
     res.rows.forEach(row => {
       client.levelCache[parseInt(row.level)] = {
         roleID: row.roleID,
-        name: row.name
+        name: row.name,
+        level: parseInt(row.level)
       }
     })
   })
