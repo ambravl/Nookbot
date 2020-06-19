@@ -158,6 +158,7 @@ class Profile {
         } else {
           info = this.message.member;
           console.log(info);
+          console.log(this.message.member);
         }
         break;
       case 'fruit':
