@@ -237,7 +237,7 @@ class Profile {
     else if(event === 'list'){
       const Discord = require('discord.js');
       const embed = new Discord.MessageEmbed()
-        .setAuthor(`${this.info.displayName}'s Profile`, this.info.displayAvatarURL())
+        .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
         .setColor('#0ba47d')
         .setDescription(`${msg.join('\n')}`);
       message.channel.send(embed);
