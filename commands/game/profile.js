@@ -150,7 +150,7 @@ class Profile {
             message.guild.members.cache.get(args[0]) ||
             client.searchMember(args.join(' '))
           );
-        } else info = message.member;
+        } else info = message.author;
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
