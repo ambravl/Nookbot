@@ -89,7 +89,6 @@ module.exports = async (client) => {
       const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
-        console.log(res);
         if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');
         if (column === '*') return res.rows[0];
         else {
@@ -101,7 +100,6 @@ module.exports = async (client) => {
             });
         }
       } catch (e) {
-        console.log(e);
         if (column === '*') {
           const insertQuery = `INSERT INTO ${this.name} (${this.mainColumn}) VALUES ($1)`;
           client.db.query(insertQuery, [primaryKey])

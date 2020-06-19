@@ -77,7 +77,7 @@ class Profile {
       if (!member) {
         if (parseInt(args[1], 10)) {
           try {
-            member = await client.users.fetch(args[1]);
+            member = await this.client.users.fetch(args[1]);
           } catch (err) {
             console.log(err);
           }
@@ -85,9 +85,9 @@ class Profile {
       }
 
       if (!member) {
-        const searchedMember = client.searchMember(args[1]);
+        const searchedMember = this.client.searchMember(args[1]);
         if (searchedMember) {
-          const decision = await client.reactPrompt(
+          const decision = await this.client.reactPrompt(
             message,
             `Would you like to moderate \`${searchedMember.user.tag}\`'s island settings?`
           );
@@ -142,9 +142,6 @@ class Profile {
   }
 
   validate(args, message) {
-    console.log(message);
-    console.log(message.member);
-    console.log('division');
     if (this.type !== 'search' && args.length === 1) {
       return 'none';
     }
