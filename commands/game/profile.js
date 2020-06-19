@@ -155,6 +155,7 @@ class Profile {
             this.client.searchMember(args.join(' '))
           );
         } else info = message.member;
+        console.log(info);
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
