@@ -118,14 +118,16 @@ class Profile {
         let message = [];
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
-            ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
-              if (res[category]) {
-                message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
-              }
-            });
+            if (res) {
+              ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
+                if (res[category]) {
+                  message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
+                }
+              });
+            }
             if (message.length < 1) {
               if (this.info.id === message.author.id) this.send('noneSelf');
-              else this.send('noneOther')
+              else this.send('noneOther');
             } else this.send('list', message)
           })
 

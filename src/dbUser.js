@@ -101,6 +101,7 @@ module.exports = async (client) => {
             });
         }
       } catch (e) {
+        console.log(e);
         if (column === '*') {
           const insertQuery = `INSERT INTO ${this.name} (${this.mainColumn}) VALUES ($1)`;
           client.db.query(insertQuery, [primaryKey])
