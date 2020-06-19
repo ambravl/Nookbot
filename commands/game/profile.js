@@ -70,6 +70,7 @@ class Profile {
     } else {
       this.message = message;
       this.info = this.validate(args);
+      console.log(this.info);
     }
   }
 
@@ -154,7 +155,10 @@ class Profile {
             this.message.guild.members.cache.get(args[0]) ||
             this.client.searchMember(args.join(' '))
           );
-        } else info = this.message.member;
+        } else {
+          info = this.message.member;
+          console.log(info);
+        }
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
@@ -207,6 +211,7 @@ class Profile {
         info = args.slice(1).join(' ');
         if (info.length > 10) return undefined;
     }
+    console.log(info);
     return info;
   }
   set(memberID){
