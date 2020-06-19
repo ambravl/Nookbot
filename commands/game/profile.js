@@ -59,6 +59,9 @@ class Profile {
     this.client = client;
     this.type = args[0] ? islandAliases[args[0].toLowerCase()] : 'search';
     this.type = this.type ? this.type : 'search';
+    this.message = message;
+    console.log(this.message);
+    console.log(this.message.member);
     if (this.type === 'mod') {
       this.message = this.mod(args, message);
       if (typeof this.message.author === 'string') {
@@ -68,7 +71,6 @@ class Profile {
       this.type = 'remove';
       this.info = this.validate(args.shift());
     } else {
-      this.message = message;
       this.info = this.validate(args, this.message);
       console.log(this.info);
     }
