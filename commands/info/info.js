@@ -100,7 +100,7 @@ module.exports.conf = {
 module.exports.help = {
   name: 'info',
   category: 'info',
-  description: 'Provides info of the specified source',
+  description: 'Provides info about the specified source (bot, server, member, etc)',
   usage: 'info <bot|user|server>',
   details: '<bot|user|server> => The source of info.',
 };

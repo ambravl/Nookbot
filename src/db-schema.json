@@ -28,11 +28,6 @@
   "emojiID": "text PRIMARY KEY",
   "uses": "integer"
  },
- "adoptees":  {
-  "name": "text PRIMARY KEY",
-  "adopters": "text[]",
-   "curOffset": "integer"
- },
  "tags":  {
   "tag": "text PRIMARY KEY",
   "content": "text"

@@ -129,15 +129,7 @@ module.exports.conf = {
   guildOnly: false,
   aliases: ['character', 'char', 'villager', 'vil', 'item'],
   permLevel: 'User',
-  args: 1,
-  blockedChannels: [
-    '538938170822230026',
-    '494376688877174785',
-    '661330633510879274',
-    '651611409272274954',
-    '494467780293427200',
-    '669696796024504341',
-  ],
+  args: 1
 };
 
 module.exports.help = {

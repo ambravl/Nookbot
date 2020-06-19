@@ -160,10 +160,6 @@ If you believe this member is a mention spammer bot, please ban them with the co
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');
   }
 
-  if (cmd.conf.blockedChannels && cmd.conf.blockedChannels.includes(message.channel.id) && permissionLevel.level < 4) {
-    return client.error(message.channel, 'Command Not Available in this Channel!', 'Please use it in the right channel!');
-  }
-
   if (cmd.conf.allowedChannels && client.config.botCommands !== message.channel.id && permissionLevel.level < 4) {
     return client.error(message.channel, 'Command Not Available in this Channel!', `You will have to use this command in one of the allowed channels: ${cmd.conf.allowedChannels.map((ch) => `<#${ch}>`).join(', ')}.`);
   }
