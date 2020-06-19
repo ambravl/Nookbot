@@ -241,7 +241,7 @@ class Search extends Profile {
     const Canvas = require('canvas');
     const canvas = Canvas.createCanvas(700, 200);
     const ctx = canvas.getContext('2d');
-    const bg = this.userInfo.bg ? this.userInfo.bg : '../../src/bg.png';
+    const bg = this.userInfo.bg ? this.userInfo.bg : './src/bg.png';
     const background = await Canvas.loadImage(bg);
     const applyText = (canvas, text) => {
       const ctx = canvas.getContext('2d');
