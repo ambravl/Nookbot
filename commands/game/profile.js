@@ -150,7 +150,7 @@ class Profile {
           info = (
             this.message.mentions.members.first() ||
             this.message.guild.members.cache.get(args[0]) ||
-            client.searchMember(args.join(' '))
+            this.client.searchMember(args.join(' '))
           );
         } else info = message.member;
         break;
