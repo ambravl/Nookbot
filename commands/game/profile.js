@@ -270,12 +270,12 @@ class Search extends Profile {
     ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
 
     ctx.beginPath();
-    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
     ctx.closePath();
     ctx.clip();
 
     const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
-    ctx.drawImage(avatar, 25, 25, 200, 200);
+    ctx.drawImage(avatar, 25, 25, 150, 150);
 
     return canvas.toBuffer();
   }
