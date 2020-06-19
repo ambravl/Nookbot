@@ -12,8 +12,7 @@ module.exports = async (client, message) => {
     .then((res) => {
       if (client.config.rankedChannels.includes(message.channel.id)) {
         client.userDB.math(message.author.id, '+', 1, 'points');
-        const role = client.ranks[res + 1];
-        console.log(role);
+        const role = client.ranks.find(rank => rank.minPoints === res + 1);
         if (role) {
           message.member.roles.add(role.roleID, '[Auto] Rank Up');
           if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');

@@ -5,6 +5,7 @@ const request = require('request');
 module.exports.run = async (client, message, args) => {
   const search = args.join(' ').toLowerCase();
   const link = `https://duckduckgo.com/?q=%5C${escape(search)}+site%3Anookipedia.com`;
+  console.log(link);
 
   const waitingMsg = await message.channel.send('Please wait while Nookbot counts its bells...');
 
