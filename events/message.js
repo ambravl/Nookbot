@@ -10,6 +10,7 @@ module.exports = async (client, message) => {
 
   client.userDB.ensure(message.author.id, 0, 'points')
     .then((res) => {
+      if (res === 0) client.userDB.insert(message.author.id, '723586405498093600', 'rankRole');
       if (client.config.rankedChannels.includes(message.channel.id)) {
         client.userDB.math(message.author.id, '+', 1, 'points');
         const role = client.ranks[res + 1];
