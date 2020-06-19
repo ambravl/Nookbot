@@ -317,7 +317,7 @@ class Search extends Profile {
         this.message.channel.send(embed, image);
       })
       .catch((err) => {
-        client.handle(err, 'search constructor', message)
+        client.handle(err, 'search constructor')
       });
   }
 
