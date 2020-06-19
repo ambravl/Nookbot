@@ -229,6 +229,8 @@ class Search extends Profile {
       .then((res) => {
         if (!res || !res.rows || res.rows.length === 0) this.userInfo = undefined;
         else this.userInfo = res.rows[0];
+        console.log(this.userInfo);
+        console.log(res);
       })
       .catch((err) => {
         client.handle(err, 'search constructor', message)
