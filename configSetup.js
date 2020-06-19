@@ -20,13 +20,11 @@ module.exports = (client) => {
 
   client.rankDB.cacheDB().then((res) => {
     client.ranks = [];
-    let guildRoles = client.guilds.cache.get(client.config.mainGuild).roles.cache;
     for (let i = 0; i < res.rows.length; i++) {
       client.ranks.push({
         minPoints: res.rows[i].minPoints,
         previous: i === 0 ? undefined : res.rows[i - 1].roleID,
-        roleID: res.rows[i].roleID,
-        roleName: guildRoles.get(res.rows[i].roleID)
+        roleID: res.rows[i].roleID
       })
     }
   });

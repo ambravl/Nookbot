@@ -5,7 +5,6 @@ const request = require('request');
 module.exports.run = async (client, message, args) => {
   const search = args.join(' ').toLowerCase();
   const link = `https://duckduckgo.com/?q=%5C${escape(search)}+site%3Anookipedia.com`;
-  console.log(link);
 
   const waitingMsg = await message.channel.send('Please wait while Nookbot counts its bells...');
 
@@ -110,7 +109,7 @@ module.exports.run = async (client, message, args) => {
         default:
           color = 'RANDOM';
       }
-
+console.log(image);
       const embed = new Discord.MessageEmbed()
         .setColor(color)
         .setTimestamp()
