@@ -139,6 +139,9 @@ class Profile {
   }
 
   validate(args, message) {
+    console.log(message);
+    console.log(message.member);
+    console.log('division');
     if (this.type !== 'search' && args.length === 1) {
       return 'none';
     }
