@@ -19,6 +19,7 @@ module.exports = async (client, messageReaction, user) => {
       .catch((err) => {
         client.handle(err, 'adding reaction role', messageReaction.message)
       });
+  }
 
     // If message has a cumulative count of reactions over 4000, reset all the reactions on the message.
     let totalReactions = 0;
