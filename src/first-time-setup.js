@@ -40,7 +40,7 @@ module.exports.run = async (client) => {
           "('modLog', '720058757954011231', 'text', '720568062490705931')",
           "('reportMail', '720058757954011231', 'text', '720568062490705931')",
           "('modMailGuild', '', 'text', '')",
-          "('mainGuild', '717575621420646432', 'text', '435195075375661067')",
+          "('mainGuild', '717575621420646432', 'text', '723559554285174864')",
           "('raidJoinCount', '10', 'int', '1')",
           "('raidJoinsPerSecond', '10', 'int', '1')",
           "('joinLeaveLog', '717575621961580609', 'text', '720057918791090212')",
@@ -56,10 +56,10 @@ module.exports.run = async (client) => {
           "('announcementsChannel', '', 'text', '716935607934386257')",
           "('positiveRepLimit', '100', 'int', '')",
           "('negativeRepLimit', '5', 'int', '')",
-          "('botCommands', '718592382194417754', 'text', '720568062490705931')",
+          "('botCommands', '718592382194417754', 'text', '723559554285174869')",
           "('giveawayChannel', '717599016665350164', 'text', '716935607934386257')",
           "('roleChannel', '718647593319530536', 'text', '720568062490705931')",
-          "('rankedChannels', '', 'array', '720568062490705931')"
+          "('rankedChannels', '', 'array', '723559554285174869')"
         ];
         break;
       case 'adoptees':
