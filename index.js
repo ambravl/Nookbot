@@ -1,5 +1,5 @@
-const firstTime = true;
-const testing = true;
+const firstTime = false;
+const testing = false;
 const Discord = require('discord.js');
 const fs = require('fs');
 
