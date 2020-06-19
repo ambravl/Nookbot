@@ -235,6 +235,7 @@ class Profile {
       );
     }
     else if(event === 'list'){
+      const Discord = require('discord.js');
       const embed = new Discord.MessageEmbed()
         .setAuthor(`${this.member.displayName}'s Profile`, this.member.user.displayAvatarURL())
         .setColor('#0ba47d')
