@@ -236,28 +236,29 @@ class Search extends Profile {
     return message.member;
   }
 
-  async makeImage(memberCount) {
-    const Canvas = require('canvas');
-    const canvas = Canvas.createCanvas(700, 200);
+async makeImage(memberCount, color) {
+  const Canvas = require('canvas');
+  const canvas = Canvas.createCanvas(700, 200);
+  const ctx = canvas.getContext('2d');
+  const bg = this.userInfo.bg ? this.userInfo.bg : './src/bg.png';
+  const background = await Canvas.loadImage(bg);
+  ctx.fillStyle = ctx.createPattern(background, "repeat-x");
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const applyText = (canvas, text) => {
     const ctx = canvas.getContext('2d');
-    const bg = this.userInfo.bg ? this.userInfo.bg : './src/bg.png';
-    const background = await Canvas.loadImage(bg);
-    const applyText = (canvas, text) => {
-      const ctx = canvas.getContext('2d');
 
-      // Declare a base size of the font
-      let fontSize = 70;
+    // Declare a base size of the font
+    let fontSize = 70;
 
-      do {
-        // Assign the font to the context and decrement it so it can be measured again
-        ctx.font = `${fontSize -= 10}px sans-serif`;
-        // Compare pixel width of the text to the canvas minus the approximate avatar size
+    do {
+      // Assign the font to the context and decrement it so it can be measured again
+      ctx.font = `${fontSize -= 10}px sans-serif`;
+      // Compare pixel width of the text to the canvas minus the approximate avatar size
       } while (ctx.measureText(text).width > canvas.width - 300);
 
       // Return the result to use in the actual canvas
       return ctx.font;
     };
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
     // Slightly smaller text placed above the member's display name
     ctx.font = '28px sans-serif';
@@ -266,19 +267,62 @@ class Search extends Profile {
 
     // Add an exclamation point here and below
     ctx.font = applyText(canvas, this.user.displayName);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
 
+  ctx.beginPath();
+  ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
+  ctx.closePath();
+  ctx.clip();
+
+  const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
+  ctx.drawImage(avatar, 25, 25, 150, 150);
+
+
+  ctx.beginPath();
+  ctx.rect(150, 180, 500, 20);
+  ctx.fillStyle = color;
+  ctx.fill();
+
+
+  let posX = 10;
+  let posY = 10;
+  let width = 400;
+  let height = 35;
+  let number = 50;
+  let percentage = number / 100 * width;
+  // Visualize -------
+  ctx.beginPath();
+  ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI / 2, 3 / 2 * Math.PI);
+  ctx.lineTo(width - height + posX, posY);
+  ctx.arc(width - height / 2 + posX, height / 2 + posY, height / 2, 3 / 2 * Math.PI, Math.PI / 2);
+  ctx.lineTo(height / 2 + posX, height + posY);
+  ctx.strokeStyle = '#000000';
+  ctx.stroke();
+  ctx.closePath();
+  // -----------------
+  if (percentage <= height) {
     ctx.beginPath();
-    ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
+    ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI - Math.acos((height - percentage) / height), Math.PI + Math.acos((height - percentage) / height));
+    ctx.save();
+    ctx.scale(-1, 1);
+    ctx.arc((height / 2) - percentage - posX, height / 2 + posY, height / 2, Math.PI - Math.acos((height - percentage) / height), Math.PI + Math.acos((height - percentage) / height));
+    ctx.restore();
     ctx.closePath();
-    ctx.clip();
-
-    const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
-    ctx.drawImage(avatar, 25, 25, 150, 150);
-
-    return canvas.toBuffer();
+  } else {
+    ctx.beginPath();
+    ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI / 2, 3 / 2 * Math.PI);
+    ctx.lineTo(percentage - height + posX, posY);
+    ctx.arc(percentage - (height / 2) + posX, height / 2 + posY, height / 2, 3 / 2 * Math.PI, Math.PI / 2);
+    ctx.lineTo(height / 2 + posX, height + posY);
+    ctx.closePath();
   }
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  return canvas.toBuffer();
+}
+
 
   makeEmbed(strings, color, Discord) {
     const embed = new Discord.MessageEmbed()
@@ -316,7 +360,7 @@ class Search extends Profile {
           role ? role.color : '#ffffff',
           Discord
         );
-        const image = await this.makeImage(message.guild.memberCount);
+        const image = await this.makeImage(message.guild.memberCount, role ? role.color : '#ffffff');
         embed.attachFiles([new Discord.MessageAttachment(image)]);
         message.channel.send(embed);
       })
