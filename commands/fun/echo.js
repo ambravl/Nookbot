@@ -4,13 +4,10 @@ module.exports.run = (client, message, args, level, Discord) => {
   const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:(content|description|text):([\s\S]+))|(?:(url|link): ?(https?:\/\/[^ \n\r]+))/gmu;
   const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
-  console.log(matches);
   for (let fields of matches) {
-    console.log(fields);
     if (fields[1]) {
       const content = fields[2].trim();
       if (['title', 'color', 'footer'].includes(fields[1])) {
-        console.log(`set${fields[1].toProperCase()}`);
         embed[`set${fields[1].toProperCase()}`](content);
       } else if (fields[1].startsWith('field')) embed.addField(fields[1].slice(6), content);
       else if (fields[1] === 'channel' && level > 3) channel = client.channels.cache.get(content);
