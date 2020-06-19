@@ -1,6 +1,6 @@
 module.exports.run = async (client, message, args) => {
   const query = {
-    text: args.slice(1).join(' '),
+    text: args.join(' '),
     rowMode: 'array'
   };
   client.db.query(query)
