@@ -213,7 +213,7 @@ class Profile {
       this.client.success(
         this.message.channel,
         this.client.mStrings.island[this.type].success.title,
-        this.client.mStrings.island[this.type], success.desc + ` **${this.info}**`
+        this.client.mStrings.island[this.type].success.desc + ` **${this.info}**`
       );
     } else {
       this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${this.info.displayName}${this.client.mStrings.island[this.type][event].desc}`)
