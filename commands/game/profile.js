@@ -116,6 +116,7 @@ class Profile {
     else {
       if(this.type === 'search'){
         let message = [];
+        console.log(this.info);
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
             ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
@@ -123,8 +124,8 @@ class Profile {
                 message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
               }
             });
-            if(message.length < 1){
-              if(this.info.id === message.author.id) this.send('noneSelf');
+            if (message.length < 1) {
+              if (this.info.id === message.author.id) this.send('noneSelf');
               else this.send('noneOther')
             }
             else this.send('list', message)
@@ -146,8 +147,6 @@ class Profile {
     let info;
     switch (this.type) {
       case 'search':
-        console.log(this.message.member);
-        console.log(this.message.author);
         if (args) {
           info = (
             this.message.mentions.members.first() ||
