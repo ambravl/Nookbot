@@ -312,11 +312,10 @@ class Search extends Profile {
   }
 
   async send(client, message) {
-    if (!this.userInfo) return;
     const Discord = require('discord.js');
     const embed = this.makeEmbed(client.mStrings.island, Discord);
     const image = await this.makeImage(message.guild.memberCount);
-    this.message.channel.send(embed, attachment);
+    this.message.channel.send(embed, image);
   }
 
 }
