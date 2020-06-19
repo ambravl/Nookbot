@@ -270,14 +270,6 @@ async makeImage(memberCount, color) {
   ctx.fillStyle = '#ffffff';
   ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
 
-  ctx.beginPath();
-  ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
-  ctx.closePath();
-  ctx.clip();
-
-  const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
-  ctx.drawImage(avatar, 25, 25, 150, 150);
-
 
   ctx.beginPath();
   ctx.rect(150, 180, 500, 20);
@@ -285,10 +277,10 @@ async makeImage(memberCount, color) {
   ctx.fill();
 
 
-  let posX = 10;
-  let posY = 10;
-  let width = 400;
-  let height = 35;
+  let posX = 170;
+  let posY = 170;
+  let width = 450;
+  let height = 20;
   let number = 50;
   let percentage = number / 100 * width;
   // Visualize -------
@@ -319,6 +311,14 @@ async makeImage(memberCount, color) {
   }
   ctx.fillStyle = color;
   ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
+  ctx.closePath();
+  ctx.clip();
+
+  const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
+  ctx.drawImage(avatar, 25, 25, 150, 150);
 
   return canvas.toBuffer();
 }
