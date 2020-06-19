@@ -185,11 +185,12 @@ class Profile {
         break;
       case 'background':
         if (message.attachments) {
-          info = message.attachments.first()
+          info = message.attachments.first().url;
+        } else {
+          if (!args[1].startsWith('http')) return undefined;
+          if (!args[1].endsWith('.png') && !args[1].endsWith('.jpg') && !args[1].endsWith('.gif')) return undefined;
+          info = args[1];
         }
-        if (!args[1].startsWith('http')) return undefined;
-        if (!args[1].endsWith('.png') && !args[1].endsWith('.jpg') && !args[1].endsWith('.gif')) return undefined;
-        info = args[1];
         break;
       case 'bio':
         args.forEach((txt) => {
