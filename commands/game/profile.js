@@ -314,7 +314,8 @@ class Search extends Profile {
         const Discord = require('discord.js');
         const embed = this.makeEmbed(client.mStrings.island, Discord);
         const image = await this.makeImage(message.guild.memberCount);
-        message.channel.send(embed, image);
+        embed.attachFiles([new Discord.MessageAttachment(image)]);
+        message.channel.send(embed);
       })
       .catch((err) => {
         client.handle(err, 'search constructor')
