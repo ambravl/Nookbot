@@ -1,7 +1,7 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
     if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
-    let island = new Island(client, message, args);
+    let island = new Profile(client, message, args);
     island.run()
       .catch((err) =>  {client.handle(err, 'island', message)})
 };
@@ -44,7 +44,7 @@ const islandAliases = {
   'mod':'mod',
 };
 
-class Island {
+class Profile {
   constructor(client, message, args) {
     this.client = client;
     this.type = islandAliases[args[0].toLowerCase()];
@@ -231,7 +231,7 @@ module.exports.conf = {
 module.exports.help = {
   name: 'island',
   category: 'game',
-  description: 'Island information display',
+  description: 'Profile information display',
   usage: 'island <islandname|fruit|charactername|hemisphere|profilename|friendcode> <name|fruit|hemisphere|code>',
   details: '<islandname> => Set the name of your \n<fruit> => Set the fruit that is native on your \n<charactername> => Set the name of your character on the \n<hemisphere> => Set the hemisphere your island is in.\n<profilename> => Set the name of your Switch profile.\n<friendcode> => Set your Switch friendcode.',
 };
