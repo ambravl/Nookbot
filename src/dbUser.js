@@ -86,7 +86,9 @@ module.exports = async (client) => {
 
     async ensure(primaryKey, defaultValue, col) {
       let column = col ? col : this.secondaryColumn;
-      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      let query;
+      if (this.name === 'userDB') query = `SELECT ${column}, DENSE_RANK() OVER(ORDER BY points) rank FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      else query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
         if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');

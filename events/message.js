@@ -12,15 +12,21 @@ module.exports = async (client, message) => {
     .then((res) => {
       if (client.config.rankedChannels.includes(message.channel.id)) {
         client.userDB.math(message.author.id, '+', 1, 'points');
-        const roleID = client.ranks[res + 1];
-        if (roleID) {
-          message.member.roles.add(roleID, '[Auto] Rank Up');
+        const role = client.ranks[res + 1];
+        if (role) {
+          message.member.roles.add(role.roleID, '[Auto] Rank Up');
+          if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
+          client.userDB.update(message.author.id, name, 'rankRole');
+          const name = message.guild.roles.cache.get(roleID).name;
           const embed = new Discord.MessageEmbed()
             .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
-            .setDescription(client.mStrings.rank.up.descL + message.guild.roles.cache.get(roleID).name + client.mStrings.rank.up.descR);
+            .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
           message.channel.send(embed);
         }
       }
+    })
+    .catch((err) => {
+      client.handle(err, 'ensuring a member exists when adding points')
     });
 
   // Emoji finding and tracking

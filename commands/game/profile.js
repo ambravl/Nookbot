@@ -100,21 +100,65 @@ class Profile {
         }
       }
 
-      if (!member) {
-        return {channel: message.channel, author: 'invalid'};
-      }
-      return {
-        channel: message.channel,
-        author: member
-      };
+    if (!member) {
+      return {channel: message.channel, author: 'invalid'};
+    }
+    return {
+      channel: message.channel,
+      author: member
+    };
 
   }
 
-  async run(){
+  async makeImage(playerInfo) {
+    const Canvas = require('canvas');
+    const canvas = Canvas.createCanvas(700, 200);
+    const ctx = canvas.getContext('2d');
+    const bg = playerInfo.bg ? playerInfo.bg : '../../src/bg.png';
+    const background = await Canvas.loadImage(bg);
+    const applyText = (canvas, text) => {
+      const ctx = canvas.getContext('2d');
+
+      // Declare a base size of the font
+      let fontSize = 70;
+
+      do {
+        // Assign the font to the context and decrement it so it can be measured again
+        ctx.font = `${fontSize -= 10}px sans-serif`;
+        // Compare pixel width of the text to the canvas minus the approximate avatar size
+      } while (ctx.measureText(text).width > canvas.width - 300);
+
+      // Return the result to use in the actual canvas
+      return ctx.font;
+    };
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    // Slightly smaller text placed above the member's display name
+    ctx.font = '28px sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`${playerInfo.rankRole} - #${playerInfo.rank}/${this.message.guild.memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
+
+    // Add an exclamation point here and below
+    ctx.font = applyText(canvas, this.info.displayName);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(this.info.displayName, canvas.width / 2.5, canvas.height / 1.8);
+
+    ctx.beginPath();
+    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.clip();
+
+    const avatar = await Canvas.loadImage(this.info.user.displayAvatarURL({format: 'jpg'}));
+    ctx.drawImage(avatar, 25, 25, 200, 200);
+
+    return canvas.toBuffer();
+  }
+
+  async run() {
     if (!this.info) this.send('invalid');
     if (this.info === 'none') this.send('none');
     else {
-      if(this.type === 'search'){
+      if (this.type === 'search') {
         let playerInfo = [];
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
@@ -241,15 +285,22 @@ class Profile {
       );
     } else if (event === 'list') {
       const Discord = require('discord.js');
-      const embed = new Discord.MessageEmbed()
-        .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
-        .setColor('#0ba47d');
-      if (typeof playerInfo[0] === 'string' || playerInfo[0] instanceof String) {
-        embed.setDescription(playerInfo[0]);
-        playerInfo.shift();
-      }
-      if (playerInfo) embed.addFields(playerInfo);
-      this.message.channel.send(embed);
+      this.makeImage(playerInfo)
+        .then((image) => {
+          const attachment = new Discord.MessageAttachment(image, 'rank.png');
+          const embed = new Discord.MessageEmbed()
+            .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
+            .setColor('#0ba47d');
+          if (typeof playerInfo[0] === 'string' || playerInfo[0] instanceof String) {
+            embed.setDescription(playerInfo[0]);
+            playerInfo.shift();
+          }
+          if (playerInfo) embed.addFields(playerInfo);
+          this.message.channel.send(embed, attachment);
+        })
+        .catch((err) => {
+          client.handle(err, 'making image in send profile')
+        })
     }
     else{
       this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${this.client.mStrings.island[this.type][event].desc}`)

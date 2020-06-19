@@ -21,7 +21,8 @@
    "nicknames": "text[]",
    "usernames": "text[]",
    "infractions": "jsonb[]",
-   "points": "integer"
+   "points": "integer",
+   "rankRole": "text"
  },
  "emojiDB":  {
   "emojiID": "text PRIMARY KEY",
