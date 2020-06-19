@@ -3,7 +3,9 @@ module.exports.run = (client, message, args, level, Discord) => {
   const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:content|description|text:([^]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gm;
   const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
+  console.log(matches);
   for (let fields of matches) {
+    console.log(fields);
     if (fields[1]) {
       const content = fields[2].trim();
       if (['title', 'color', 'footer'].includes(fields[1])) embed[`set${fields[1].toProperCase()}`](content);
