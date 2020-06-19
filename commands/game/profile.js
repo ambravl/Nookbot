@@ -148,7 +148,7 @@ class Profile {
     let info;
     switch (this.type) {
       case 'search':
-        if (args) {
+        if (args && args.length > 0) {
           info = (
             message.mentions.members.first() ||
             message.guild.members.cache.get(args[0]) ||
