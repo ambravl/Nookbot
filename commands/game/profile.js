@@ -308,6 +308,7 @@ class Search extends Profile {
   async send(client, message) {
     client.userDB.selectAll(this.user.id)
       .then(async (res) => {
+        console.log(res);
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
