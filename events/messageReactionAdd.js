@@ -12,7 +12,7 @@ module.exports = async (client, messageReaction, user) => {
     if (rolesToRemove.length !== 0) {
       member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove')
         .catch((err) => {
-          client.handle(err, 'removing exclusive reactions', messageReaction.message)
+          client.handle(err, 'removing exclusive reactions')
         })
     }
   }
@@ -20,7 +20,7 @@ module.exports = async (client, messageReaction, user) => {
   if (!member.roles.cache.has(reactionRoleMenu.roleID)) {
     member.roles.add(reactionRoleMenu.roleID, '[Auto] Reaction Role Add')
       .catch((err) => {
-        client.handle(err, 'adding reaction role', messageReaction.message)
+        client.handle(err, 'adding reaction role')
       });
   }
 
@@ -39,7 +39,7 @@ module.exports = async (client, messageReaction, user) => {
           await message.react(emoji);
         })
           .catch((err) => {
-            client.handle(err, 'removing all reactions from >4000 message', messageReaction.message)
+            client.handle(err, 'removing all reactions from >4000 message')
           });
       })
       .catch((err) => {
