@@ -14,3 +14,18 @@ module.exports.run = (client, message, args, level, Discord) => {
   }
   channel.send(embed);
 };
+
+module.exports.conf = {
+  guildOnly: true,
+  aliases: [],
+  permLevel: 'User',
+  allowedChannels: true,
+};
+
+module.exports.help = {
+  name: 'echo',
+  category: 'fun',
+  description: 'Repeats what the user said, but in a fancy embed',
+  usage: 'echo <field>: <text>',
+  details: 'ill write something here someday',
+};
