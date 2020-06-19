@@ -225,16 +225,6 @@ class Search extends Profile {
   constructor(client, message, args) {
     super(client, message, args);
     this.user = this.validate(message, args);
-    client.userDB.selectAll(this.user.id)
-      .then((res) => {
-        if (!res || !res.rows || res.rows.length === 0) this.userInfo = undefined;
-        else this.userInfo = res.rows[0];
-        console.log(this.userInfo);
-        console.log(res);
-      })
-      .catch((err) => {
-        client.handle(err, 'search constructor', message)
-      });
   }
 
   validate(message, args) {
@@ -316,10 +306,18 @@ class Search extends Profile {
   }
 
   async send(client, message) {
-    const Discord = require('discord.js');
-    const embed = this.makeEmbed(client.mStrings.island, Discord);
-    const image = await this.makeImage(message.guild.memberCount);
-    this.message.channel.send(embed, image);
+    client.userDB.selectAll(this.user.id)
+      .then(async (res) => {
+        if (!res || !res.rows || res.rows.length === 0) return;
+        else this.userInfo = res.rows[0];
+        const Discord = require('discord.js');
+        const embed = this.makeEmbed(client.mStrings.island, Discord);
+        const image = await this.makeImage(message.guild.memberCount);
+        this.message.channel.send(embed, image);
+      })
+      .catch((err) => {
+        client.handle(err, 'search constructor', message)
+      });
   }
 
 }
