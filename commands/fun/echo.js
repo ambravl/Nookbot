@@ -1,6 +1,6 @@
 module.exports.run = (client, message, args, level, Discord) => {
   const embed = new Discord.MessageEmbed();
-  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:content|description|text:([^]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gm;
+  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:content|description|text:([\s\S]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gm;
   const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
   console.log(matches);
