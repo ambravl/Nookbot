@@ -1,8 +1,7 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
-    if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
-    let island = new Profile(client, message, args);
-    console.log(island.info);
+  if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
+  let island = new Profile(client, message, args);
   island.run()
     .catch((err) => {
       client.handle(err, 'island')
@@ -59,9 +58,6 @@ class Profile {
     this.client = client;
     this.type = args[0] ? islandAliases[args[0].toLowerCase()] : 'search';
     this.type = this.type ? this.type : 'search';
-    this.message = message;
-    console.log(this.message);
-    console.log(this.message.member);
     if (this.type === 'mod') {
       this.message = this.mod(args, message);
       if (typeof this.message.author === 'string') {
@@ -71,8 +67,8 @@ class Profile {
       this.type = 'remove';
       this.info = this.validate(args.shift());
     } else {
-      this.info = this.validate(args, this.message);
-      console.log(this.info);
+      this.message = message;
+      this.info = this.validate(args, message);
     }
   }
 
@@ -120,7 +116,6 @@ class Profile {
     else {
       if(this.type === 'search'){
         let message = [];
-        console.log(this.info);
         this.client.userDB.ensure(this.info.id, '', '*')
           .then((res) => {
             ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
@@ -131,8 +126,7 @@ class Profile {
             if (message.length < 1) {
               if (this.info.id === message.author.id) this.send('noneSelf');
               else this.send('noneOther')
-            }
-            else this.send('list', message)
+            } else this.send('list', message)
           })
 
       }
@@ -144,7 +138,7 @@ class Profile {
     }
   }
 
-  validate(args) {
+  validate(args, message) {
     if (this.type !== 'search' && args.length === 1) {
       return 'none';
     }
@@ -153,15 +147,11 @@ class Profile {
       case 'search':
         if (args) {
           info = (
-            this.message.mentions.members.first() ||
-            this.message.guild.members.cache.get(args[0]) ||
+            message.mentions.members.first() ||
+            message.guild.members.cache.get(args[0]) ||
             this.client.searchMember(args.join(' '))
           );
-        } else {
-          info = this.message.member;
-          console.log(info);
-          console.log(this.message.member);
-        }
+        } else info = message.member;
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
@@ -195,8 +185,8 @@ class Profile {
         info = islandAliases[args[1].toLowerCase()];
         break;
       case 'background':
-        if (this.message.attachments) {
-          info = this.message.attachments.first().url;
+        if (message.attachments) {
+          info = message.attachments.first().url;
         } else {
           if (!args[1].startsWith('http')) return undefined;
           if (!args[1].endsWith('.png') && !args[1].endsWith('.jpg') && !args[1].endsWith('.gif')) return undefined;
@@ -214,7 +204,6 @@ class Profile {
         info = args.slice(1).join(' ');
         if (info.length > 10) return undefined;
     }
-    console.log(info);
     return info;
   }
   set(memberID){
