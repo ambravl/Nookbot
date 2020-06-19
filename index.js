@@ -1,5 +1,4 @@
-const firstTime = false;
-const testing = false;
+const firstTime = true;
 const Discord = require('discord.js');
 const fs = require('fs');
 
@@ -21,7 +20,6 @@ const client = new Discord.Client({
     ],
   },
 });
-client.testing = testing;
 client.firstTime = firstTime;
 const strings = require('./src/strings.json');
 const {botVersion} = require('./package.json');
