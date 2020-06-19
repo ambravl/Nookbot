@@ -1,4 +1,4 @@
-const firstTime = true;
+const firstTime = false;
 const Discord = require('discord.js');
 const fs = require('fs');
 
