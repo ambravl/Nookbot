@@ -1,7 +1,7 @@
 module.exports.run = (client, message, args, level, Discord) => {
   const embed = new Discord.MessageEmbed()
     .setAuthor(message.author.name, message.author.iconURL, message.author.url);
-  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:(?:content|description|text):([\s\S]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gmu;
+  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:(content|description|text):([\s\S]+))|(?:(url|link): ?(https?:\/\/[^ \n\r]+))/gmu;
   const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
   console.log(matches);
