@@ -86,9 +86,7 @@ module.exports = async (client) => {
 
     async ensure(primaryKey, defaultValue, col) {
       let column = col ? col : this.secondaryColumn;
-      let query;
-      if (this.name === 'userDB') query = `SELECT ${column}, DENSE_RANK() OVER(ORDER BY points) rank FROM ${this.name} WHERE ${this.mainColumn} = $1`;
-      else query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         let res = await client.db.query(query, [primaryKey]);
         if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');
@@ -311,7 +309,7 @@ module.exports = async (client) => {
      * @param {string} primaryKey
      */
     async selectAll(primaryKey) {
-      const query = `SELECT * FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      const query = `SELECT *, DENSE_RANK() OVER(ORDER BY points) rank FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       return client.db.query(query, [primaryKey]);
     }
 

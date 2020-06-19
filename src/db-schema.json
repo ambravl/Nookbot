@@ -68,7 +68,6 @@
   },
   "rankDB": {
     "roleID": "text PRIMARY KEY",
-    "minPoints": "integer",
-    "color": "text"
+    "minPoints": "integer"
   }
 }

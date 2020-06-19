@@ -281,10 +281,10 @@ class Search extends Profile {
     return canvas.toBuffer();
   }
 
-  makeEmbed(strings, Discord) {
+  makeEmbed(strings, color, Discord) {
     const embed = new Discord.MessageEmbed()
       .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
-      .setColor('#0ba47d');
+      .setColor(color);
     if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
     let embeds;
     if (this.userInfo) {
@@ -312,7 +312,11 @@ class Search extends Profile {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
-        const embed = this.makeEmbed(client.mStrings.island, Discord);
+        const embed = this.makeEmbed(
+          client.mStrings.island,
+          message.guild.roles.cache.find((r) => r.name === this.userInfo.rankRole).color,
+          Discord
+        );
         const image = await this.makeImage(message.guild.memberCount);
         embed.attachFiles([new Discord.MessageAttachment(image)]);
         message.channel.send(embed);

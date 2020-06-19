@@ -16,8 +16,8 @@ module.exports = async (client, message) => {
         if (role) {
           message.member.roles.add(role.roleID, '[Auto] Rank Up');
           if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
-          client.userDB.update(message.author.id, name, 'rankRole');
           const name = message.guild.roles.cache.get(roleID).name;
+          client.userDB.update(message.author.id, name, 'rankRole');
           const embed = new Discord.MessageEmbed()
             .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
             .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
