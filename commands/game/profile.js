@@ -65,7 +65,7 @@ const islandAliases = {
 class Profile {
   constructor(client, message, args) {
     this.client = client;
-    this.type = islandAliases[args[0].toLowerCase()];
+    if (args) this.type = islandAliases[args[0].toLowerCase()];
     if (this.type === 'mod') {
       this.message = this.mod(args, message);
       if (typeof this.message.author === 'string') {
