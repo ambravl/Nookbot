@@ -240,7 +240,7 @@ class Profile {
       message.channel.send(embed);
     }
     else{
-      this.client.error(this.message.channel, client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${client.mStrings.island[this.type][event].desc}`)
+      this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${this.client.mStrings.island[this.type][event].desc}`)
     }
   }
   search(){
