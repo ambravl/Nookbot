@@ -21,7 +21,10 @@ module.exports = (client) => {
 
     for (let reaction of reactionRoleMenu.reactions) {
       console.log(`saved: [${reaction.emojiID}], got: [${messageReaction.emoji.name}]`);
-      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) result.roleID = reaction.roleID;
+      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
+        result.roleID = reaction.roleID;
+        console.log('got here');
+      }
       result.roles.push(reaction.roleID);
       result.emoji.push(reaction.emojiID);
     }
