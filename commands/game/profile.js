@@ -260,27 +260,22 @@ async makeImage(memberCount, color) {
       return ctx.font;
     };
 
+
     // Slightly smaller text placed above the member's display name
     ctx.font = '28px sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`${this.userInfo.rankRole ? this.userInfo.rankRole : 'Weed'} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(`${this.userInfo.rankRole ? this.userInfo.rankRole : 'Weed'} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
 
-    // Add an exclamation point here and below
-    ctx.font = applyText(canvas, this.user.displayName);
+  // Add an exclamation point here and below
+  ctx.font = applyText(canvas, this.user.displayName);
   ctx.fillStyle = '#ffffff';
   ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
 
 
-  ctx.beginPath();
-  ctx.rect(150, 180, 500, 20);
-  ctx.fillStyle = color;
-  ctx.fill();
-
-
-  let posX = 170;
-  let posY = 170;
-  let width = 450;
-  let height = 20;
+  let posX = 200;
+  let posY = 150;
+  let width = 400;
+  let height = 30;
   let number = 50;
   let percentage = number / 100 * width;
   // Visualize -------
