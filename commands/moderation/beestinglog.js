@@ -33,8 +33,7 @@ module.exports.run = async (client, message, args, level) => {
   let curPoints = 0;
   let curMsg = '';
   const time = Date.now();
-  infractions.forEach((j) => {
-    const i = JSON.parse(j);
+  infractions.forEach((i) => {
     // Only allow mods to see zero point stings, called notes, on a user
     if (i.points > 0 || level >= 2) {
       const moderator = client.users.cache.get(i.moderator);

@@ -12,8 +12,7 @@ module.exports.nameCheck = async (client, message, args, Discord, nick) => {
   if (result === null) return client.error(message.channel, 'Member Not Found!', 'This member may have left the server or the id provided is not a member id!');
   let nameArray = [];
   result.forEach((pair) => {
-    let n = JSON.parse(pair);
-    nameArray.unshift(`${moment.utc(n.timestamp).format('DD MMM YY HH:mm')} UTC: ${n[u + 'names']}`)
+    nameArray.unshift(`${moment.utc(pair.timestamp).format('DD MMM YY HH:mm')} UTC: ${pair[u + 'names']}`)
   });
   let currentPage = 1;
   const maxPage = Math.ceil(nameArray.length / 15) || 1;

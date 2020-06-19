@@ -8,7 +8,7 @@
    "friendCode": "text",
    "islandName": "text",
     "fruit": "text",
-    "characterName": "text",
+   "characterName": "text",
    "hemisphere": "boolean",
    "profileName": "text",
    "positiveRep": "smallint",
@@ -18,7 +18,7 @@
    "roles": "bigint[]",
    "nicknames": "text[]",
    "usernames": "text[]",
-   "infractions": "text[]",
+   "infractions": "jsonb[]",
    "points": "integer"
  },
  "emojiDB":  {
@@ -50,7 +50,7 @@
    "messageID": "text PRIMARY KEY",
    "channelID": "bigint",
    "type": "text",
-   "reactions": "text[]"
+   "reactions": "jsonb[]"
  },
   "configDB": {
     "config_name": "text PRIMARY KEY",

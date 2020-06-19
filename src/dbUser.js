@@ -231,7 +231,7 @@ module.exports = async (client) => {
      */
     async push(primaryKey, value, column) {
       const query = `UPDATE ${this.name} SET ${column} = ${column} || $1 WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, [JSON.stringify(value), primaryKey])
+      client.db.query(query, [value, primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'push');
         })

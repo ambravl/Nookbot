@@ -26,10 +26,9 @@ module.exports = (client) => {
 
     for (let reaction of reactionRoleMenu.reactions) {
       console.log(reaction);
-      let parse = JSON.parse(reaction);
-      if (parse.emojiID === messageReaction.emoji.id || parse.emojiID === messageReaction.emoji.identifier) result.roleID = parse.roleID;
-      result.roles.push(parse.roleID);
-      result.emoji.push(parse.emojiID);
+      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier) result.roleID = reaction.roleID;
+      result.roles.push(reaction.roleID);
+      result.emoji.push(reaction.emojiID);
     }
     return result;
   };
