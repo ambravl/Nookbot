@@ -155,8 +155,6 @@ class Profile {
             this.client.searchMember(args.join(' '))
           );
         } else info = message.member;
-        console.log(info);
-        console.log(args);
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
@@ -213,14 +211,14 @@ class Profile {
   }
   set(memberID){
     if(this.type === 'all'){
-      client.userDB.multiUpdate(
+      this.client.userDB.multiUpdate(
         memberID ? memberID : this.message.author.id,
-        ['','','','','','',],
+        ['', '', '', '', '', '',],
         ['islandName', 'fruit', 'characterName', 'hemisphere', 'profileName', 'friendCode']
       );
       this.send('remove', 'success');
     }
-    client.userDB.safeUpdate(memberID ? memberID : this.message.author.id, this.info, this.type, false)
+    this.client.userDB.safeUpdate(memberID ? memberID : this.message.author.id, this.info, this.type, false)
       .then(() => {
         this.send(this.type === '' ? 'clear' : 'success');
       })
@@ -232,8 +230,8 @@ class Profile {
     if(event === 'success'){
       this.client.success(
         this.message.channel,
-        client.mStrings.island[this.type][event].title,
-        client.mStrings.island[this.type][event].desc + ` **${this.info}**`
+        this.client.mStrings.island[this.type][event].title,
+        this.client.mStrings.island[this.type][event].desc + ` **${this.info}**`
       );
     }
     else if(event === 'list'){
