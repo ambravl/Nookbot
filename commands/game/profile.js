@@ -121,7 +121,7 @@ class Profile {
             if (res) {
               ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere', 'points'].forEach((category) => {
                 if (res[category]) {
-                  message.push(`${client.mStrings.island[category].name}: **${res[category]}**`);
+                  message.push(`${this.client.mStrings.island[category].name}: **${res[category]}**`);
                 }
               });
             }
