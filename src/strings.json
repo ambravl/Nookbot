@@ -272,14 +272,7 @@
         "title": "Unknown Member!",
         "desc": "Could not find a member by that name!"
       },
-      "noneSelf": {
-        "title": "No Island Information Found!",
-        "desc": "You have not supplied any information about your island! You can do so by running \\`.island <islandname|fruit|charactername|hemisphere|profilename|friendcode> <name|fruit|hemisphere|code>\\` with any of the options. Ex. \\`.island fruit pears\\`."
-      },
-      "noneOther": {
-        "title": "No Island Information Found!",
-        "desc": " has not supplied any information about their island!"
-      }
+      "none": "There's nothing here... Use `.island (bio/islandname/fruit/charactername/hemisphere/profilename/friendcode) <info>` to write information here!"
     }
   },
   "emojistats": {

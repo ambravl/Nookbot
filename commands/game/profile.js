@@ -1,11 +1,19 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
   if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
-  let island = new Profile(client, message, args);
-  island.run()
-    .catch((err) => {
-      client.handle(err, 'island')
-    })
+  if (islandAliases[args[0].toLowerCase()]) {
+    let island = new Profile(client, message, args);
+    island.run()
+      .catch((err) => {
+        client.handle(err, 'island')
+      })
+  } else {
+    let profile = new Search(client, message, args);
+    profile.send(client, message)
+      .catch((err) => {
+        client.handle(err, 'search profile')
+      });
+  }
 };
 
 // noinspection SpellCheckingInspection
@@ -56,8 +64,7 @@ const islandAliases = {
 class Profile {
   constructor(client, message, args) {
     this.client = client;
-    this.type = args[0] ? islandAliases[args[0].toLowerCase()] : 'search';
-    this.type = this.type ? this.type : 'search';
+    this.type = islandAliases[args[0].toLowerCase()];
     if (this.type === 'mod') {
       this.message = this.mod(args, message);
       if (typeof this.message.author === 'string') {
@@ -110,101 +117,25 @@ class Profile {
 
   }
 
-  async makeImage(playerInfo) {
-    const Canvas = require('canvas');
-    const canvas = Canvas.createCanvas(700, 200);
-    const ctx = canvas.getContext('2d');
-    const bg = playerInfo.bg ? playerInfo.bg : '../../src/bg.png';
-    const background = await Canvas.loadImage(bg);
-    const applyText = (canvas, text) => {
-      const ctx = canvas.getContext('2d');
-
-      // Declare a base size of the font
-      let fontSize = 70;
-
-      do {
-        // Assign the font to the context and decrement it so it can be measured again
-        ctx.font = `${fontSize -= 10}px sans-serif`;
-        // Compare pixel width of the text to the canvas minus the approximate avatar size
-      } while (ctx.measureText(text).width > canvas.width - 300);
-
-      // Return the result to use in the actual canvas
-      return ctx.font;
-    };
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-    // Slightly smaller text placed above the member's display name
-    ctx.font = '28px sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(`${playerInfo.rankRole} - #${playerInfo.rank}/${this.message.guild.memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
-
-    // Add an exclamation point here and below
-    ctx.font = applyText(canvas, this.info.displayName);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillText(this.info.displayName, canvas.width / 2.5, canvas.height / 1.8);
-
-    ctx.beginPath();
-    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.clip();
-
-    const avatar = await Canvas.loadImage(this.info.user.displayAvatarURL({format: 'jpg'}));
-    ctx.drawImage(avatar, 25, 25, 200, 200);
-
-    return canvas.toBuffer();
-  }
 
   async run() {
     if (!this.info) this.send('invalid');
     if (this.info === 'none') this.send('none');
     else {
-      if (this.type === 'search') {
-        let playerInfo = [];
-        this.client.userDB.ensure(this.info.id, '', '*')
-          .then((res) => {
-            if (res) {
-              ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
-                if (res[category]) {
-                  playerInfo.push({
-                    name: this.client.mStrings.island[category].name,
-                    value: res[category],
-                    inline: true
-                  });
-                }
-              });
-              if (res.bio) playerInfo.unshift(res.bio);
-            }
-            if (playerInfo.length < 1) {
-              if (this.info.id === playerInfo.author.id) this.send('noneSelf');
-              else this.send('noneOther');
-            } else this.send('list', playerInfo)
-          })
-
-      } else {
         if (this.type === 'remove') {
           this.type = this.info;
           this.info = '';
         }
         this.set();
       }
-    }
   }
 
   validate(args, message) {
-    if (this.type !== 'search' && args.length === 1) {
+    if (args.length === 1) {
       return 'none';
     }
     let info;
     switch (this.type) {
-      case 'search':
-        if (args && args.length > 0) {
-          info = (
-            message.mentions.members.first() ||
-            message.guild.members.cache.get(args[0]) ||
-            this.client.searchMember(args.join(' '))
-          );
-        } else info = message.member;
-        break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
           info = 'Apples';
@@ -283,32 +214,110 @@ class Profile {
         this.client.mStrings.island[this.type].success.title,
         this.client.mStrings.island[this.type], success.desc + ` **${this.info}**`
       );
-    } else if (event === 'list') {
-      const Discord = require('discord.js');
-      this.makeImage(playerInfo)
-        .then((image) => {
-          const attachment = new Discord.MessageAttachment(image, 'rank.png');
-          const embed = new Discord.MessageEmbed()
-            .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
-            .setColor('#0ba47d');
-          if (typeof playerInfo[0] === 'string' || playerInfo[0] instanceof String) {
-            embed.setDescription(playerInfo[0]);
-            playerInfo.shift();
-          }
-          if (playerInfo) embed.addFields(playerInfo);
-          this.message.channel.send(embed, attachment);
-        })
-        .catch((err) => {
-          client.handle(err, 'making image in send profile')
-        })
-    }
-    else{
-      this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${this.client.mStrings.island[this.type][event].desc}`)
+    } else {
+      this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${this.info.displayName}${this.client.mStrings.island[this.type][event].desc}`)
     }
   }
-  search(){
-    pass;
+}
+
+class Search extends Profile {
+  constructor(client, message, args) {
+    super(client, message, args);
+    this.user = this.validate(args, message);
+    client.userDB.selectAll(this.user.id)
+      .then((res) => {
+        if (!res || !res.rows || res.rows.length === 0) this.userInfo = undefined;
+        else this.userInfo = res.rows[0];
+      })
+      .catch((err) => {
+        client.handle(err, 'search constructor', message)
+      });
   }
+
+  validate(message, args) {
+    if (args && args.length > 0) {
+      let info = message.mentions.members.first();
+      if (!info) info = message.guild.members.cache.get(args[0]);
+      if (!info) return undefined;
+      return info;
+    }
+    return message.member;
+  }
+
+  async makeImage(memberCount) {
+    const Canvas = require('canvas');
+    const canvas = Canvas.createCanvas(700, 200);
+    const ctx = canvas.getContext('2d');
+    const bg = playerInfo.bg ? playerInfo.bg : '../../src/bg.png';
+    const background = await Canvas.loadImage(bg);
+    const applyText = (canvas, text) => {
+      const ctx = canvas.getContext('2d');
+
+      // Declare a base size of the font
+      let fontSize = 70;
+
+      do {
+        // Assign the font to the context and decrement it so it can be measured again
+        ctx.font = `${fontSize -= 10}px sans-serif`;
+        // Compare pixel width of the text to the canvas minus the approximate avatar size
+      } while (ctx.measureText(text).width > canvas.width - 300);
+
+      // Return the result to use in the actual canvas
+      return ctx.font;
+    };
+    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    // Slightly smaller text placed above the member's display name
+    ctx.font = '28px sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(`${this.userInfo.rankRole} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
+
+    // Add an exclamation point here and below
+    ctx.font = applyText(canvas, this.user.displayName);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
+
+    ctx.beginPath();
+    ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.clip();
+
+    const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
+    ctx.drawImage(avatar, 25, 25, 200, 200);
+
+    return canvas.toBuffer();
+  }
+
+  makeEmbed(strings, Discord) {
+    const embed = new Discord.MessageEmbed()
+      .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
+      .setColor('#0ba47d');
+    if (this.userInfo.bio) embed.setDescription(this.userInfo.bio);
+    let embeds;
+    ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
+      if (this.userInfo[category]) {
+        embeds.push({
+          name: strings[category].name,
+          value: this.userInfo[category],
+          inline: true
+        });
+      }
+    });
+    if (embeds) embed.addFields(embeds);
+    if (!embeds && !this.userInfo.bio) {
+      embed.setDescription(strings.search.none);
+    }
+    return embed;
+  }
+
+  async send(client, message) {
+    if (!this.userInfo) return;
+    const Discord = require('discord.js');
+    const embed = this.makeEmbed(client.mStrings.island, Discord);
+    const image = await this.makeImage(message.guild.memberCount);
+    this.message.channel.send(embed, attachment);
+  }
+
 }
 
 module.exports.conf = {
