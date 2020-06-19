@@ -156,6 +156,7 @@ class Profile {
           );
         } else info = message.member;
         console.log(info);
+        console.log(args);
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
