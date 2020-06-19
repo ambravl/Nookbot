@@ -218,7 +218,9 @@ class Profile {
       .then(() => {
         this.send(this.type === '' ? 'clear' : 'success');
       })
-      .catch((err) => {this.client.handle(err, 'set island info', message)})
+      .catch((err) => {
+        this.client.handle(err, 'set island info', this.message)
+      })
   }
   send(event, msg){
     if(event === 'success'){
