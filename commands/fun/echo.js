@@ -1,9 +1,9 @@
 module.exports.run = (client, message, args, level, Discord) => {
   const embed = new Discord.MessageEmbed();
-  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:content:([^]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gm;
-  const fields = message.content.slice(6).matchAll(regexp);
+  const regexp = /^(?:(title|color|footer|field.+):(.+))|(?:content|description|text:([^]+))|(?:(?:url|link): ?(https?:\/\/[^ \n\r]+))/gm;
+  const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
-  for (let field of fields) {
+  for (let fields of matches) {
     if (fields[1]) {
       const content = fields[2].trim();
       if (['title', 'color', 'footer'].includes(fields[1])) embed[`set${fields[1].toProperCase()}`](content);
