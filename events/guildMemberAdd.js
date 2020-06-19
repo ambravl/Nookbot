@@ -16,26 +16,29 @@ module.exports = async (client, member) => {
   }
 
   // Set a timeout to remove them from the list after 10 seconds if not in raid mode.
-  if (!client.raidMode) {
+  if (client.raidMode) {
+    // We're in Raid Mode, don't make a fancy member join embed.
+    return;
+  } else {
     setTimeout(() => {
       if (!client.raidMode) client.raidJoins.shift();
     }, client.config.raidJoinsPerSecond * 1000);
-  } else {
-    // We're in Raid Mode, don't make a fancy member join embed.
-    return;
   }
 
   // Role persistence
-  const storedMember = client.userDB.ensure(member.id, client.config.userDBDefaults);
-  if (storedMember.roles.length !== 0) {
-    storedMember.roles.forEach((r) => {
-      const role = member.guild.roles.cache.get(r);
-      if (role && !role.managed && role.id !== member.guild.id) {
-        member.roles.add(role);
+  client.userDB.ensure(member.id, [], 'roles')
+    .then((roles) => {
+      if(roles.length !== 0){
+        roles.forEach((r) => {
+          const role = member.guild.roles.cache.get(r);
+          if (role && !role.managed && role.id !== member.guild.id) {
+            member.roles.add(role);
+          }
+
+        })
+        client.userDB.update(member.id, [], 'roles');
       }
     });
-    client.userDB.setProp(member.id, 'roles', []);
-  }
 
   const time = Date.now();
   let accountAge = client.humanTimeBetween(time, member.user.createdTimestamp);

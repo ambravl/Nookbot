@@ -3,7 +3,11 @@ module.exports.run = (client, message, args, level) => {
   const inputNumber = parseInt(args[0], 10);
 
   if (!inputNumber) {
-    return client.error(message.channel, 'Invalid Number!', 'Please provide a valid number for the max range!');
+    return client.error(
+      message.channel,
+      client.mStrings.roll.invalidNumber.title,
+      client.mStrings.roll.invalidNumber.description
+    );
   }
 
   const outputNumber = Math.ceil(Math.random() * inputNumber);

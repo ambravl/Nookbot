@@ -3,29 +3,51 @@ const Discord = require('discord.js');
 const moment = require('moment');
 
 module.exports = (client) => {
-  client.permLevel = (message) => {
-    let permName = 'User';
-    let permlvl = 0;
-    const permOrder = client.config.permLevels.slice(0)
-      .sort((p, c) => (p.level < c.level ? 1 : -1));
-
-    while (permOrder.length) {
-      const currentlvl = permOrder.shift();
-
-      if (currentlvl.check(client, message)) {
-        permName = currentlvl.name;
-        permlvl = currentlvl.level;
-        break;
-      }
+  client.handleReaction = async (client, messageReaction, user) => {
+    if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
+      return;
     }
-    return [permName, permlvl];
+
+    let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id);
+
+    // If not there isn't a type, then this is not a reaction role message.
+    if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
+      return;
+    }
+
+    reactionRoleMenu = reactionRoleMenu.rows[0];
+
+    let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
+
+    for (let reaction of reactionRoleMenu.reactions) {
+      console.log(`saved: [${reaction.emojiID}], got: [${messageReaction.emoji.name}]`);
+      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
+        result.roleID = reaction.roleID;
+        console.log('got here');
+      }
+      result.roles.push(reaction.roleID);
+      result.emoji.push(reaction.emojiID);
+    }
+    return result;
+  };
+  client.permLevel = (message) => {
+    let permission;
+    let i = 0;
+    while (i < client.levelCache.length) {
+      let currentLevel = client.levelCache[i];
+      if (client.levelCheck(currentLevel, client, message)) permission = currentLevel;
+      else i = client.levelCache.length;
+      i++;
+    }
+    return permission;
   };
 
-  client.clean = async (clientParam, text) => {
+  client.clean = async (clientParam, txt) => {
+    let text = txt;
     if (text && text.constructor.name === 'Promise') {
       text = await text;
     }
-    if (typeof evaled !== 'string') {
+    if (typeof text !== 'string') {
       // eslint-disable-next-line global-require
       text = require('util').inspect(text, { depth: 1 });
     }
@@ -38,11 +60,6 @@ module.exports = (client) => {
     return text;
   };
 
-  client.fetchOwner = async () => {
-    const owner = await client.users.fetch(client.config.ownerID);
-    return owner;
-  };
-
   client.success = (channel, suc, msg) => {
     channel.send(`${client.emoji.checkMark} **${suc}**\n${msg}`, { split: true });
   };
@@ -51,13 +68,28 @@ module.exports = (client) => {
     channel.send(`${client.emoji.redX} **${err}**\n${msg}`, { split: true });
   };
 
-  client.humanTimeBetween = (time1, time2) => {
-    if (time1 < time2) {
-      const temp = time1;
-      time1 = time2;
-      time2 = temp;
+  client.compareTimes = (times, units) => {
+
+    // Grab the top 3 units of time that aren't 0
+    let outTimes = '';
+    let c = 0;
+    for (let t = 0; t < units.length && c !== 3; t++) {
+      if (times[t] > 0) {
+        outTimes += `${c === 1 ? '|' : ''}${c === 2 ? '=' : ''}${times[t]} ${units[t]}${times[t] === 1 ? '' : 's'}`;
+        c += 1;
+      }
     }
-    const timeDif = moment.duration(moment(time1).diff(moment(time2)));
+
+    if (outTimes.includes('=')) {
+      return outTimes.replace('|', ', ').replace('=', ', and ');
+    } else {
+      return outTimes.replace('|', ' and ');
+    }
+
+  };
+
+  client.humanTimeBetween = (time1, time2) => {
+    const timeDif = moment.duration(moment(time1 < time2 ? time2 : time1).diff(moment(time1 < time2 ? time1 : time2)));
 
     const times = [
       timeDif.years(),
@@ -70,35 +102,16 @@ module.exports = (client) => {
 
     const units = ['year', 'month', 'day', 'hour', 'minute', 'second'];
 
-    // Grab the top 3 units of time that aren't 0
-    let outTimes = '';
-    let c = 0;
-    for (let t = 0; t < units.length; t++) {
-      if (times[t] > 0) {
-        outTimes += `${c === 1 ? '|' : ''}${c === 2 ? '=' : ''}${times[t]} ${units[t]}${times[t] === 1 ? '' : 's'}`;
-        c += 1;
-        if (c === 3) {
-          break;
-        }
-      }
-    }
-
-    if (outTimes.includes('=')) {
-      outTimes = outTimes.replace('|', ', ').replace('=', ', and ');
-    } else {
-      outTimes = outTimes.replace('|', ' and ');
-    }
-
-    return outTimes || '0 seconds';
+    return client.compareTimes(times, units) || '0 seconds';
   };
 
   client.regexCount = (regexp, str) => {
     if (typeof regexp !== 'string') {
       return 0;
     }
-    regexp = regexp === '.' ? `\\${regexp}` : regexp;
-    regexp = regexp === '' ? '.' : regexp;
-    return ((str || '').match(new RegExp(regexp, 'g')) || []).length;
+    let re = regexp === '.' ? `\\${regexp}` : regexp;
+    re = re === '' ? '.' : re;
+    return ((str || '').match(new RegExp(re, 'g')) || []).length;
   };
 
   client.reactPrompt = async (message, question, opt) => {
@@ -132,6 +145,7 @@ module.exports = (client) => {
       counter += 1;
     });
     const confirm = await message.channel.send(body);
+    // UGLY
     counter = 0x1F1E6;
     const emojiList = [];
     await client.asyncForEach(opt.slice(0, 20), async () => {
@@ -163,7 +177,7 @@ module.exports = (client) => {
     }
   };
 
-  // eslint-disable-next-line no-unused-vars
+  // FIXME
   client.searchMember = (name, threshold = 0.5) => undefined;
 
   client.clearSongQueue = () => {
@@ -186,24 +200,21 @@ module.exports = (client) => {
   client.raidModeActivate = async (guild) => {
     // Enable Raid Mode
     client.raidMode = true;
-    // Save @everyone role and staff/actionlog channels here for ease of use.
-    const { everyone } = guild.roles;
+    // Save @everyone role and staff/action log channels here for ease of use.
+    const {everyone} = guild.roles;
     const staffChat = guild.channels.cache.get(client.config.staffChat);
     const joinLeaveLog = guild.channels.cache.get(client.config.joinLeaveLog);
 
-    const generalChat = guild.channels.cache.get('538938170822230026');
-    const acnhChat = guild.channels.cache.get('494376688877174785');
-    const raidMsg = "**Raid Ongoing**!\nWe're sorry to inconvenience everyone, but we've restricted all message sending capabilities due to a suspected raid. Don't worry though, you'll be back to chatting about your favorite game in no time, yes yes!";
-    const noMoreRaidMsg = "**Raid Mode Has Been Lifted**!\nWe've determined that it's safe to lift raid mode precautions and allow everyone to send messages again! Channels should open up again immediately, yes yes!";
+    const announcements = guild.channels.cache.get(client.config.announcementsChannel);
 
-    await generalChat.send(raidMsg);
-    await acnhChat.send(raidMsg);
+    await announcements.send(client.mStrings.raid.raidAnnouncement);
 
     // Create a Permissions object with the permissions of the @everyone role, but remove Send Messages.
     const perms = new Discord.Permissions(everyone.permissions).remove('SEND_MESSAGES');
-    everyone.setPermissions(perms);
+    await everyone.setPermissions(perms);
 
     // Send message to staff with prompts
+    // FIXME
     client.raidMessage = await staffChat.send(`**##### RAID MODE ACTIVATED #####**
 <@&495865346591293443> <@&494448231036747777>
 
@@ -225,16 +236,16 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
         if (reaction.emoji.name === client.emoji.checkMark) {
           // A valid user has selected to ban the raid party.
           // Log that the banning is beginning and who approved of the action.
-          client.success(staffChat, 'Banning!', `User ${modUser.tag} has chosen to ban the raid. It may take some time to finish banning all raid members.`);
+          client.success(
+            staffChat,
+            client.mStrings.raid.banned.title,
+            `User ${modUser.tag} ${client.mStrings.raid.banned.description}`
+          );
           client.raidBanning = true;
           // Create a setInterval to ban members without rate limiting.
           const interval = setInterval(() => {
-            if (client.raidJoins.length !== 0) {
-              // Ban the next member
-              client.raidJoins.shift().ban({ days: 1, reason: 'Member of raid.' })
-                .catch(console.error);
-            } else {
-              // We've finished banning, annouce that raid mode is ending.
+            if (client.raidJoins.length === 0) {
+              // We've finished banning, announce that raid mode is ending.
               staffChat.send('Finished banning all raid members. Raid Mode is deactivated.');
               joinLeaveLog.send(`The above ${client.raidMembersPrinted} members have been banned.`);
               // Reset all raid variables
@@ -246,13 +257,15 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
               client.raidJoins = [];
               client.raidMessage = null;
               client.raidMembersPrinted = 0;
-
-              generalChat.send(noMoreRaidMsg);
-              acnhChat.send(noMoreRaidMsg);
               // Allow users to send messages again.
               perms.add('SEND_MESSAGES');
               everyone.setPermissions(perms);
               clearInterval(interval);
+              announcements.send(client.mStrings.raid.raidEnded);
+            } else {
+              // Ban the next member
+              client.raidJoins.shift().ban({days: 1, reason: 'Member of raid.'})
+                .catch(console.error);
             }
           }, 100); // 100 ms is 10 bans a second, hopefully not too many.
         } else {
@@ -264,11 +277,10 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
           client.raidMessage = null;
           client.raidMembersPrinted = 0;
           // Allow users to send messages again.
-          generalChat.send(noMoreRaidMsg);
-          acnhChat.send(noMoreRaidMsg);
 
           perms.add('SEND_MESSAGES');
-          everyone.setPermissions(perms);
+          await everyone.setPermissions(perms);
+          announcements.send(client.mStrings.raid.raidEnded);
         }
       })
       .catch(console.error);
@@ -279,6 +291,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
       if (!client.raidMode) {
         clearInterval(updateRaid);
       } else if (!client.raidBanning) {
+        // FIXME
         client.raidMessage.edit(`**##### RAID MODE ACTIVATED #####**
 <@&495865346591293443> <@&494448231036747777>
 
@@ -296,6 +309,7 @@ Would you like to ban all ${client.raidJoins.length} members that joined in the 
             msg += `\n${mem.user.tag} (${mem.id})`;
           });
           joinLeaveLog.send(msg, { split: true });
+          // UGLY
           msg = '';
         }
       }

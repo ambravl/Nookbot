@@ -1,0 +1,73 @@
+{
+"enabledCommands":  {
+ "commandName": "text PRIMARY KEY",
+ "enabled": "boolean"
+},
+ "userDB":  {
+   "memberID": "text PRIMARY KEY",
+   "friendCode": "text",
+   "islandName": "text",
+   "fruit": "text",
+   "characterName": "text",
+   "hemisphere": "boolean",
+   "profileName": "text",
+   "bio": "text",
+   "background": "text",
+   "positiveRep": "smallint",
+   "negativeRep": "smallint",
+   "posRepList": "bigint[]",
+   "negRepList": "bigint[]",
+   "roles": "bigint[]",
+   "nicknames": "text[]",
+   "usernames": "text[]",
+   "infractions": "jsonb[]",
+   "points": "integer",
+   "rankRole": "text"
+ },
+ "emojiDB":  {
+  "emojiID": "text PRIMARY KEY",
+  "uses": "integer"
+ },
+ "adoptees":  {
+  "name": "text PRIMARY KEY",
+  "adopters": "text[]",
+   "curOffset": "integer"
+ },
+ "tags":  {
+  "tag": "text PRIMARY KEY",
+  "content": "text"
+ },
+ "infractions":  {
+  "caseNumber": "serial PRIMARY KEY",
+  "userID": "bigint"
+ },
+ "voiceSessions":  {
+  "channelID": "text PRIMARY KEY",
+  "identifier": "smallint"
+ },
+ "mutedUsers":  {
+  "memberID": "text PRIMARY KEY",
+  "time": "integer"
+ },
+ "reactionRoles": {
+   "messageID": "text PRIMARY KEY",
+   "channelID": "bigint",
+   "type": "text",
+   "reactions": "jsonb[]"
+ },
+  "configDB": {
+    "config_name": "text PRIMARY KEY",
+    "config_value": "text",
+    "config_type": "text",
+    "testing_value": "text"
+  },
+  "permissionDB": {
+    "roleID": "text PRIMARY KEY",
+    "level": "integer",
+    "name": "text"
+  },
+  "rankDB": {
+    "roleID": "text PRIMARY KEY",
+    "minPoints": "integer"
+  }
+}

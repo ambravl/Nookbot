@@ -1,83 +1,46 @@
 module.exports = async (client, messageReaction, user) => {
-  if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
-    return;
+  const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
+  const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
+  if (!member || !reactionRoleMenu || !reactionRoleMenu.roleID) return;
+  if (reactionRoleMenu.type === 'exclusive') {
+    const rolesToRemove = [];
+    member.roles.cache.forEach((role, rID) => {
+      if (rID !== reactionRoleMenu.roleID && reactionRoleMenu.roles.includes(rID)) {
+        rolesToRemove.push(rID);
+      }
+    });
+    if (rolesToRemove.length !== 0) {
+      member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove')
+        .catch((err) => {
+          client.handle(err, 'removing exclusive reactions')
+        })
+    }
+  }
+  // Members can have any number of the roles in this menu.
+  if (!member.roles.cache.has(reactionRoleMenu.roleID)) {
+    member.roles.add(reactionRoleMenu.roleID, '[Auto] Reaction Role Add')
+      .catch((err) => {
+        client.handle(err, 'adding reaction role')
+      });
   }
 
-  const reactionRoleMenu = client.reactionRoleDB.get(messageReaction.message.id);
-
-  // If not there isn't a type, then this is not a reaction role message.
-  if (!reactionRoleMenu) {
-    return;
-  }
-
-  switch (reactionRoleMenu.type) {
-    case 'remove': {
-      // This reaction role menu is supposed to remove the specified role on a reaction add.
-      const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
-
-      if (roleID) {
-        // This reaction corresponds to a role
-        const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-        if (member && member.roles.cache.has(roleID)) {
-          member.roles.remove(roleID, '[Auto] Remove Reaction Role');
-        }
-      }
-      break;
-    }
-    case 'exclusive': {
-      // Members can only have one of the roles in this menu.
-      const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
-
-      if (roleID) {
-        console.log('got here');
-        const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-        if (member) {
-          // Check if they have any of the other roles in this list and remove them.
-          const rolesToRemove = [];
-          const rolesInGroup = Object.values(reactionRoleMenu.reactions);
-          member.roles.cache.forEach((role, rID) => {
-            if (rID !== roleID && rolesInGroup.includes(rID)) {
-              rolesToRemove.push(rID);
-            }
-          });
-          if (rolesToRemove.length !== 0) {
-            await member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove');
-          }
-          if (!member.roles.cache.has(roleID)) {
-            member.roles.add(roleID, '[Auto] Exclusive Reaction Role Add');
-          }
-        }
-      }
-      break;
-    }
-    case 'multiple': {
-      // Members can have any number of the roles in this menu.
-      const roleID = reactionRoleMenu.reactions[messageReaction.emoji.id || messageReaction.emoji.identifier];
-
-      if (roleID) {
-        const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-        if (member && !member.roles.cache.has(roleID)) {
-          member.roles.add(roleID, '[Auto] Multiple Reaction Role Add');
-        }
-      }
-      break;
-    }
-    default:
-      break;
-  }
-
-  // If message has a cumulative count of reactions over 4000, reset all the reactions on the message.
-  let totalReactions = 0;
-  messageReaction.message.reactions.cache.forEach((reaction) => { totalReactions += reaction.count; });
-  if (totalReactions > 4000) {
-    // Remove all reactions.
-    messageReaction.message.reactions.removeAll()
-      .then((message) => {
-        console.log(`Removed ${totalReactions} reactions from message ${message.id}(msgID) in ${message.channel.id}(chID) and reset them.`);
-        // Add back one of each reaction.
-        client.asyncForEach(Object.keys(reactionRoleMenu.reactions), async (emoji) => {
+    // If message has a cumulative count of reactions over 4000, reset all the reactions on the message.
+    let totalReactions = 0;
+    messageReaction.message.reactions.cache.forEach((reaction) => {
+      totalReactions += reaction.count;
+    });
+    if (totalReactions > 4000) {
+      // Remove all reactions.
+      messageReaction.message.reactions.removeAll()
+        .then((message) => {
+          console.log(`Removed ${totalReactions} reactions from message ${message.id}(msgID) in ${message.channel.id}(chID) and reset them.`);
+          // Add back one of each reaction.
+        client.asyncForEach(reactionRoleMenu.emoji, async (emoji) => {
           await message.react(emoji);
-        });
+        })
+          .catch((err) => {
+            client.handle(err, 'removing all reactions from >4000 message')
+          });
       })
       .catch((err) => {
         // Failed to remove all reactions.

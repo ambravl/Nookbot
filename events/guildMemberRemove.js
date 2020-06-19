@@ -5,10 +5,10 @@ module.exports = async (client, member) => {
     return;
   }
 
-  client.userDB.ensure(member.id, client.config.userDBDefaults);
+  let rolesToPush = [];
 
   member.roles.cache.forEach((r) => {
-    client.userDB.push(member.id, r.id, 'roles');
+    rolesToPush.push(r.id);
   });
 
   const serverAge = client.humanTimeBetween(Date.now(), member.joinedTimestamp);
@@ -20,9 +20,12 @@ module.exports = async (client, member) => {
   rolesArray.forEach((r) => {
     // Check if it's managed, since we can't add those roles back with the bot later
     if (!r.managed) {
-      client.userDB.push(member.id, r.id, 'roles');
+      rolesToPush.push(r.id);
     }
   });
+
+  client.userDB.safeUpdate(member.id, rolesToPush, 'roles', true)
+    .catch((err) => {client.handle(err, 'guildMemberRemove')});
 
   const embed = new Discord.MessageEmbed()
     .setAuthor(member.user.tag, member.user.displayAvatarURL())

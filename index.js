@@ -1,10 +1,7 @@
-/* eslint-disable consistent-return,linebreak-style */
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
+const firstTime = true;
+const testing = true;
 const Discord = require('discord.js');
-const Enmap = require('enmap');
 const fs = require('fs');
-require('dotenv').config();
 
 const client = new Discord.Client({
   messageCacheMaxSize: 500,
@@ -24,16 +21,34 @@ const client = new Discord.Client({
     ],
   },
 });
-const { botVersion } = require('./package.json');
+client.testing = testing;
+client.firstTime = firstTime;
+const strings = require('./src/strings.json');
+const {botVersion} = require('./package.json');
 const emoji = require('./src/emoji');
-require('./src/functions')(client);
-
-client.config = require('./config');
+require('./src/error-handler')(client);
+require('./src/dbUser')(client);
 
 client.version = `v${botVersion}`;
 client.emoji = emoji;
+client.mStrings = strings;
 client.token = process.env.TOKEN;
-console.log(client.token);
+
+client.initializeDB()
+  .catch((err) => {
+    client.handle(err, 'initialize')
+  })
+  .then(() => {
+    require('./configSetup')(client);
+  })
+  .catch((err) => {
+    client.handle(err, 'require config')
+  })
+  .then(() => {
+    require('./src/functions')(client);
+    require('./src/load-commands')(client);
+
+  });
 
 fs.readdir('./events/', (err, files) => {
   if (err) {
@@ -46,47 +61,6 @@ fs.readdir('./events/', (err, files) => {
   });
 });
 
-client.commands = new Enmap();
-client.aliases = new Enmap();
-
-fs.readdir('./commands/', (err, folders) => {
-  if (err) {
-    return console.error(err);
-  }
-
-  // Looping over all folders to load all commands
-  for (let i = 0; i < folders.length; i++) {
-    fs.readdir(`./commands/${folders[i]}/`, (error, files) => {
-      if (error) {
-        return console.error(error);
-      }
-      files.forEach((file) => {
-        const props = require(`./commands/${folders[i]}/${file}`);
-        const commandName = props.help.name;
-        if (!file.endsWith('.js')) {
-          return;
-        }
-
-        console.log(`Attempting to load command ${commandName}`);
-        client.commands.set(commandName, props);
-
-        if (props.conf.aliases) {
-          props.conf.aliases.forEach((alias) => {
-            client.aliases.set(alias, commandName);
-          });
-        }
-
-        client.enabledCommands.ensure(commandName, true);
-      });
-    });
-  }
-});
-
-client.levelCache = {};
-for (let i = 0; i < client.config.permLevels.length; i += 1) {
-  const thisLevel = client.config.permLevels[i];
-  client.levelCache[thisLevel.name] = thisLevel.level;
-}
 
 client.firstReady = false;
 
@@ -119,8 +93,6 @@ client.imageOnlyFilterCount = 0;
 client.newlineLimitFilterCount = 0;
 client.noMentionFilterCount = 0;
 
-Object.assign(client, Enmap.multi(['enabledCommands', 'userDB', 'emojiDB', 'villagerDB', 'tags', 'playlist', 'infractionDB', 'sessionDB', 'muteDB', 'memberStats', 'reactionRoleDB'], { ensureProps: true }));
-
 client.login(client.token).then(() => {
   console.log('Bot successfully logged in.');
 }).catch(() => {
@@ -135,3 +107,7 @@ client.login(client.token).then(() => {
     });
   }, 30000);
 });
+
+// process.on('SIGTERM', () => {
+//   if (client.db) client.db.end();
+// });

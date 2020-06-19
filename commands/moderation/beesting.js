@@ -40,10 +40,11 @@ module.exports.run = async (client, message, args, level, Discord) => {
 
   let curPoints = 0;
   const time = Date.now();
-  client.userDB.ensure(member.id, client.config.userDBDefaults).infractions.forEach((i) => {
+  const infractions = await client.userDB.ensure(member.id, '', 'infractions');
+  infractions.forEach((infraction) => {
     // If (points * 1 week) + time of infraction > current time, then the points are still valid
-    if ((i.points * 604800000) + i.date > time) {
-      curPoints += i.points;
+    if ((infraction.points * 604800000) + infraction.date > time) {
+      curPoints += infraction.points;
     }
   });
 
@@ -116,20 +117,19 @@ If you wish to contact the moderators about your warning, please send a message 
     }
   }
 
-  // Create infraction in the infractionDB to get case number
-  const caseNum = client.infractionDB.autonum;
-  client.infractionDB.set(caseNum, member.id);
+  // Create infraction in the infractions to get case number
+  const caseNum = await client.infractions.add(member.id);
 
-  // Create infraction in the userDB to store important information
+  // Create infraction in the users to store important information
   client.userDB.push(member.id, {
     case: caseNum,
-    action,
+    action: action,
     points: newPoints,
     reason: `${reason}${message.attachments.size > 0 ? `\n${message.attachments.map((a) => `${a.url}`).join('\n')}` : ''}`,
     moderator: message.author.id,
-    dmSent,
+    dmSent: dmSent,
     date: time,
-  }, 'infractions', true);
+  }, 'infractions');
 
   // Perform the required action
   if (ban) {
@@ -138,8 +138,8 @@ If you wish to contact the moderators about your warning, please send a message 
     });
   } else if (mute) {
     try {
-      // Update unmuteTime on userDB
-      client.muteDB.set(member.id, (mute * 60000) + time);
+      // Update unmuteTime on users
+      client.mutedUsers.set(member.id, (mute * 60000) + time);
       const guildMember = await message.guild.members.fetch(member);
       await guildMember.roles.add('495854925054607381', '[Auto] Beestings');
 
@@ -150,8 +150,8 @@ If you wish to contact the moderators about your warning, please send a message 
 
       // Schedule unmute
       setTimeout(() => {
-        if ((client.muteDB.get(member.id) || 0) < Date.now()) {
-          client.muteDB.delete(member.id);
+        if ((client.mutedUsers.get(member.id) || 0) < Date.now()) {
+          client.mutedUsers.delete(member.id);
           guildMember.roles.remove('495854925054607381', `Scheduled unmute after ${mute} minutes.`).catch((err) => {
             client.error(message.guild.channels.cache.get(client.config.modLog), 'Unmute Failed!', `I've failed to unmute this member! ${err}\nID: ${member.id}`);
           });

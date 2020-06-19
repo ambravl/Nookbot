@@ -2,14 +2,13 @@ const moment = require('moment-timezone');
 const { version } = require('discord.js');
 
 module.exports.run = async (client, message, args, level, Discord) => {
-  const owner = await client.fetchOwner();
 
   // embed
   const embed = new Discord.MessageEmbed()
     .setAuthor(message.author.tag, message.author.displayAvatarURL())
     .setColor('#4199c2')
     .setTimestamp()
-    .setFooter('Nookbot', client.user.displayAvatarURL());
+    .setFooter(client.user.username, client.user.displayAvatarURL());
 
   switch (args[0]) {
     case 'bot': {
@@ -23,7 +22,6 @@ module.exports.run = async (client, message, args, level, Discord) => {
         .setThumbnail(client.user.displayAvatarURL())
         .addField('Bot Name', client.user.username, true)
         .addField('Bot ID', client.user.id, true)
-        .addField('Bot Owner', owner.tag, true)
         .addField('Bot Version', client.version, true)
         .addField('Online Users', client.users.cache.size, true)
         .addField('Server Count', client.guilds.cache.size, true)

@@ -1,5 +1,7 @@
 const moment = require('moment');
 
+// TODO: make appeal channel
+
 module.exports = (client, channel) => {
   if (channel.type !== 'text' || (channel.guild ? channel.guild.id !== client.config.modMailGuild : true)) {
     return;
@@ -8,7 +10,7 @@ module.exports = (client, channel) => {
   setTimeout(async () => {
     if (channel.topic !== null) {
       const user = await client.users.fetch(channel.topic.trim());
-      const { infractions } = client.userDB.ensure(user.id, client.config.userDBDefaults);
+      const { infractions } = client.userDB.ensure(user.id, '', 'infractions');
       let msg = `__**${user.tag}'s Bee Stings**__`;
       let expPoints = 0;
       let expMsg = '';
@@ -17,12 +19,14 @@ module.exports = (client, channel) => {
       const time = Date.now();
       infractions.forEach((i) => {
         const moderator = client.users.cache.get(i.moderator);
+        const mod = moderator ? `Mod: ${moderator.tag}` : `Unknown Mod ID: ${i.moderator || 'No ID Stored'}`;
+        const txt = `\n• Case ${i.case} - ${mod} - (${moment.utc(i.date).format('DD MMM YYYY HH:mm')} UTC) ${i.points} bee sting${i.points === 1 ? '' : 's'}\n> Reason: ${i.reason}`
         if ((i.points * 604800000) + i.date > time) {
           curPoints += i.points;
-          curMsg += `\n• Case ${i.case} - ${moderator ? `Mod: ${moderator.tag}` : `Unknown Mod ID: ${i.moderator || 'No ID Stored'}`} - (${moment.utc(i.date).format('DD MMM YYYY HH:mm')} UTC) ${i.points} bee sting${i.points === 1 ? '' : 's'}\n> Reason: ${i.reason}`;
+          curMsg += txt;
         } else {
           expPoints += i.points;
-          expMsg += `\n• Case ${i.case} - ${moderator ? `Mod: ${moderator.tag}` : `Unknown Mod ID: ${i.moderator || 'No ID Stored'}`} - (${moment.utc(i.date).format('DD MMM YYYY HH:mm')} UTC) ${i.points} bee sting${i.points === 1 ? '' : 's'}\n> Reason: ${i.reason}`;
+          expMsg += txt;
         }
       });
 

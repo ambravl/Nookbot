@@ -1,7 +1,7 @@
 {
   "name": "nookbot",
   "version": "1.0.0",
-  "description": "",
+  "desc": "",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -20,7 +20,7 @@
   "homepage": "https://github.com/Phoenix1128/Nookbot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.1.0",
-    "better-sqlite3": "^5.4.3",
+    "canvas": "^2.6.1",
     "cheerio": "^1.0.0-rc.3",
     "discord.js": "^12.0.1",
     "dotenv": "^8.2.0",
@@ -29,6 +29,7 @@
     "ffmpeg-static": "^2.7.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
+    "pg": "^8.2.1",
     "node-opus": "^0.3.3",
     "node-schedule": "^1.3.2",
     "ping": "^0.2.2",
@@ -39,8 +40,9 @@
     "ytpl": "github:NotArandomGUY/node-ytpl#master"
   },
   "devDependencies": {
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2"
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^11.1.0"
   }
 }

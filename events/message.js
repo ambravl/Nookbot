@@ -6,28 +6,43 @@ const cooldowns = new Discord.Collection();
 
 module.exports = async (client, message) => {
   // Ignore all bots
-  if (message.author.bot) {
-    // If message sent by ban appeal webhook bot account, and in the ban appeals channel
-    if ((message.author.id === '695145674081042443' && message.channel.id === '680479301857968237')
-     || (message.author.id === '700611254296903741' && message.channel.id === '700454847643648129')) {
-      await message.react(client.emoji.checkMark);
-      message.react(client.emoji.redX);
-    }
-    return;
-  }
+  if (message.author.bot) return;
 
-  // User activity tracking
-  client.userDB.set(message.author.id, message.createdTimestamp, 'lastMessageTimestamp');
+  client.userDB.ensure(message.author.id, 0, 'points')
+    .then((res) => {
+      if (client.config.rankedChannels.includes(message.channel.id)) {
+        client.userDB.math(message.author.id, '+', 1, 'points');
+        const role = client.ranks[res + 1];
+        if (role) {
+          message.member.roles.add(role.roleID, '[Auto] Rank Up');
+          if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
+          const name = message.guild.roles.cache.get(roleID).name;
+          client.userDB.update(message.author.id, name, 'rankRole');
+          const embed = new Discord.MessageEmbed()
+            .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
+            .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
+          message.channel.send(embed);
+        }
+      }
+    })
+    .catch((err) => {
+      client.handle(err, 'ensuring a member exists when adding points')
+    });
 
   // Emoji finding and tracking
   const regex = /<a?:\w+:([\d]+)>/g;
   const msg = message.content;
   let regMatch;
   while ((regMatch = regex.exec(msg)) !== null) {
-    // If the emoji ID is in our emojiDB, then increment its count
-    if (client.emojiDB.has(regMatch[1])) {
-      client.emojiDB.inc(regMatch[1]);
-    }
+    // If the emoji ID is in our emoji, then increment its count
+    client.emojiDB.select(regMatch[1])
+      .then((rows) => {
+        if (rows) client.emojiDB.math(regMatch[1], '+', 1, 'uses')
+          .catch((err) => client.handle(err, 'emoji increment in message event', message));
+      })
+      .catch((err) => {
+        client.handle(err, 'emoji select in message event', message);
+      });
   }
 
   if (message.guild && !message.member) {
@@ -37,9 +52,9 @@ module.exports = async (client, message) => {
   // Anti Mention Spam
   if (message.mentions.members && message.mentions.members.size > 10) {
     // They mentioned more than 10 members, automute them for 10 mintues.
-    if (message.member && client.permLevel(message)[1] < 4) {
+    if (message.member && client.permLevel(message).level < 4) {
       // Mute
-      message.member.roles.add('495854925054607381', 'Mention Spam');
+      message.member.roles.add(client.config.mutedRole, 'Mention Spam');
       // Delete Message
       if (!message.deleted) {
         message.delete();
@@ -47,16 +62,16 @@ module.exports = async (client, message) => {
       // Schedule unmute
       setTimeout(() => {
         try {
-          message.member.roles.remove('495854925054607381', 'Unmuted after 10 mintues for Mention Spam');
+          message.member.roles.remove(client.config.mutedRole, 'Unmuted after 10 mintues for Mention Spam');
         } catch (error) {
           // Couldn't unmute, oh well
-          console.error('Failed to unmute after Anit Mention Spam');
+          console.error('Failed to unmute after Anti Mention Spam');
           console.error(error);
         }
       }, 600000);
       // Notify mods so they may ban if it was a raider.
       message.guild.channels.cache.get(client.config.staffChat).send(`**Mass Mention Attempt!**
-<@&495865346591293443> <@&494448231036747777>
+<@&${client.levelCache[4]}> <@&${client.levelCache[5]}> <@&${client.levelCache[6]}>
 The member **${message.author.tag}** just mentioned ${message.mentions.members.size} members and was automatically muted for 10 minutes!
 They have been a member of the server for ${client.humanTimeBetween(Date.now(), message.member.joinedTimestamp)}.
 If you believe this member is a mention spammer bot, please ban them with the command:
@@ -66,7 +81,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
 
   // Delete non-image containing messages from image only channels
   if (message.guild && client.config.imageOnlyChannels.includes(message.channel.id)
-      && message.attachments.size === 0 && client.permLevel(message)[1] < 4) {
+      && message.attachments.size === 0 && client.permLevel(message).level < 4) {
     // Message is in the guild's image only channels, without an image or link in it, and is not a mod's message, so delete
     if (!message.deleted && message.deletable) {
       message.delete();
@@ -86,7 +101,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
   if (message.guild && client.config.newlineLimitChannels.includes(message.channel.id)
       && ((message.content.match(/\n/g) || []).length >= client.config.newlineLimit
       || (message.attachments.size + (message.content.match(/https?:\/\//gi) || []).length) >= client.config.imageLinkLimit)
-      && client.permLevel(message)[1] < 4) {
+      && client.permLevel(message).level < 4) {
     // Message is in the guild, in a channel that has a limit on newline characters, and has too many or too many links + attachments, and is not a mod's message, so delete
     if (!message.deleted && message.deletable) {
       message.delete();
@@ -105,7 +120,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
   // Delete posts with @ mentions in villager and turnip channels
   if (message.guild && client.config.noMentionChannels.includes(message.channel.id)
     && message.mentions.members.size > 0
-    && client.permLevel(message)[1] < 3) {
+    && client.permLevel(message).level < 3) {
   // Message is in the guild, in a channel that restricts mentions, and is not a mod's message, so delete
     if (!message.deleted && message.deletable) {
       message.delete();
@@ -126,7 +141,8 @@ If you believe this member is a mention spammer bot, please ban them with the co
     return;
   }
 
-  const level = client.permLevel(message);
+  const permissionLevel = client.permLevel(message);
+  console.log(permissionLevel);
 
   // Our standard argument/command name definition.
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
@@ -134,37 +150,31 @@ If you believe this member is a mention spammer bot, please ban them with the co
 
   // Grab the command data and aliases from the client.commands Enmap
   const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
-  let enabledCommands = client.enabledCommands.get(command);
-  if (enabledCommands === undefined) {
-    enabledCommands = client.enabledCommands.get(client.aliases.get(command));
-  }
 
   // If that command doesn't exist, silently exit and do nothing
   if (!cmd) {
     return;
   }
 
-  if (enabledCommands === false && level[1] < 4) {
-    return client.error(message.channel, 'Command Disabled!', 'This command is currently disabled!');
-  }
-
   if (!message.guild && cmd.conf.guildOnly) {
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');
   }
 
-  if (cmd.conf.blockedChannels && cmd.conf.blockedChannels.includes(message.channel.id) && level[1] < 4) {
-    return client.error(message.channel, 'Command Not Available in this Channel!', 'You will have to use this command in the <#549858839994826753> channel!');
+  if (cmd.conf.blockedChannels && cmd.conf.blockedChannels.includes(message.channel.id) && permissionLevel.level < 4) {
+    return client.error(message.channel, 'Command Not Available in this Channel!', 'Please use it in the right channel!');
   }
 
-  if (cmd.conf.allowedChannels && !cmd.conf.allowedChannels.includes(message.channel.id) && level[1] < 4) {
+  if (cmd.conf.allowedChannels && client.config.botCommands !== message.channel.id && permissionLevel.level < 4) {
     return client.error(message.channel, 'Command Not Available in this Channel!', `You will have to use this command in one of the allowed channels: ${cmd.conf.allowedChannels.map((ch) => `<#${ch}>`).join(', ')}.`);
   }
 
   // eslint-disable-next-line prefer-destructuring
-  message.author.permLevel = level[1];
+  message.author.permLevel = permissionLevel.level;
 
-  if (level[1] < client.levelCache[cmd.conf.permLevel]) {
-    client.error(message.channel, 'Invalid Permissions!', `You do not currently have the proper permssions to run this command!\n**Current Level:** \`${level[0]}: Level ${level[1]}\`\n**Level Required:** \`${cmd.conf.permLevel}: Level ${client.levelCache[cmd.conf.permLevel]}\``);
+  const requiredLevel = client.levelCache.find((level) => {return level.name === cmd.conf.permLevel});
+
+  if (permissionLevel.level < requiredLevel.level) {
+    client.error(message.channel, 'Invalid Permissions!', `You do not currently have the proper permssions to run this command!\n**Current Level:** \`${permissionLevel.name}: Level ${permissionLevel.level}\`\n**Level Required:** \`${requiredLevel.name}: Level ${requiredLevel.level}\``);
     return console.log(`${message.author.tag} (${message.author.id}) tried to use cmd '${cmd.help.name}' without proper perms!`);
   }
 
@@ -181,7 +191,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
   const cooldownAmount = (cmd.conf.cooldown || 0) * 1000;
 
   if (timestamps.has(message.author.id)) {
-    if (level[1] < 2) {
+    if (permissionLevel.level < 2) {
       const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
       if (now < expirationTime) {
@@ -203,5 +213,5 @@ If you believe this member is a mention spammer bot, please ban them with the co
   const guildUsed = message.guild ? `#${message.channel.name}` : 'DMs';
 
   console.log(`${message.author.tag} (${message.author.id}) ran cmd '${cmd.help.name}' in ${guildUsed}!`);
-  cmd.run(client, message, args, level[1], Discord);
+  cmd.run(client, message, args, permissionLevel.level, Discord);
 };

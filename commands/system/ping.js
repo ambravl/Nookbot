@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 module.exports.run = async (client, message, args, level) => {
-  // Pings client... noting else I can say here
-  const m = await message.channel.send('Pinging the Client...');
+  // Pings client.. noting else I can say here
+  const m = await message.channel.send('Pinging the client..');
   m.edit(`Pong! Latency: **${m.createdTimestamp - message.createdTimestamp}ms** \nAPI Latency: **${Math.round(client.ws.ping)}ms**`);
 };
 
