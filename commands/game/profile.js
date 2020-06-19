@@ -240,7 +240,7 @@ class Profile {
         .setAuthor(`${this.info.displayName}'s Profile`, this.info.user.displayAvatarURL())
         .setColor('#0ba47d')
         .setDescription(`${msg.join('\n')}`);
-      message.channel.send(embed);
+      this.message.channel.send(embed);
     }
     else{
       this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${event === 'noneOther' ? this.info.displayName : ''}${this.client.mStrings.island[this.type][event].desc}`)
