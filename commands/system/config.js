@@ -2,7 +2,7 @@ module.exports.run = (client, message, args) => {
   if (!args || args.legth < 2) client.handle(new Error('wrong argument number'), 'config command', message);
   if (args[0] === 'check' || args[0] === 'c') {
     const configList = Object.keys(client.config);
-    let configs;
+    let configs = [];
     configList.forEach((config) => {
       configs.push({
         name: config,
