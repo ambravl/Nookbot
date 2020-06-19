@@ -1,6 +1,7 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
   if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
+  consle.log(args[0]);
   if (args[0]) {
     let island = new Profile(client, message, args);
     island.run()
