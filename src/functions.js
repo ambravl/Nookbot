@@ -19,14 +19,14 @@ module.exports = (client) => {
 
     console.log(reactionRoleMenu);
     console.log(reactionRoleMenu.type);
-    console.log(reactionRoleMenu.reactons);
+    console.log(reactionRoleMenu.reactions);
     console.log(reactionRoleMenu.reactions[0]);
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
 
     for (let reaction of reactionRoleMenu.reactions) {
       console.log(reaction);
-      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier) result.roleID = reaction.roleID;
+      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) result.roleID = reaction.roleID;
       result.roles.push(reaction.roleID);
       result.emoji.push(reaction.emojiID);
     }
