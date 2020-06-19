@@ -24,7 +24,7 @@ module.exports = (client) => {
   client.rankDB.cacheDB().then((res) => {
     client.ranks = {};
     for (let i = 0; i < res.rows.length; i++) {
-      client.ranks[res.rows[i].points] = {
+      client.ranks[res.rows[i].minPoints] = {
         roleID: res.rows[i].roleID,
         previous: i === 0 ? undefined : res.rows[i - 1].roleID
       };
