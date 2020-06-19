@@ -129,12 +129,13 @@ class Profile {
             } else this.send('list', message)
           })
 
+      } else {
+        if (this.type === 'remove') {
+          this.type = this.info;
+          this.info = '';
+        }
+        this.set();
       }
-      if (this.type === 'remove') {
-        this.type = this.info;
-        this.info = '';
-      }
-      this.set();
     }
   }
 
@@ -230,8 +231,8 @@ class Profile {
     if(event === 'success'){
       this.client.success(
         this.message.channel,
-        this.client.mStrings.island[this.type][event].title,
-        this.client.mStrings.island[this.type][event].desc + ` **${this.info}**`
+        this.client.mStrings.island[this.type].success.title,
+        this.client.mStrings.island[this.type], success.desc + ` **${this.info}**`
       );
     }
     else if(event === 'list'){
