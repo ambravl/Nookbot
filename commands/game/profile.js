@@ -324,7 +324,7 @@ async makeImage(memberCount, color) {
       .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
       .setColor(color);
     if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
-    let embeds;
+    let embeds = [];
     if (this.userInfo) {
       ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
         if (this.userInfo[category]) {
