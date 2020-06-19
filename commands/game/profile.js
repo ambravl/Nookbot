@@ -146,13 +146,15 @@ class Profile {
     let info;
     switch (this.type) {
       case 'search':
+        console.log(this.message.member);
+        console.log(this.message.author);
         if (args) {
           info = (
             this.message.mentions.members.first() ||
             this.message.guild.members.cache.get(args[0]) ||
             this.client.searchMember(args.join(' '))
           );
-        } else info = message.member;
+        } else info = this.message.member;
         break;
       case 'fruit':
         if (/apples?/i.test(args[1])) {
@@ -216,7 +218,7 @@ class Profile {
       );
       this.send('remove', 'success');
     }
-    client.userDB.safeUpdate(memberID ? memberID : this.message.author.id, this.info, this.type)
+    client.userDB.safeUpdate(memberID ? memberID : this.message.author.id, this.info, this.type, false)
       .then(() => {
         this.send(this.type === '' ? 'clear' : 'success');
       })
