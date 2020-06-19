@@ -2,10 +2,11 @@
 module.exports.run = async (client, message, args, level) => {
     if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
     let island = new Profile(client, message, args);
-    island.run()
-      .catch((err) => {
-        client.handle(err, 'island')
-      })
+    console.log(island.info);
+  island.run()
+    .catch((err) => {
+      client.handle(err, 'island')
+    })
 };
 
 // noinspection SpellCheckingInspection
