@@ -35,7 +35,7 @@ const islandAliases = {
   'f': 'fruit',
   'charactername': 'charactername',
   'character': 'charactername',
-  'charname': 'characterName',
+  'charname': 'charactername',
   'cn': 'charactername',
   'villagername': 'charactername',
   'vn': 'charactername',
@@ -194,7 +194,7 @@ class Profile {
       this.client.userDB.multiUpdate(
         memberID ? memberID : this.message.author.id,
         ['', '', '', '', '', '',],
-        ['islandName', 'fruit', 'characterName', 'hemisphere', 'profileName', 'friendCode']
+        ['islandname', 'fruit', 'charactername', 'hemisphere', 'profilename', 'friendcode']
       );
       this.send('remove', 'success');
     }
