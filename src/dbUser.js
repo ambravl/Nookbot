@@ -200,7 +200,7 @@ module.exports = async (client) => {
      */
     async update(primaryKey, value, column) {
       let query;
-      if (value instanceof Array) query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`
+      if (value instanceof Array) query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`;
       else query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
       client.db.query(query, value instanceof Array ? value.push(primaryKey) : [value, primaryKey])
         .catch((err) => {
@@ -326,15 +326,6 @@ module.exports = async (client) => {
       const query = `UPDATE ${this.name} SET ${column} = ${column} ${operation} ${modifier} WHERE ${this.mainColumn} = $1 RETURNING ${column}`;
       return client.db.query(query, [primaryKey]);
     };
-
-    /**
-     * @param {string} value
-     * @param {string} column
-     */
-    async selectSearchArray(value, column) {
-      const query = `SELECT * FROM ${this.name} WHERE $1 = ANY ${column}`;
-      return client.db.query(query, [value]);
-    }
 
     /**
      * @param {Number} limit
