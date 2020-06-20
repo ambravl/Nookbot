@@ -325,9 +325,8 @@ async makeImage(memberCount, color) {
       .setColor(color);
     if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
     let embeds = [];
-    console.log(this.userInfo);
     if (this.userInfo) {
-      ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
+      ['friendCode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
         if (this.userInfo[category]) {
           embeds.push({
             name: strings[category].name,
@@ -336,7 +335,6 @@ async makeImage(memberCount, color) {
           });
         }
       });
-      console.log(embeds);
       if (embeds) embed.addFields(embeds);
     }
     if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
