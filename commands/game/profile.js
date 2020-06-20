@@ -215,7 +215,7 @@ class Profile {
         this.client.mStrings.island[this.type].success.desc + ` **${this.info}**`
       );
     } else {
-      this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${this.info.displayName}${this.client.mStrings.island[this.type][event].desc}`)
+      this.client.error(this.message.channel, this.client.mStrings.island[this.type][event].title, `${this.client.mStrings.island[this.type][event].desc}`)
     }
   }
 }
@@ -327,6 +327,7 @@ async makeImage(memberCount, color) {
     let embeds = [];
     if (this.userInfo) {
       ['friendcode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
+        console.log(category);
         if (this.userInfo[category]) {
           embeds.push({
             name: strings[category].name,
