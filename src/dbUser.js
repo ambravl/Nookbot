@@ -135,7 +135,7 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
-     * @param {Array<string>} values
+     * @param {Array<string|Array<string>>} values
      * @param {Array<string>} columns
      */
     mathAndPush(primaryKey, values, columns) {
@@ -233,7 +233,7 @@ module.exports = async (client) => {
      */
     async push(primaryKey, value, column) {
       const query = `UPDATE ${this.name} SET ${column} = ${column} || $1 WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, [value, primaryKey])
+      client.db.query(query, [[value], primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'push');
         })
