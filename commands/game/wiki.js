@@ -68,7 +68,7 @@ module.exports.run = async (client, message, args) => {
           gender = (infoBox.text().match(/(Male|Female)/) || [''])[0];
         } else {
           const src = output.find('img', 'a').filter((i, elem) => ($(elem).attr('width') > 60 && $(elem).attr('height') > 60)).first().attr('src');
-          image = `https://nookipedia.com${src}`;
+          image = `${src}`;
           // eslint-disable-next-line prefer-destructuring
           gender = (output.find('table').eq(1).text().match(/(Male|Female)/) || [''])[0];
         }

@@ -3,7 +3,7 @@ module.exports = (client) => {
   const Discord = require('discord.js');
   client.handle = function (error, method, message) {
     let url;
-    if (message) url = `https://discordapp.com/channels/${message.guild.id}/${message.channels.id}/${message.id}`;
+    if (message) url = `https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
     console.error(`Got error ${error.name} while running ${method}`);
     if (url) console.error(`Message link: ${url}`);
     console.error(error.message);

@@ -1,10 +1,35 @@
 // TODO
 // eslint-disable-next-line no-unused-vars
 module.exports.run = async (client, message, args, level, Discord) => {
+  const strings = client.mStrings.modMail;
   if (message.guild) {
     message.delete().catch((err) => console.error(err));
   }
-  return message.channel.send('Modmail has a new host! This command will no longer work. Please send your message to <@715355702444425296> (Orvbot#6893) for it to be sent to staff. You can find Orvbot at the top of the member list in the AC:NH server!');
+  const embed = new Discord.MessageEmbed()
+    .setAuthor(message.author.name, message.author.displayAvatarURL())
+    .setTitle(`Ticket #${message.id}`)
+    .setDescription(message.content)
+    .setColor('#ff0000')
+    .addField('\u200b', '\u200b')
+    .setFooter(`Status: not replied`);
+  if (message.attachments) embed.attachFiles(message.attachments);
+  message.guild.channels.cache.get(client.config.modMail).send(message.content)
+    .then((msg) => {
+      const dmMsg = new Discord.MessageEmbed()
+        .setTitle(strings.thanks.title)
+        .setDescription('\n' + strings.thanks.desc)
+        .setColor('#4dab68');
+      message.member.createDM().then((dmChannel) => {
+        dmChannel.send(dmMsg)
+          .then((dm) => {
+            client.modMail.insert(msg.id, [message.author.id, dm.id, 'unread'], ['memberID', 'dmID', 'status'])
+              .catch((err) => client.handle(err, 'adding modmail to the db', message))
+          })
+          .catch((err) => client.handle(err, 'sending DM to modmail sender', message))
+      })
+        .catch((err) => client.handle(err, 'opening DM channel with modmail sender', message));
+    })
+    .catch((err) => client.handle(err, 'sending modmail to channel'))
 };
 
 module.exports.conf = {

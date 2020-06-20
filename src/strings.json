@@ -127,7 +127,7 @@
       }
     },
     "charactername": {
-      "name": "Character Name:",
+      "name": "Character Name",
       "none": {
         "title": "No Character Name Given!",
         "desc": "Please supply the name of your character!"
@@ -146,7 +146,7 @@
       }
     },
     "hemisphere": {
-      "name": "Hemisphere:",
+      "name": "Hemisphere",
       "none": {
         "title": "No Hemisphere Given!",
         "desc": "Please supply the hemisphere your island is in, either northern or southern!"
@@ -319,6 +319,56 @@
       "title": "Congratulations,",
       "descL": "You just leveled up to rank **",
       "descR": "**! Keep talking to unlock new levels and rewards!"
+    }
+  },
+  "addPermission": {
+    "none": {
+      "title": "Not enough arguments!",
+      "desc": "You must supply a role and permission level to edit or add! The correct usage is `.addperm <role name> <role level>`, like `.addperm blue rose mod`"
+    },
+    "invalid": {
+      "title": "Couldn't find role!",
+      "desc": "Sorry, I couldn't find a role by that name! Could you try using the role's ID instead?"
+    },
+    "newPermission": {
+      "title": "Couldn't find permission level!",
+      "desc": "Couldn't find a permission level by that name! Would you like to add a new one? If so, what's the numeric level (0-10, with 0 being unverified)? Say cancel if you don't want to."
+    },
+    "updated": {
+      "title": "Permissions updated!",
+      "desc": "is now granted the following permission level:"
+    },
+    "cancel": {
+      "title": "Cancelled!",
+      "desc": "This role won't have a permission level added to it!"
+    },
+    "newSuccess": {
+      "title": "New level added!",
+      "desc": "is now granted the new permission level:"
+    }
+  },
+  "addRank": {
+    "none": {
+      "title": "Invalid number of arguments!",
+      "desc": "Please mention the new role and say the number of points needed to reach it!"
+    },
+    "noRole": {
+      "title": "Couldn't find that role!",
+      "desc": "Please @mention the role so I can find it!"
+    },
+    "noPoints": {
+      "title": "No points!",
+      "desc": "Please supply the minimum needed points to achieve the role!"
+    },
+    "success": {
+      "title": "Success!",
+      "desc": "Successfully added the new role to the rank database!"
+    }
+  },
+  "modMail": {
+    "thanks": {
+      "title": "Thanks for the message!",
+      "desc": "I've forwarded it to the mods and will let you know as soon as someome answers or something changes!"
     }
   }
 }

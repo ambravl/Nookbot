@@ -63,5 +63,13 @@
   "rankDB": {
     "roleID": "text PRIMARY KEY",
     "minPoints": "integer"
+  },
+  "modMail": {
+    "tickedID": "text PRIMARY KEY",
+    "messageID": "text",
+    "memberID": "text",
+    "dmID": "text",
+    "status": "text",
+    "notes": "text[]"
   }
 }

@@ -5,7 +5,7 @@ module.exports.run = async (client, message, args) => {
   };
   client.db.query(query)
     .then((res) => {
-      if (res.rows) {
+      if (res && res.rows && res.rows.length > 0) {
         let msg = [`**${res.fields.map(f => f.name).join(' | ')}**`];
         res.rows.forEach((row) => {
           msg.push(row.join(' | '));

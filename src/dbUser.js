@@ -195,12 +195,13 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
-     * @param {string} value
-     * @param {string} column
+     * @param {string|Array<string>} value
+     * @param {string|Array<string>} column
      */
     async update(primaryKey, value, column) {
+      if (value instanceof Array) const query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`
       const query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, [value, primaryKey])
+      client.db.query(query, value instanceof Array ? value.push(primaryKey) : [value, primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'update');
         });
@@ -260,8 +261,8 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
-     * @param {string} value
-     * @param {string} column
+     * @param {string|Array<string>} value
+     * @param {string|Array<string>} column
      * @param {boolean} push
      * @returns {Promise<void>}
      */
@@ -270,7 +271,7 @@ module.exports = async (client) => {
       client.db.query(query, [primaryKey])
         .then((res) => {
           if (!res || res.rows < 1) {
-            this.insert(primaryKey, value, [column])
+            this.insert(primaryKey, value, column instanceof Array ? column : [column])
               .catch((err) => {
                 client.handle(err, 'safeUpdate insert')
               });
