@@ -61,20 +61,6 @@ module.exports.run = async (client) => {
           "('rankedChannels', '718581551331409971', 'array')"
         ];
         break;
-      case 'adoptees':
-        const fs = require('fs');
-
-        try {
-          const data = fs.readFileSync('src/villagers.txt', 'utf8');
-          const fixedData = data.split('\n');
-
-          fixedData.forEach((vil) => {
-            insertQuery.push(`('${vil.trim()}', '{}')`);
-          });
-        } catch (e) {
-          console.error(e);
-        }
-        break;
     }
     if (insertQuery && insertQuery.length > 0) query.push(`INSERT INTO ${table} VALUES ${insertQuery.join(', ')}`);
   });
