@@ -63,7 +63,7 @@
       "desc": "Successfully downvoted"
     }
   },
-  "friendCode": {
+  "friendcode": {
     "noCode": {
       "title": "No Code Given!",
       "desc": "Please supply your Switch friend code!"
@@ -126,7 +126,7 @@
         "desc": "To set your island's native fruit again, use `.island fruit <fruit>`!"
       }
     },
-    "characterName": {
+    "charactername": {
       "name": "Character Name:",
       "none": {
         "title": "No Character Name Given!",
@@ -164,7 +164,7 @@
         "desc": "To set the hemisphere for your island again, use `.island hemisphere <hemisphere>`!"
       }
     },
-    "profileName": {
+    "profilename": {
       "name": "Switch Profile Name",
       "none": {
         "title": "No Switch Profile Name Given!",
@@ -183,7 +183,7 @@
         "desc": "To set your Switch profile name again, use `.island profilename <name>`!"
       }
     },
-    "friendCode": {
+    "friendcode": {
       "name": "Friend Code",
       "none": {
         "title": "No Code Given!",
