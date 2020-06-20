@@ -26,31 +26,32 @@ module.exports.vote = (client, message, args, positive) => {
 
   client.userDB.ensure(member.id, '', '*')
     .then((result) => {
-      const voted = result.rows[0];
-      if (voted[list].includes(message.author.id)) {
-        return client.error(
-          message.channel,
-          strings.alreadyVoted.title,
-          strings.alreadyVoted.descL + member.displayName + strings.alreadyVoted.descR
-        );
-      }
-      if (voted.posRepList.includes(message.author.id)) {
-        client.userDB.switchPoints(true, member.id, message.author.id);
-        client.success(
-          message.channel,
-          strings.changed.title,
-          `${strings.changed.description}${member.displayName}**!`
-        );
-      } else {
-        client.userDB.mathAndPush(member.id, [-1, message.author.id], [rep, list]);
-        client.success(message.channel, strings.success.title, `${strings.success.desc} **${member.displayName}**!`);
-      }
-      if (voted[list].length + 1 === limit) {
-        message.guild.channels.cache.get(client.config.staffChat).send(
-          `${rep} Threshold Reached!\n
+      if (result && result.rows && result.rows.length > 0) {
+        const voted = result.rows[0];
+        if (voted[list].includes(message.author.id)) {
+          return client.error(
+            message.channel,
+            strings.alreadyVoted.title,
+            strings.alreadyVoted.descL + member.displayName + strings.alreadyVoted.descR
+          );
+        }
+        if (voted.posRepList.includes(message.author.id)) {
+          client.userDB.switchPoints(true, member.id, message.author.id);
+          return client.success(
+            message.channel,
+            strings.changed.title,
+            `${strings.changed.description}${member.displayName}**!`
+          );
+        }
+        if (voted[list].length + 1 === limit) {
+          message.guild.channels.cache.get(client.config.staffChat).send(
+            `${rep} Threshold Reached!\n
           **${member.user.tag}** (${member}) has reached **${limit}** ${rep}orts!`
-        );
+          );
+        }
       }
+      client.userDB.mathAndPush(member.id, [-1, message.author.id], [rep, list]);
+      return client.success(message.channel, strings.success.title, `${strings.success.desc} **${member.displayName}**!`);
     })
     .catch((err) => {
       client.handle(err, 'voting', message)
