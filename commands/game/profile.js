@@ -264,7 +264,7 @@ async makeImage(memberCount, color) {
     // Slightly smaller text placed above the member's display name
     ctx.font = '28px sans-serif';
   ctx.fillStyle = '#ffffff';
-  ctx.fillText(`${this.userInfo.rankRole ? this.userInfo.rankRole : 'Weed'} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
+  ctx.fillText(`${this.userInfo.rankRole ? this.userInfo.rankRole : 'Placeholder'} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
 
   // Add an exclamation point here and below
   ctx.font = applyText(canvas, this.user.displayName);
@@ -325,6 +325,7 @@ async makeImage(memberCount, color) {
       .setColor(color);
     if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
     let embeds = [];
+    console.log(this.userInfo);
     if (this.userInfo) {
       ['friendCode', 'profileName', 'characterName', 'islandName', 'fruit', 'hemisphere'].forEach((category) => {
         if (this.userInfo[category]) {
@@ -335,6 +336,7 @@ async makeImage(memberCount, color) {
           });
         }
       });
+      console.log(embeds);
       if (embeds) embed.addFields(embeds);
     }
     if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
