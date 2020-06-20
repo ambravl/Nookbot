@@ -326,7 +326,7 @@ async makeImage(memberCount, color) {
     if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
     let embeds = [];
     if (this.userInfo) {
-      ['friendCode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
+      ['friendcode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
         if (this.userInfo[category]) {
           embeds.push({
             name: strings[category].name,
