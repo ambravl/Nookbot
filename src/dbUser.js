@@ -271,6 +271,7 @@ module.exports = async (client) => {
       const [columns, values] = this.treatData(primaryKey, vals, cols);
       let valueCall = [];
       for (let i = 0; i < values.length; i++) valueCall.push(`$${i + 1}`);
+      if (valueCall.length === 0) valueCall = 'DEFAULT';
       const query = `INSERT INTO ${this.name} (${columns}) VALUES (${valueCall.join(', ')})`;
       client.db.query(query, values)
         .catch((err) => {
@@ -291,9 +292,15 @@ module.exports = async (client) => {
           .catch((err) => {
             client.handle(new DBError(query, err), 'update');
           });
-      } else {
+      } else if (value) {
         const query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
         client.db.query(query, [value, primaryKey])
+          .catch((err) => {
+            client.handle(new DBError(query, err), 'update');
+          });
+      } else {
+        const query = `UPDATE ${this.name} SET ${column} = DEFAULT WHERE ${this.mainColumn} = $1`;
+        client.db.query(query, [primaryKey])
           .catch((err) => {
             client.handle(new DBError(query, err), 'update');
           });
