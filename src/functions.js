@@ -16,15 +16,16 @@ module.exports = (client) => {
     }
 
     reactionRoleMenu = reactionRoleMenu.rows[0];
+    console.log(reactionRoleMenu);
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
 
     for (let reaction of reactionRoleMenu.reactions) {
-      if (reaction.emojiid === messageReaction.emoji.id || reaction.emojiid === messageReaction.emoji.identifier || reaction.emojiid === messageReaction.emoji.name) {
-        result.roleid = reaction.roleid;
+      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
+        result.roleid = reaction.roleID;
       }
-      result.roles.push(reaction.roleid);
-      result.emoji.push(reaction.emojiid);
+      result.roles.push(reaction.roleID);
+      result.emoji.push(reaction.emojiID);
     }
     return result;
   };
