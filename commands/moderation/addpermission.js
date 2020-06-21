@@ -29,7 +29,7 @@ function newPermission(strings, role, channel, client) {
         .then(collected => {
           if (collected.first().content.toLowerCase() === 'cancel') return client.error(channel, strings.cancel.title, strings.cancel.desc);
           const newLevel = parseInt(collected.first().content);
-          client.permissionDB.insert(role.id, newLevel, role.name)
+          client.permissionDB.insert(role.id, [newLevel, role.name], ['level', 'name'])
             .then(() => channel.send(`**${strings.newSuccess.title}**\n${role.name} ${strings.newSuccess.desc} ${newLevel}`))
             .catch((err) => client.handle(err, 'inserting new permission'));
         })
@@ -53,7 +53,7 @@ function fetchPermission(permissionName) {
     'Bot Owner'];
   let permission;
   if (isNaN(permissionName)) permission = permissionLevels.find((permLevel) =>
-    permLevel === permissionName
+    permLevel.toLowerCase() === permissionName.toLowerCase()
   );
   else if (permissionName.length < 3) permission = permissionLevels[parseInt(permissionName)];
   return [permission, permissionLevels.indexOf(permission)];
