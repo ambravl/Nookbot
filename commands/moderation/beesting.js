@@ -121,7 +121,7 @@ If you wish to contact the moderators about your warning, please send a message 
   const caseNum = await client.infractions.add(member.id);
 
   // Create infraction in the users to store important information
-  client.userDB.push(member.id, JSON.stringify({
+  const infraction = {
     case: caseNum.rows[0].casenumber,
     action: action,
     points: newPoints,
@@ -129,11 +129,13 @@ If you wish to contact the moderators about your warning, please send a message 
     moderator: message.author.id,
     dmSent: dmSent,
     date: time
-  }), 'infractions');
+  };
+  console.log(infraction);
+  client.userDB.push(member.id, infraction, 'infractions');
 
   // Perform the required action
   if (ban) {
-    await message.guild.members.ban(member, { reason: '[Auto] Beestings', days: 1 }).catch((err) => {
+    await message.guild.members.ban(member, {reason: '[Auto] Beestings', days: 1}).catch((err) => {
       client.error(message.guild.channels.cache.get(client.config.modLog), 'Ban Failed!', `I've failed to ban this member! ${err}`);
     });
   } else if (mute) {
@@ -167,7 +169,7 @@ If you wish to contact the moderators about your warning, please send a message 
 
   // Send mod-log embed
   const embed = new Discord.MessageEmbed()
-    .setAuthor(`Case ${caseNum} | ${action} | ${member.guild ? member.user.tag : member.tag || member}`, member.guild ? member.user.displayAvatarURL() : member.displayAvatarURL())
+    .setAuthor(`Case ${caseNum.rows[0].casenumber} | ${action} | ${member.guild ? member.user.tag : member.tag || member}`, member.guild ? member.user.displayAvatarURL() : member.displayAvatarURL())
     .setColor((mute || ban) ? '#ff9292' : '#fada5e')
     .setDescription(`Reason: ${reason}`)
     .addField('User', `<@${member.id}>`, true)

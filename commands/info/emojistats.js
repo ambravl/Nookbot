@@ -81,7 +81,9 @@ class EmojiList{
           this.client.handle(err, 'emojiStats send', this.message)
         })
     }
-    catch(err) {client.handle(err, 'emojiStats prepare', this.message)}
+    catch (err) {
+      this.client.handle(err, 'emojiStats prepare', this.message)
+    }
   }
 
   async send(event, args){
