@@ -1,9 +1,9 @@
 module.exports.run = async (client, message, args) => {
   const strings = client.mStrings.addPermission;
   if (!args || args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
-  const arguments = args.join(' ').split('-').trim();
-  const roleName = arguments[0];
-  const permissionName = arguments[1];
+  const arguments = args.join(' ').split('-');
+  const roleName = arguments[0].trim();
+  const permissionName = arguments[1].trim();
   let role;
   if (isNaN(roleName)) {
     if (message.mentions && message.mentions.roles) role = message.mentions.roles.first();
