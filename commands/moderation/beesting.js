@@ -121,7 +121,7 @@ If you wish to contact the moderators about your warning, please send a message 
   const caseNum = await client.infractions.add(member.id);
 
   // Create infraction in the users to store important information
-  client.userDB.push(member.id, {
+  client.userDB.push(member.id, JSON.stringify({
     case: caseNum.rows[0].casenumber,
     action: action,
     points: newPoints,
@@ -129,7 +129,7 @@ If you wish to contact the moderators about your warning, please send a message 
     moderator: message.author.id,
     dmSent: dmSent,
     date: time
-  }, 'infractions');
+  }), 'infractions');
 
   // Perform the required action
   if (ban) {
