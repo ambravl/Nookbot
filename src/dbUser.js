@@ -140,7 +140,8 @@ module.exports = async (client) => {
      */
     mathAndPush(primaryKey, values, columns) {
       const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = array_append(${columns[1]}, $3) WHERE ${this.mainColumn} = $1`;
-      client.db.query(query, values.unshift(primaryKey))
+      values.unshift(primaryKey);
+      client.db.query(query, values)
         .catch((err) => {
           client.handle(new DBError(query, err), 'mathAndPush')
         });
@@ -219,7 +220,8 @@ module.exports = async (client) => {
         updates.push(`${columns[i]} = $${i + 2}`);
       }
       const query = `UPDATE ${this.name} SET ${updates.join(', ')} WHERE ${this.mainColumn} = $1`;
-      client.db.query(query, values.unshift(primaryKey))
+      values.unshift(primaryKey);
+      client.db.query(query, values)
         .catch((err) => {
           client.handle(new DBError(query, err), 'multiUpdate')
         })

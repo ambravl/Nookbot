@@ -5,7 +5,7 @@ module.exports.run = async (client, message, args) => {
   if (!role) return client.error(message.channel, strings.noRole.title, strings.noRole.desc);
   const points = args.find(arg => !isNaN(arg));
   if (!points) return client.error(message.channel, strings.noPoints.title, strings.noPoints.desc);
-  client.rankDB.safeUpdate(role.id, points, 'points', false)
+  client.rankDB.safeUpdate(role.id, points, 'minPoints', false)
     .then(() => client.success(message.channel, strings.success.title, strings.success.desc))
     .catch((err) => client.handle(err, 'updating rank DB', message))
 };
