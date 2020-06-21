@@ -43,7 +43,7 @@ module.exports.vote = (client, message, args, positive) => {
           return client.success(
             channel,
             strings.changed.title,
-            `${strings.changed.description}${member.displayName}**!`
+            `${strings.changed.desc}${member.displayName}**!`
           );
         }
         if (result[list] && result[list].length + 1 === limit) {
