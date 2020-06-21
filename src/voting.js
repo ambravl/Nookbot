@@ -50,7 +50,7 @@ module.exports.vote = (client, message, args, positive) => {
           );
         }
       }
-      client.userDB.mathAndPush(member.id, [-1, [message.author.id]], [rep, list]);
+      client.userDB.mathAndPush(member.id, [-1, message.author.id], [rep, list]);
       return client.success(message.channel, strings.success.title, `${strings.success.desc} **${member.displayName}**!`);
     })
     .catch((err) => {

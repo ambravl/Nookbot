@@ -23,7 +23,7 @@ class DBError extends Error{
     }
     this.name = 'Database Error!';
     this.date = new Date();
-    this.message = `Database Error! [${error.name}] when running query: [${query}], error: ${error.message}`;
+    this.message = `[${error.name}] when running query: [${query}], error: ${error.message}`;
   }
 }
 
@@ -139,7 +139,7 @@ module.exports = async (client) => {
      * @param {Array<string>} columns
      */
     mathAndPush(primaryKey, values, columns) {
-      const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = ${columns[1]} || $3 WHERE ${this.mainColumn} = $1`;
+      const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = ${columns[1]} || ARRAY[$3] WHERE ${this.mainColumn} = $1`;
       client.db.query(query, values.unshift(primaryKey))
         .catch((err) => {
           client.handle(new DBError(query, err), 'mathAndPush')
