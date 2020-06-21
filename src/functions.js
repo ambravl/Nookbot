@@ -20,11 +20,11 @@ module.exports = (client) => {
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
 
     for (let reaction of reactionRoleMenu.reactions) {
-      if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
+      if (reaction.emojiid === messageReaction.emoji.id || reaction.emojiid === messageReaction.emoji.identifier || reaction.emojiid === messageReaction.emoji.name) {
         result.roleid = reaction.roleid;
       }
       result.roles.push(reaction.roleid);
-      result.emoji.push(reaction.emojiID);
+      result.emoji.push(reaction.emojiid);
     }
     return result;
   };

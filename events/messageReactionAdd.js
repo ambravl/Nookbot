@@ -1,5 +1,4 @@
 module.exports = async (client, messageReaction, user) => {
-  console.log(`${user.nickname} reacted with ${messageReaction.emoji.name}`);
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
   if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
