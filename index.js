@@ -22,12 +22,12 @@ const client = new Discord.Client({
 });
 client.firstTime = firstTime;
 const strings = require('./src/strings.json');
-const {botVersion} = require('./package.json');
+const {version} = require('./package.json');
 const emoji = require('./src/emoji');
 require('./src/error-handler')(client);
 require('./src/dbUser')(client);
 
-client.version = `v${botVersion}`;
+client.version = `v${version}`;
 client.emoji = emoji;
 client.mStrings = strings;
 client.token = process.env.TOKEN;
