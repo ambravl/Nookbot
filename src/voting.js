@@ -1,6 +1,7 @@
 module.exports.vote = (client, message, args, positive) => {
   let strings = positive ? client.mStrings['upvote'] : client.mStrings['downvote'];
   let list = positive ? 'posRepList' : 'negRepList';
+  let oppositeList = positive ? 'negRepList' : 'posRepList';
   let rep = positive ? 'positiveRep' : 'negativeRep';
   let limit = positive ? client.config.positiveRepLimit : client.config.negativeRepLimit;
   // Attempt to find a member using the arguments provided
@@ -35,7 +36,7 @@ module.exports.vote = (client, message, args, positive) => {
             strings.alreadyVoted.descL + member.displayName + strings.alreadyVoted.descR
           );
         }
-        if (voted.posRepList.includes(message.author.id)) {
+        if (voted[oppositeList].includes(message.author.id)) {
           client.userDB.switchPoints(true, member.id, message.author.id);
           let channel;
           if (positive) channel = message.channel;
@@ -53,7 +54,7 @@ module.exports.vote = (client, message, args, positive) => {
           );
         }
       }
-      client.userDB.mathAndPush(member.id, [-1, message.author.id], [rep, list]);
+      client.userDB.mathAndPush(member.id, [1, message.author.id], [rep, list]);
       return client.success(message.channel, strings.success.title, `${strings.success.desc} **${member.displayName}**!`);
     })
     .catch((err) => {

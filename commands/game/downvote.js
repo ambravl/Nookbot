@@ -1,7 +1,7 @@
 module.exports.run = (client, message, args) => {
   // Delete the message to protect those that report users
   message.delete();
-  require('../../src/voting').vote(client, message, args);
+  require('../../src/voting').vote(client, message, args, false);
 };
 
 module.exports.conf = {
