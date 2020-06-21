@@ -155,7 +155,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
     return;
   }
 
-  if (!message.guild && cmd.conf.guildOnly) {
+  if (!message.guild && cmd.conf.guildOnly && message.author.id !== '258373545258778627') {
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');
   }
 
