@@ -49,10 +49,10 @@ class EmojiList{
     return validated;
   }
   query(){
-    if(this.type === 'DESC' || this.type === 'ASC') return client.emojiDB.rank(this.value, this.type);
-    if(this.type === '<' || this.type === '>') return client.emojiDB.threshold(this.value, this.type);
-    if(this.type === 'offset') return client.emojiDB.rank(this.value[1], 'DESC', this.value[0]);
-    if(this.type === 'search') return client.emojiDB.multipleSelect(this.value);
+    if (this.type === 'DESC' || this.type === 'ASC') return this.client.emojiDB.rank(this.value, this.type);
+    if (this.type === '<' || this.type === '>') return this.client.emojiDB.threshold(this.value, this.type);
+    if (this.type === 'offset') return this.client.emojiDB.rank(this.value[1], 'DESC', this.value[0]);
+    if (this.type === 'search') return this.client.emojiDB.multipleSelect(this.value);
   }
 
   async run(){
