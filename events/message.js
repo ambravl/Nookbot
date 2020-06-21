@@ -35,11 +35,12 @@ module.exports = async (client, message) => {
   let regMatch;
   while ((regMatch = regex.exec(msg)) !== null) {
     console.log('found emoji');
+    console.log(message.content);
+    console.log(regMatch);
     // If the emoji ID is in our emoji, then increment its count
     client.emojiDB.select(regMatch[1])
       .then((rows) => {
         console.log('tried to select emoji');
-        console.log(regMatch);
         if (rows) {
           console.log('found emoji in db');
           client.emojiDB.math(regMatch[1], '+', 1, 'uses')
