@@ -15,7 +15,12 @@ module.exports.run = async (client, message, args) => {
   console.log(permission);
   client.permissionDB.safeUpdate(role.id, permission, ['name', 'level'], false)
     .then(() => {
-      client.success(message.channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`)
+      client.success(message.channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`);
+      client.levelCache[permission[1]] = {
+        roleID: role.id,
+        name: permission[0],
+        level: permission[1]
+      }
     })
     .catch((err) => client.handle(err, 'updating permissions', message));
 };

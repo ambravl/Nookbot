@@ -29,7 +29,7 @@ module.exports = (client) => {
     }
   });
 
-  client["permissionDB"].cacheDB().then((res) => {
+  client.permissionDB.cacheDB().then((res) => {
     client.levelCache = [];
     res.rows.forEach(row => {
       client.levelCache[parseInt(row.level)] = {
