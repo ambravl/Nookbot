@@ -237,10 +237,10 @@ module.exports = async (client) => {
      * @param {string} keyToRemove
      */
     switchPoints(minus, primaryKey, keyToRemove) {
-      const posRep = `"positiveRep" = "positiveRep" ${minus ? '-1' : '+1'}`;
-      const negRep = `"negativeRep" = "negativeRep" ${minus ? '+1' : '-1'}`;
-      const posRepL = `"posRepList" = array_${minus ? 'remove' : 'append'}("posRepList", $2)`;
-      const negRepL = `"negRepList" = array_${minus ? 'append' : 'remove'}("negRepList", $2)`;
+      const posRep = `positiveRep = positiveRep ${minus ? '-1' : '+1'}`;
+      const negRep = `negativeRep = negativeRep ${minus ? '+1' : '-1'}`;
+      const posRepL = `posRepList = array_${minus ? 'remove' : 'append'}(posRepList, $2)`;
+      const negRepL = `negRepList = array_${minus ? 'append' : 'remove'}(negRepList, $2)`;
       const q = `UPDATE ${this.name} SET ${posRep}, ${negRep}, ${posRepL}, ${negRepL} WHERE ${this.mainColumn} = $1`;
       client.db.query(q, [primaryKey, keyToRemove])
         .catch((err) => {
