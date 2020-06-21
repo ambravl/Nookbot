@@ -124,8 +124,8 @@ module.exports = async (client) => {
     switchPoints(minus, primaryKey, keyToRemove) {
       const posRep = `"positiveRep" = "positiveRep" ${minus ? '-1' : '+1'}`;
       const negRep = `"negativeRep" = "negativeRep" ${minus ? '-1' : '+1'}`;
-      const posRepL = `"posRepList" = ${minus ? 'array_remove("posRepList", $2)' : '"posRepList" || $2'}`;
-      const negRepL = `"negRepList" = ${minus ? 'array_remove("negRepList", $2)' : '"negRepList" || $2'}`;
+      const posRepL = `"posRepList" = array_${minus ? 'remove' : 'append'}("posRepList", $2)`;
+      const negRepL = `"negRepList" = array_${minus ? 'append' : 'remove'}("negRepList", $2)`;
       const q = `UPDATE ${this.name} SET ${posRep}, ${negRep}, ${posRepL}, ${negRepL} WHERE ${this.mainColumn} = $1`;
       client.db.query(q, [primaryKey, keyToRemove])
         .catch((err) => {
@@ -139,7 +139,7 @@ module.exports = async (client) => {
      * @param {Array<string>} columns
      */
     mathAndPush(primaryKey, values, columns) {
-      const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = ${columns[1]} || ARRAY[$3] WHERE ${this.mainColumn} = $1`;
+      const query = `UPDATE ${this.name} SET ${columns[0]} = ${columns[0]} + $2, ${columns[1]} = array_append(${columns[1]}, $3) WHERE ${this.mainColumn} = $1`;
       client.db.query(query, values.unshift(primaryKey))
         .catch((err) => {
           client.handle(new DBError(query, err), 'mathAndPush')
@@ -232,7 +232,7 @@ module.exports = async (client) => {
      * @returns {Promise<void>}
      */
     async push(primaryKey, value, column) {
-      const query = `UPDATE ${this.name} SET ${column} = ${column} || $1 WHERE ${this.mainColumn} = $2`;
+      const query = `UPDATE ${this.name} SET ${column} = array_append(${column}, $1) WHERE ${this.mainColumn} = $2`;
       client.db.query(query, [[value], primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'push');

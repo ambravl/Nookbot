@@ -36,7 +36,7 @@ module.exports.vote = (client, message, args, positive) => {
           );
         }
         if (voted.posRepList.includes(message.author.id)) {
-          client.userDB.switchPoints(true, member.id, [message.author.id]);
+          client.userDB.switchPoints(true, member.id, message.author.id);
           return client.success(
             message.channel,
             strings.changed.title,
