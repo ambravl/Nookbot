@@ -1,13 +1,13 @@
 module.exports.run = async (client, message, args) => {
   const caseNum = parseInt(args[0], 10);
 
-  if (!(caseNum > 0)) {
+  if (caseNum < 0) {
     return client.error(message.channel, 'Invalid Number!', 'Please provide a valid case number to apply medicine to!');
   }
-  client.infractions.delete(caseNum)
+  client.infractions.delete(args[0])
     .then(async (res) => {
       if (res && res.rows && res.rows.length > 0) {
-        client.userDB.pop(res.rows[0].userID, caseNum, 'infractions')
+        client.userDB.pop(res.rows[0].userID, caseNum, 'infractions', 'case')
           .catch((err) => {
             throw err;
           });

@@ -351,10 +351,20 @@ module.exports = async (client) => {
      * @param {string} primaryKey
      * @param {string} value
      * @param {string} column
+     * @param {string} field
      */
-    async pop(primaryKey, value, column) {
-      const query = `UPDATE ${this.name} SET ${column} = array_remove(${column}, $1) WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, [value, primaryKey])
+    async pop(primaryKey, value, column, field) {
+      // i just copied this from stackoverflow sorry
+      const query = `UPDATE ${this.name}
+SET    ${column} = array_remove(${column}, d.to_remove)
+FROM  (
+   SELECT ${this.mainColumn}, to_remove
+   FROM   ${this.name}, unnest(${this.column}) to_remove
+   WHERE  to_remove->>'${field}' = $2
+   ) d
+WHERE  d.${this.mainColumn} = $1`;
+      // const query = `UPDATE ${this.name} SET ${column} = array_remove(${column}, $1) WHERE ${this.mainColumn} = $2`;
+      client.db.query(query, [primaryKey, value])
         .catch((err) => {
           client.handle(new DBError(query, err), 'pop')
         });
