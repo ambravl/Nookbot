@@ -2,6 +2,8 @@ module.exports = async (client, messageReaction, user) => {
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
   console.log('awaited');
+  console.log(member);
+  console.log(reactionRoleMenu);
   if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
   console.log('passed checks');
   if (reactionRoleMenu.type === 'exclusive') {
