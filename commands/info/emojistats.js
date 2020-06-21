@@ -39,7 +39,7 @@ class EmojiList{
       } else {
         validated.type = 'search';
         let value = [];
-        args.forEach((arg) => {
+        rawArgs.forEach((arg) => {
           let emojiID = arg.replace(/<a?:\w+:([\d]+)>/g, '\\$1');
           if (emojiID) value.push(emojiID);
         });
