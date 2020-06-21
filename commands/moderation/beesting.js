@@ -128,7 +128,7 @@ If you wish to contact the moderators about your warning, please send a message 
     reason: `${reason}${message.attachments.size > 0 ? `\n${message.attachments.map((a) => `${a.url}`).join('\n')}` : ''}`,
     moderator: message.author.id,
     dmSent: dmSent,
-    date: time,
+    date: time
   }, 'infractions');
 
   // Perform the required action
