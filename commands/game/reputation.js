@@ -3,9 +3,9 @@ module.exports.run = (client, message, args, level) => {
   const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' ')) || message.member;
   client.userDB.ensure(member.id, '', '*')
     .then((result) => {
-      const { positiveRep, negativeRep } = result;
-      if(!positiveRep && !negativeRep) return message.channel.send(`**${member.user.tag}**'s Reputation is **unknown**.`);
-      return message.channel.send(`**${member.user.tag}**'s Reputation is **${Math.round((positiveRep / ((positiveRep + negativeRep) || 1)) * 100)}%** positive based on **${positiveRep + negativeRep}** total ratings **(+${positiveRep}|-${negativeRep})**.`);
+      const {positiverep, negativerep} = result;
+      if (!positiverep && !negativerep) return message.channel.send(`**${member.user.tag}**'s Reputation is **unknown**.`);
+      return message.channel.send(`**${member.user.tag}**'s Reputation is **${Math.round((positiverep / ((positiverep + negativerep) || 1)) * 100)}%** positive based on **${positiverep + negativerep}** total ratings **(+${positiverep}|-${negativerep})**.`);
     })
     .catch((err) => {client.handle(err, 'rep check', message)});
 };
