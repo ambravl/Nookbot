@@ -1,4 +1,5 @@
 module.exports = async (client, messageReaction, user) => {
+  console.log(`${user.nickname} reacted with ${messageReaction.emoji.name}`);
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
   if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
@@ -9,7 +10,7 @@ module.exports = async (client, messageReaction, user) => {
         rolesToRemove.push(rID);
       }
     });
-    if (rolesToRemove.length !== 0) {
+    if (rolesToRemove.length > 0) {
       member.roles.remove(rolesToRemove, '[Auto] Exclusive Reaction Role Remove')
         .catch((err) => {
           client.handle(err, 'removing exclusive reactions')

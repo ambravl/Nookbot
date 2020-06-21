@@ -109,7 +109,6 @@ module.exports.run = async (client, message, args) => {
         default:
           color = 'RANDOM';
       }
-console.log(image);
       const embed = new Discord.MessageEmbed()
         .setColor(color)
         .setTimestamp()
