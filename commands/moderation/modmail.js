@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     .addField('\u200b', '\u200b')
     .setFooter(`Status: not replied`);
   if (message.attachments) embed.attachFiles(message.attachments);
-  message.guild.channels.cache.get(client.config.modMail).send(message.content)
+  message.guild.channels.cache.get(client.config.modMail).send(embed)
     .then((msg) => {
       const dmMsg = new Discord.MessageEmbed()
         .setTitle(strings.thanks.title)

@@ -20,7 +20,10 @@ module.exports.run = (client, message, args) => {
             .catch((err) => {
               client.handle(err, 'reactionRole setup reaction', message)
             });
-        }
+        } else if (emojiID && roleType === 'verified') reactions.push({
+          roleID: client.config.verified,
+          emojiID: emojiID
+        });
       }
       client.reactionRoles.insert(link[3], [link[2], roleType, reactions], ['channelID', 'type', 'reactions'])
         .catch((err) => {
