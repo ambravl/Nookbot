@@ -344,7 +344,7 @@ module.exports = async (client) => {
      * @returns {*}
      */
     add(value) {
-      return this.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${this.secondaryColumn}) VALUES ( DEFAULT, '${value}') RETURNING ${this.mainColumn}`);
+      return client.db.query(`INSERT INTO ${this.name} (${this.mainColumn}, ${this.secondaryColumn}) VALUES ( DEFAULT, '${value}') RETURNING ${this.mainColumn}`);
     };
 
     /**
