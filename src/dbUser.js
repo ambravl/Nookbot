@@ -154,7 +154,7 @@ module.exports = async (client) => {
       const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       try {
         const res = await client.db.query(query, [primaryKey]);
-        if (!res || !res.rows || res.rows.length < 1) return null;
+        if (!res || !res.rows || res.rows.length < 1) return undefined;
         return res.rows[0][column.toLowerCase()];
       } catch (err) {
         client.handle(new DBError(query, err), 'select');

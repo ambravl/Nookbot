@@ -9,9 +9,9 @@ module.exports.nameCheck = async (client, message, args, Discord, nick) => {
     member = args[0] ? {id: args[0]} : message.member;
   }
   const result = await client.userDB.select(member.id, u + 'names');
-  if (result === null) return client.error(message.channel, 'Member Not Found!', 'This member may have left the server or the id provided is not a member id!');
+  if (result === undefined) return client.error(message.channel, 'Member Not Found!', 'This member may have left the server or the id provided is not a member id!');
   let nameArray = [];
-  result.forEach((pair) => {
+  if (result) result.forEach((pair) => {
     nameArray.unshift(`${moment.utc(pair.timestamp).format('DD MMM YY HH:mm')} UTC: ${pair[u + 'names']}`)
   });
   let currentPage = 1;
