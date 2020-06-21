@@ -345,7 +345,7 @@ async makeImage(memberCount, color) {
   }
 
   async send(client, message) {
-    client.userDB.selectAll(this.user.id)
+    client.userDB.selectAll(this.user.id, true)
       .then(async (res) => {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];

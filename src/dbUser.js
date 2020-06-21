@@ -311,9 +311,11 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
+     * @param {boolean} orderByPoints
      */
-    async selectAll(primaryKey) {
-      const query = `SELECT *, DENSE_RANK() OVER(ORDER BY points) rank FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+    async selectAll(primaryKey, orderByPoints) {
+      const order = orderByPoints ? ', DENSE_RANK() OVER(ORDER BY points) rank' : '';
+      const query = `SELECT *${order} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
       return client.db.query(query, [primaryKey]);
     }
 

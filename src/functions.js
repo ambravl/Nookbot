@@ -8,7 +8,7 @@ module.exports = (client) => {
       return;
     }
 
-    let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id);
+    let reactionRoleMenu = await client.reactionRoles.selectAll(messageReaction.message.id, false);
 
     // If not there isn't a type, then this is not a reaction role message.
     if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
