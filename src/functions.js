@@ -21,9 +21,9 @@ module.exports = (client) => {
 
     for (let reaction of reactionRoleMenu.reactions) {
       if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
-        result.roleID = reaction.roleID;
+        result.roleid = reaction.roleid;
       }
-      result.roles.push(reaction.roleID);
+      result.roles.push(reaction.roleid);
       result.emoji.push(reaction.emojiID);
     }
     return result;

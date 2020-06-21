@@ -14,7 +14,7 @@ module.exports = async (client, message) => {
         client.userDB.math(message.author.id, '+', 1, 'points');
         const role = client.ranks.find(rank => rank.minPoints === res + 1);
         if (role) {
-          message.member.roles.add(role.roleID, '[Auto] Rank Up');
+          message.member.roles.add(role.roleid, '[Auto] Rank Up');
           if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
           const name = message.guild.roles.cache.get(roleID).name;
           client.userDB.update(message.author.id, name, 'rankRole');

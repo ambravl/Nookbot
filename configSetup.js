@@ -23,8 +23,8 @@ module.exports = (client) => {
     for (let i = 0; i < res.rows.length; i++) {
       client.ranks.push({
         minPoints: res.rows[i].minPoints,
-        previous: i === 0 ? undefined : res.rows[i - 1].roleID,
-        roleID: res.rows[i].roleID
+        previous: i === 0 ? undefined : res.rows[i - 1].roleid,
+        roleID: res.rows[i].roleid
       })
     }
   });
@@ -33,7 +33,7 @@ module.exports = (client) => {
     client.levelCache = [];
     res.rows.forEach(row => {
       client.levelCache[parseInt(row.level)] = {
-        roleID: row.roleID,
+        roleID: row.roleid,
         name: row.name,
         level: parseInt(row.level)
       }
@@ -47,7 +47,7 @@ module.exports = (client) => {
     if (role.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
     if (message.author.id === '258373545258778627') return true;
     if (message.guild) {
-      const levelObj = message.guild.roles.cache.get(role.roleID);
+      const levelObj = message.guild.roles.cache.get(role.roleid);
       if (levelObj && message.member.roles.cache.has(levelObj.id)) return true;
       if (role.name === 'Admin' && message.member.hasPermission('ADMINISTRATOR')) return true;
     }

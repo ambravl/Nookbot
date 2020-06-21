@@ -46,23 +46,24 @@ module.exports = (client) => {
       client.mutedUsers.cacheDB().then((res) => {
         res.rows.forEach((row) => {
           const unmuteTime = row.time;
-          guild.members.fetch(row.memberID).then((member) => {
-            if(unmuteTime < now) {
+          guild.members.fetch(row.memberid).then((member) => {
+            if (unmuteTime < now) {
               // Immediately unmute
-              client.mutedUsers.delete(row.memberID);
+              client.mutedUsers.delete(row.memberid);
               member.roles.remove(client.config.mutedRole, 'Scheduled unmute through reboot.');
-            }
-            else{
+            } else {
               // Schedule unmute
               setTimeout(() => {
-                if((row.time || 0 )< Date.now()) {
-                  client.mutedUsers.delete(row.memberID);
+                if ((row.time || 0) < Date.now()) {
+                  client.mutedUsers.delete(row.memberid);
                   member.roles.remove(client.config.mutedRole, 'Scheduled unmute through reboot.');
 
                 }
               }, unmuteTime - now);
             }
-          }).catch(() => { client.mutedUsers.delete(row.memberID) });
+          }).catch(() => {
+            client.mutedUsers.delete(row.memberid)
+          });
         })
       }).catch((err) => { client.handle(err, 'scheduled unmute') });
 
@@ -70,10 +71,7 @@ module.exports = (client) => {
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
-            console.log(msg);
-            console.log(msg.channelID);
-            console.log(client.channels.cache.get(msg.channelID));
-            client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
+            client.channels.cache.get(msg.channelid).messages.fetch(msg.messageID);
           })
         })
         .catch((err) => {

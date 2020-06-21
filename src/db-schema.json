@@ -4,7 +4,7 @@
  "enabled": "boolean"
 },
  "userDB":  {
-   "memberID": "text PRIMARY KEY",
+   "memberid": "text PRIMARY KEY",
    "friendCode": "text",
    "islandName": "text",
    "fruit": "text",
@@ -40,9 +40,9 @@
   "channelID": "text PRIMARY KEY",
   "identifier": "smallint"
  },
- "mutedUsers":  {
-  "memberID": "text PRIMARY KEY",
-  "time": "integer"
+ "mutedUsers": {
+   "memberid": "text PRIMARY KEY",
+   "time": "integer"
  },
  "reactionRoles": {
    "messageID": "text PRIMARY KEY",
@@ -56,18 +56,18 @@
     "config_type": "text"
   },
   "permissionDB": {
-    "roleID": "text PRIMARY KEY",
+    "roleid": "text PRIMARY KEY",
     "level": "integer",
     "name": "text"
   },
   "rankDB": {
-    "roleID": "text PRIMARY KEY",
+    "roleid": "text PRIMARY KEY",
     "minPoints": "integer"
   },
   "modMail": {
     "tickedID": "text PRIMARY KEY",
     "messageID": "text",
-    "memberID": "text",
+    "memberid": "text",
     "dmID": "text",
     "status": "text",
     "notes": "text[]"

@@ -22,7 +22,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       message.member.createDM().then((dmChannel) => {
         dmChannel.send(dmMsg)
           .then((dm) => {
-            client.modMail.insert(msg.id, [message.author.id, dm.id, 'unread'], ['memberID', 'dmID', 'status'])
+            client.modMail.insert(msg.id, [message.author.id, dm.id, 'unread'], ['memberid', 'dmid', 'status'])
               .catch((err) => client.handle(err, 'adding modmail to the db', message))
           })
           .catch((err) => client.handle(err, 'sending DM to modmail sender', message))

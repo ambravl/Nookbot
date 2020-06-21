@@ -1,11 +1,11 @@
 module.exports = async (client, messageReaction, user) => {
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-  if (!member || !reactionRoleMenu || !reactionRoleMenu.roleID) return;
+  if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
   if (reactionRoleMenu.type === 'exclusive') {
     const rolesToRemove = [];
     member.roles.cache.forEach((role, rID) => {
-      if (rID !== reactionRoleMenu.roleID && reactionRoleMenu.roles.includes(rID)) {
+      if (rID !== reactionRoleMenu.roleid && reactionRoleMenu.roles.includes(rID)) {
         rolesToRemove.push(rID);
       }
     });
@@ -17,18 +17,18 @@ module.exports = async (client, messageReaction, user) => {
     }
   }
   // Members can have any number of the roles in this menu.
-  if (!member.roles.cache.has(reactionRoleMenu.roleID)) {
-    member.roles.add(reactionRoleMenu.roleID, '[Auto] Reaction Role Add')
+  if (!member.roles.cache.has(reactionRoleMenu.roleid)) {
+    member.roles.add(reactionRoleMenu.roleid, '[Auto] Reaction Role Add')
       .catch((err) => {
         client.handle(err, 'adding reaction role')
       });
   }
 
-    // If message has a cumulative count of reactions over 4000, reset all the reactions on the message.
-    let totalReactions = 0;
-    messageReaction.message.reactions.cache.forEach((reaction) => {
-      totalReactions += reaction.count;
-    });
+  // If message has a cumulative count of reactions over 4000, reset all the reactions on the message.
+  let totalReactions = 0;
+  messageReaction.message.reactions.cache.forEach((reaction) => {
+    totalReactions += reaction.count;
+  });
     if (totalReactions > 4000) {
       // Remove all reactions.
       messageReaction.message.reactions.removeAll()
