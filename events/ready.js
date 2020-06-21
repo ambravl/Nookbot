@@ -70,6 +70,7 @@ module.exports = (client) => {
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
+            console.log(msg);
             console.log(msg.channelID);
             console.log(client.channels.cache.get(msg.channelID));
             client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
