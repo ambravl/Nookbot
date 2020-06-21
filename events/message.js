@@ -39,6 +39,8 @@ module.exports = async (client, message) => {
     client.emojiDB.select(regMatch[1])
       .then((rows) => {
         console.log('tried to select emoji');
+        console.log(regMatch);
+        console.log(regMatch[1]);
         if (rows) {
           console.log('found emoji in db');
           client.emojiDB.math(regMatch[1], '+', 1, 'uses')
