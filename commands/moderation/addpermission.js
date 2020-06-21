@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
   const permission = fetchPermission(permissionName);
   if (!permission) return newPermission(strings, role, message.channel);
   console.log(permission);
-  client.permissionDB.safeUpdate(role.id, permission, ['level', 'name'], false)
+  client.permissionDB.safeUpdate(role.id, permission, ['name', 'level'], false)
     .then(() => {
       client.success(message.channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`)
     })
@@ -30,7 +30,7 @@ function newPermission(strings, role, channel, client) {
         .then(collected => {
           if (collected.first().content.toLowerCase() === 'cancel') return client.error(channel, strings.cancel.title, strings.cancel.desc);
           const newLevel = parseInt(collected.first().content);
-          client.permissionDB.insert(role.id, [newLevel, role.name], ['level', 'name'])
+          client.permissionDB.insert(role.id, [newLevel, role.name], ['name', 'level'])
             .then(() => channel.send(`**${strings.newSuccess.title}**\n${role.name} ${strings.newSuccess.desc} ${newLevel}`))
             .catch((err) => client.handle(err, 'inserting new permission'));
         })
