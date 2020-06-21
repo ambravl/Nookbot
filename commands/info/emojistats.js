@@ -102,7 +102,7 @@ class EmojiList{
           .addFields(args.splice(25))
       }
       const embed = new Discord.MessageEmbed()
-        .setTitle(strings[this.type].success)
+        .setTitle(strings.success.title)
         .addFields(args);
       if(secondMessage) {
         this.message.channel.send(embed).then(()=>{this.message.channel.send(secondMessage)});
