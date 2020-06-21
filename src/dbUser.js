@@ -284,13 +284,20 @@ module.exports = async (client) => {
      * @param {string|Array<string>} column
      */
     async update(primaryKey, value, column) {
-      let query;
-      if (value instanceof Array) query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`;
-      else query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, value instanceof Array ? value.push(primaryKey) : [value, primaryKey])
-        .catch((err) => {
-          client.handle(new DBError(query, err), 'update');
-        });
+      if (value instanceof Array) {
+        const query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`;
+        value.push(primaryKey);
+        client.db.query(query, value)
+          .catch((err) => {
+            client.handle(new DBError(query, err), 'update');
+          });
+      } else {
+        const query = `UPDATE ${this.name} SET ${column} = $1 WHERE ${this.mainColumn} = $2`;
+        client.db.query(query, [value, primaryKey])
+          .catch((err) => {
+            client.handle(new DBError(query, err), 'update');
+          });
+      }
     }
 
     /**

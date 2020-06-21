@@ -12,6 +12,7 @@ module.exports.run = async (client, message, args) => {
   if (!role) return client.error(message.channel, strings.invalid.title, strings.invalid.desc);
   const permission = fetchPermission(permissionName);
   if (!permission) return newPermission(strings, role, message.channel);
+  console.log(permission);
   client.permissionDB.safeUpdate(role.id, permission, ['level', 'name'], false)
     .then(() => {
       client.success(message.channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`)
