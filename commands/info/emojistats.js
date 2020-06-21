@@ -104,10 +104,11 @@ class EmojiList{
       const embed = new Discord.MessageEmbed()
         .setTitle(strings.success.title)
         .addFields(args);
-      if(secondMessage) {
-        this.message.channel.send(embed).then(()=>{this.message.channel.send(secondMessage)});
-      }
-      else this.channel.send(embed);
+      if (secondMessage) {
+        this.message.channel.send(embed).then(() => {
+          this.message.channel.send(secondMessage)
+        });
+      } else this.message.channel.send(embed);
     }
   }
 }
