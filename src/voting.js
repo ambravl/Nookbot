@@ -25,7 +25,7 @@ module.exports.vote = (client, message, args, positive) => {
   }
 
   client.userDB.ensure(member.id, '', '*')
-    .then((result) => {
+    .then(async (result) => {
       if (result && result.rows && result.rows.length > 0) {
         const voted = result.rows[0];
         if (voted[list].includes(message.author.id)) {
@@ -37,8 +37,11 @@ module.exports.vote = (client, message, args, positive) => {
         }
         if (voted.posRepList.includes(message.author.id)) {
           client.userDB.switchPoints(true, member.id, message.author.id);
+          let channel;
+          if (positive) channel = message.channel;
+          else channel = await message.member.createDM();
           return client.success(
-            message.channel,
+            channel,
             strings.changed.title,
             `${strings.changed.description}${member.displayName}**!`
           );

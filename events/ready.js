@@ -67,11 +67,16 @@ module.exports = (client) => {
       }).catch((err) => { client.handle(err, 'scheduled unmute') });
 
       // Cache messages for reaction roles
+      console.log(client.channels.cache);
       client.reactionRoles.cacheDB()
-        .then((res) => {res.rows.forEach((msg) => {
-        client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
-      })})
-        .catch((err) => {client.handle(err, 'caching reaction roles')});
+        .then((res) => {
+          res.rows.forEach((msg) => {
+            client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
+          })
+        })
+        .catch((err) => {
+          client.handle(err, 'caching reaction roles')
+        });
 
       // Logging a ready message on first boot
       console.log(`Ready sequence finished, with ${guild.memberCount} users, in ${guild.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
