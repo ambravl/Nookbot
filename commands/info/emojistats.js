@@ -32,7 +32,7 @@ class EmojiList{
       value: (Number.isNaN(args[1]) || args[1] <= 0) ? undefined : args[1]
     };
     if (!validated.type) {
-      if (args.length === 2 && Number.isInteger(num0) && Number.isInteger(num1)) {
+      if (args.length === 2 && Number.isInteger(args[0]) && Number.isInteger(args[0])) {
         validated.type = 'offset';
         if (args[0] <= 0 || args[1] <= 0) validated.value = undefined;
         validated.value = args[0] < args[1] ? [args[0], args[1] - args[0]] : [args[1], args[0] - args[1]];
@@ -41,7 +41,7 @@ class EmojiList{
         let value = [];
         args.forEach((arg) => {
           let emojiID = arg.replace(/<a?:\w+:([\d]+)>/g, '\\$1');
-          if(emojiID) value.push(emojiID);
+          if (emojiID) value.push(emojiID);
         });
         validated.value = value;
       }
