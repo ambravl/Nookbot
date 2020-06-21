@@ -34,8 +34,9 @@ module.exports = (client) => {
     let i = 0;
     while (i < client.levelCache.length) {
       let currentLevel = client.levelCache[i];
-      if (client.levelCheck(currentLevel, client, message)) permission = currentLevel;
-      else i = client.levelCache.length;
+      const lvlCheck = client.levelCheck(currentLevel, client, message);
+      if (lvlCheck) permission = currentLevel;
+      else if (lvlCheck === false) i = client.levelCache.length;
       i++;
     }
     return permission;
