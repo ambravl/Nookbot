@@ -70,7 +70,7 @@ class EmojiList{
           fields = [];
           res.rows.forEach((row, index) => {
             fields.push({
-              name: `${index + 1}) ${this.message.guild.emojis.cache.get(row.emojiid).name}`,
+              name: `${index + 1}) ${this.message.guild.emojis.cache.get(row.emojiid)}`,
               value: row.uses + ' uses',
               inline: true
             })
@@ -102,7 +102,7 @@ class EmojiList{
           .addFields(args.splice(25))
       }
       const embed = new Discord.MessageEmbed()
-        .setTitle(strings.success.title)
+        .setTitle(strings.success)
         .addFields(args);
       if (secondMessage) {
         this.message.channel.send(embed).then(() => {
