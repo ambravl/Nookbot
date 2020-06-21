@@ -41,7 +41,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   let curPoints = 0;
   const time = Date.now();
   const infractions = await client.userDB.ensure(member.id, '', 'infractions');
-  infractions.forEach((infraction) => {
+  if (infractions) infractions.forEach((infraction) => {
     // If (points * 1 week) + time of infraction > current time, then the points are still valid
     if ((infraction.points * 604800000) + infraction.date > time) {
       curPoints += infraction.points;
