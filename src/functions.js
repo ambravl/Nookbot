@@ -4,7 +4,6 @@ const moment = require('moment');
 
 module.exports = (client) => {
   client.handleReaction = async (client, messageReaction, user) => {
-    console.log('entered function');
     if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
       return;
     }
@@ -15,7 +14,7 @@ module.exports = (client) => {
     if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
       return;
     }
-    console.log('passed all checks');
+
     reactionRoleMenu = reactionRoleMenu.rows[0];
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
@@ -27,7 +26,6 @@ module.exports = (client) => {
       result.roles.push(reaction.roleid);
       result.emoji.push(reaction.emojiid);
     }
-    console.log('gonna return ' + result);
     return result;
   };
   client.permLevel = (message) => {
