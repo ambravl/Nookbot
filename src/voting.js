@@ -28,15 +28,14 @@ module.exports.vote = (client, message, args, positive) => {
   client.userDB.ensure(member.id, '', '*')
     .then(async (result) => {
       if (result && result.rows && result.rows.length > 0) {
-        const voted = result.rows[0];
-        if (voted[list].includes(message.author.id)) {
+        if (result[list].includes(message.author.id)) {
           return client.error(
             message.channel,
             strings.alreadyVoted.title,
             strings.alreadyVoted.descL + member.displayName + strings.alreadyVoted.descR
           );
         }
-        if (voted[oppositeList].includes(message.author.id)) {
+        if (result[oppositeList].includes(message.author.id)) {
           client.userDB.switchPoints(true, member.id, message.author.id);
           let channel;
           if (positive) channel = message.channel;
@@ -47,7 +46,7 @@ module.exports.vote = (client, message, args, positive) => {
             `${strings.changed.description}${member.displayName}**!`
           );
         }
-        if (voted[list].length + 1 === limit) {
+        if (result[list].length + 1 === limit) {
           message.guild.channels.cache.get(client.config.staffChat).send(
             `${rep} Threshold Reached!\n
           **${member.user.tag}** (${member}) has reached **${limit}** ${rep}orts!`
