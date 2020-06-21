@@ -39,7 +39,7 @@ function newPermission(strings, role, channel, client) {
 }
 
 function fetchPermission(permissionName) {
-  if (!permissionName || args[0].toLowerCase() === 'cancel') return null;
+  if (!permissionName || permissionName.toLowerCase() === 'cancel') return null;
   const permissionLevels = ['User',
     'Verified',
     'Redd',
