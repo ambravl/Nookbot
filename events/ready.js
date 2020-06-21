@@ -67,10 +67,11 @@ module.exports = (client) => {
       }).catch((err) => { client.handle(err, 'scheduled unmute') });
 
       // Cache messages for reaction roles
-      console.log(client.channels.cache);
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
+            console.log(msg.channelID);
+            console.log(client.channels.cache.get(msg.channelID));
             client.channels.cache.get(msg.channelID).messages.fetch(msg.messageID);
           })
         })
