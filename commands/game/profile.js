@@ -350,7 +350,7 @@ async makeImage(memberCount, color) {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
-        let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankRole);
+        let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankrole);
         const embed = this.makeEmbed(
           client.mStrings.island,
           role ? role.color : '#ffffff',

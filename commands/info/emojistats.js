@@ -69,7 +69,7 @@ class EmojiList{
           fields = [];
           res.rows.forEach((row, index) => {
             fields.push({
-              name: `${index + 1}) ${this.message.guild.emojis.cache.get(row.emojiID).name}`,
+              name: `${index + 1}) ${this.message.guild.emojis.cache.get(row.emojiid).name}`,
               value: row.uses + ' uses',
               inline: true
             })

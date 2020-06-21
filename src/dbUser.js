@@ -66,6 +66,29 @@ module.exports = async (client) => {
       this.secondaryColumn = columns[1];
     }
 
+
+    /**
+     * @param {string} primaryKey
+     * @param {Array<string>|string} vals
+     * @param {Array<string>} cols
+     * @returns {(string|*[]|number)[]}
+     */
+    treatData(primaryKey, vals, cols) {
+      let columns = cols;
+      let values;
+      if (columns) {
+        columns.unshift(this.mainColumn);
+        columns = columns.join(', ');
+      } else columns = `${this.mainColumn}, ${this.secondaryColumn}`;
+      if (vals instanceof Array) {
+        values = vals;
+        values.unshift(primaryKey);
+      } else values = [primaryKey, vals !== undefined && vals !== null ? vals : ''];
+      return [columns, values];
+    }
+
+    // -------------------- Table-wide commands --------------------
+
     async dropDB() {
       client.db.query(`DROP TABLE ${this.name}`)
         .catch((err) => console.log(err));
@@ -84,6 +107,9 @@ module.exports = async (client) => {
       return client.db.query(`SELECT * FROM ${this.name}`);
     }
 
+
+    // -------------------- Read or Write --------------------
+
     async ensure(primaryKey, defaultValue, col) {
       let column = col ? col : this.secondaryColumn;
       const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
@@ -92,7 +118,7 @@ module.exports = async (client) => {
         if (!res || !res.rows || res.rows.length < 1) throw new Error('noExist');
         if (column === '*') return res.rows[0];
         else {
-          res = res.rows[0][column];
+          res = res.rows[0][column.toLowerCase()];
           if (res) return res;
           this.update(primaryKey, defaultValue, column)
             .catch((err) => {
@@ -114,6 +140,95 @@ module.exports = async (client) => {
           return defaultValue;
         }
       }
+    }
+
+    // -------------------- Read --------------------
+
+
+    /**
+     * @param {string} primaryKey
+     * @param {string} col
+     */
+    async select(primaryKey, col) {
+      let column = col ? col : this.secondaryColumn;
+      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      try {
+        const res = await client.db.query(query, [primaryKey]);
+        if (!res || !res.rows || res.rows.length < 1) return null;
+        return res.rows[0][column.toLowerCase()];
+      } catch (err) {
+        client.handle(new DBError(query, err), 'select');
+      }
+    }
+
+    /**
+     * @param {string} primaryKey
+     * @param {boolean} orderByPoints
+     */
+    async selectAll(primaryKey, orderByPoints) {
+      const order = orderByPoints ? ', DENSE_RANK() OVER(ORDER BY points) rank' : '';
+      const query = `SELECT *${order} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
+      return client.db.query(query, [primaryKey]);
+    }
+
+    /**
+     * @param {Number} limit
+     * @param {'ASC'|'DESC'} order
+     * @param {Number} offset
+     */
+    rank(limit, order, offset) {
+      let query = `SELECT * FROM ${this.name} ORDER BY ${this.secondaryColumn} ${order} LIMIT $1`;
+      if (offset) query += ` OFFSET $2`;
+      return client.db.query(query, offset ? [limit, offset] : [limit]);
+    }
+
+    /**
+     * @param {Number} number
+     * @param {'<'|'>'} signal
+     */
+    threshold(number, signal) {
+      const query = `SELECT * FROM ${this.name} WHERE ${this.secondaryColumn} ${signal} $1`;
+      return client.db.query(query, [number]);
+    }
+
+    /**
+     * @param {Array<string>} primaryKeys
+     */
+    multipleSelect(primaryKeys) {
+      const valueCalls = primaryKeys.map((v, i) => `$${i + 1}`).join(', ');
+      const query = `SELECT * FROM ${this.name} WHERE ${this.mainColumn} IN (${valueCalls})`;
+      return client.db.query(query, primaryKeys);
+    }
+
+    /**
+     * @param {string} primaryKey
+     * @param {string} col
+     * @returns {Promise<*|HTMLTableRowElement|string|null>}
+     */
+    async levenshtein(primaryKey, col) {
+      let column = col ? col : this.mainColumn;
+      const query = `SELECT * FROM ${this.name} WHERE levenshtein($1, ${column}) <= 2 ORDER BY levenshtein($1, ${column}) LIMIT 2`;
+      try {
+        const villagers = await (client.db.query(query, [primaryKey]));
+        if (!villagers || !villagers.rows || villagers.rows.length < 1) return null;
+        if (villagers.rows.length > 1 && villagers.rows[0].lv === villagers.rows[1].lv) return null;
+        return villagers.rows[0];
+      } catch (err) {
+        client.handle(new DBError(query, err), 'levenshtein')
+      }
+    }
+
+
+    // -------------------- Write --------------------
+    /**
+     * @param {string} primaryKey
+     */
+    async delete(primaryKey) {
+      const query = `DELETE FROM ${this.name} WHERE ${this.mainColumn} = $1 RETURNING ${this.secondaryColumn}`;
+      client.db.query(query, [primaryKey])
+        .catch((err) => {
+          client.handle(new DBError(query, err), 'remove');
+        });
     }
 
     /**
@@ -151,26 +266,6 @@ module.exports = async (client) => {
      * @param {string} primaryKey
      * @param {Array<string>|string} vals
      * @param {Array<string>} cols
-     * @returns {(string|*[]|number)[]}
-     */
-    treatData(primaryKey, vals, cols) {
-      let columns = cols;
-      let values;
-      if (columns) {
-        columns.unshift(this.mainColumn);
-        columns = columns.join(', ');
-      } else columns = `${this.mainColumn}, ${this.secondaryColumn}`;
-      if (vals instanceof Array) {
-        values = vals;
-        values.unshift(primaryKey);
-      } else values = [primaryKey, vals !== undefined && vals !== null ? vals : ''];
-      return [columns, values];
-    }
-
-    /**
-     * @param {string} primaryKey
-     * @param {Array<string>|string} vals
-     * @param {Array<string>} cols
      */
     async insert(primaryKey, vals, cols) {
       const [columns, values] = this.treatData(primaryKey, vals, cols);
@@ -180,17 +275,6 @@ module.exports = async (client) => {
       client.db.query(query, values)
         .catch((err) => {
           client.handle(new DBError(query, err), 'insert')
-        });
-    }
-
-    /**
-     * @param {string} primaryKey
-     */
-    async delete(primaryKey) {
-      const query = `DELETE FROM ${this.name} WHERE ${this.mainColumn} = $1 RETURNING ${this.secondaryColumn}`;
-      client.db.query(query, [primaryKey])
-        .catch((err) => {
-          client.handle(new DBError(query, err), 'remove');
         });
     }
 
@@ -295,32 +379,6 @@ module.exports = async (client) => {
 
     /**
      * @param {string} primaryKey
-     * @param {string} col
-     */
-    async select(primaryKey, col) {
-      let column = col ? col : this.secondaryColumn;
-      const query = `SELECT ${column} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
-      try {
-        const res = await client.db.query(query, [primaryKey]);
-        if (!res || !res.rows || res.rows.length < 1) return null;
-        return res.rows[0][column];
-      } catch (err) {
-        client.handle(new DBError(query, err), 'select');
-      }
-    }
-
-    /**
-     * @param {string} primaryKey
-     * @param {boolean} orderByPoints
-     */
-    async selectAll(primaryKey, orderByPoints) {
-      const order = orderByPoints ? ', DENSE_RANK() OVER(ORDER BY points) rank' : '';
-      const query = `SELECT *${order} FROM ${this.name} WHERE ${this.mainColumn} = $1`;
-      return client.db.query(query, [primaryKey]);
-    }
-
-    /**
-     * @param {string} primaryKey
      * @param {string} operation
      * @param {Number} modifier
      * @param {string} column
@@ -331,51 +389,5 @@ module.exports = async (client) => {
       return client.db.query(query, [primaryKey]);
     };
 
-    /**
-     * @param {Number} limit
-     * @param {'ASC'|'DESC'} order
-     * @param {Number} offset
-     */
-    rank(limit, order, offset) {
-      let query = `SELECT * FROM ${this.name} ORDER BY ${this.secondaryColumn} ${order} LIMIT $1`;
-      if (offset) query += ` OFFSET $2`;
-      return client.db.query(query, offset ? [limit, offset] : [limit]);
-    }
-
-    /**
-     * @param {Number} number
-     * @param {'<'|'>'} signal
-     */
-    threshold(number, signal) {
-      const query = `SELECT * FROM ${this.name} WHERE ${this.secondaryColumn} ${signal} $1`;
-      return client.db.query(query, [number]);
-    }
-
-    /**
-     * @param {Array<string>} primaryKeys
-     */
-    multipleSelect(primaryKeys) {
-      const valueCalls = primaryKeys.map((v, i) => `$${i + 1}`).join(', ');
-      const query = `SELECT * FROM ${this.name} WHERE ${this.mainColumn} IN (${valueCalls})`;
-      return client.db.query(query, primaryKeys);
-    }
-
-    /**
-     * @param {string} primaryKey
-     * @param {string} col
-     * @returns {Promise<*|HTMLTableRowElement|string|null>}
-     */
-    async levenshtein(primaryKey, col) {
-      let column = col ? col : this.mainColumn;
-      const query = `SELECT * FROM ${this.name} WHERE levenshtein($1, ${column}) <= 2 ORDER BY levenshtein($1, ${column}) LIMIT 2`;
-      try {
-        const villagers = await (client.db.query(query, [primaryKey]));
-        if (!villagers || !villagers.rows || villagers.rows.length < 1) return null;
-        if (villagers.rows.length > 1 && villagers.rows[0].lv === villagers.rows[1].lv) return null;
-        return villagers.rows[0];
-      } catch (err) {
-        client.handle(new DBError(query, err), 'levenshtein')
-      }
-    }
   }
 };
