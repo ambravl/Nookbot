@@ -63,6 +63,29 @@
       "desc": "Successfully downvoted"
     }
   },
+  "upvote": {
+    "invalidMember": {
+      "title": "Invalid Member!",
+      "desc": "Please mention a valid member to upvote!"
+    },
+    "voteSelf": {
+      "title": "No Upvoting Yourself!",
+      "desc": "You cannot upvote yourself!"
+    },
+    "alreadyVoted": {
+      "title": "Already Positively Rated!",
+      "descL": "You have already given **",
+      "descR": "** a positive rating! You can never give them another positive rating."
+    },
+    "changed": {
+      "title": "Upvoted!",
+      "desc": "Successfully changed your rating to upvote **"
+    },
+    "success": {
+      "title": "Upvoted!",
+      "desc": "Successfully upvoted"
+    }
+  },
   "friendcode": {
     "noCode": {
       "title": "No Code Given!",

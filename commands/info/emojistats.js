@@ -89,13 +89,13 @@ class EmojiList{
   async send(event, args){
     // UGLY no way around this size so just extract success
     const strings = require('../../src/strings.json');
-    if(event === 'error') this.client.handle(err, 'emojiStats', message);
-    if(event === 'invalid') this.client.error(message.channel, strings[this.type].title, strings[this.type].desc);
-    if(event === 'none') this.client.error(message.channel, strings.none.title, strings.none.desc);
-    if(event === 'success'){
+    if (event === 'error') this.client.handle(err, 'emojiStats', this.message);
+    if (event === 'invalid') this.client.error(this.message.channel, strings[this.type].title, strings[this.type].desc);
+    if (event === 'none') this.client.error(this.message.channel, strings.none.title, strings.none.desc);
+    if (event === 'success') {
       const Discord = require('discord.js');
       let secondMessage;
-      if(args.length > 25){
+      if (args.length > 25) {
         secondMessage = new Discord.MessageEmbed()
           .addFields(args.splice(25))
       }
