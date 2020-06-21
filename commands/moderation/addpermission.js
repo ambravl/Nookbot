@@ -1,13 +1,16 @@
 module.exports.run = async (client, message, args) => {
   const strings = client.mStrings.addPermission;
   if (!args || args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
+  const arguments = args.join(' ').split('-').trim();
+  const roleName = arguments[0];
+  const permissionName = arguments[1];
   let role;
-  if (isNaN(args[0])) {
+  if (isNaN(roleName)) {
     if (message.mentions && message.mentions.roles) role = message.mentions.roles.first();
-    role = message.guild.roles.cache.find(r => r.name.toLowerCase().startsWith(args[0].toLowerCase()));
-  } else role = message.guild.roles.cache.get(args[0]);
+    role = message.guild.roles.cache.find(r => r.name.toLowerCase().startsWith(roleName.toLowerCase()));
+  } else role = message.guild.roles.cache.get(roleName);
   if (!role) return client.error(message.channel, strings.invalid.title, strings.invalid.desc);
-  const permission = fetchPermission(args.slice(-2));
+  const permission = fetchPermission(permissionName);
   if (!permission) return newPermission(strings, role, message.channel);
   client.permissionDB.safeUpdate(role.id, permission, ['level', 'name'], false)
     .then(() => {
@@ -35,9 +38,8 @@ function newPermission(strings, role, channel, client) {
     .catch((err) => client.handle(err, 'sending message asking for a new permission'));
 }
 
-function fetchPermission(args) {
-  if (!args || args.length === 0 || args[0].toLowerCase() === 'cancel') return null;
-  const last = args[args.length - 1];
+function fetchPermission(permissionName) {
+  if (!permissionName || args[0].toLowerCase() === 'cancel') return null;
   const permissionLevels = ['User',
     'Verified',
     'Redd',
@@ -50,10 +52,10 @@ function fetchPermission(args) {
     'Bot Admin',
     'Bot Owner'];
   let permission;
-  if (isNaN(last)) permission = permissionLevels.find((permLevel) =>
-    permLevel === last || permLevel === args.join(' ')
+  if (isNaN(permissionName)) permission = permissionLevels.find((permLevel) =>
+    permLevel === permissionName
   );
-  else if (last.length < 3) permission = permissionLevels[parseInt(last)];
+  else if (permissionName.length < 3) permission = permissionLevels[parseInt(permissionName)];
   return [permission, permissionLevels.indexOf(permission)];
 }
 
@@ -68,5 +70,5 @@ module.exports.help = {
   name: 'addpermission',
   category: 'moderation',
   description: 'Adds a new role to the permission database so it can run appropriate commands',
-  usage: 'addpermission <role> <level>',
+  usage: 'addpermission <role> - <level>',
 };
