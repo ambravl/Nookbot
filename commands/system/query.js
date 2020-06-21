@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args) => {
         });
         message.channel.send(msg.join('\n'));
       } else {
-        if (res.command.toUpperCase() === 'SELECT') client.error(message.channel, 'No results!', 'There were no results for your query...');
+        if (res && res.command.toUpperCase() === 'SELECT') client.error(message.channel, 'No results!', 'There were no results for your query...');
         else client.success(message.channel, 'Done!', "Whatever it was, it's done now!")
       }
     })
