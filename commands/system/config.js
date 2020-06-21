@@ -1,20 +1,13 @@
 module.exports.run = (client, message, args) => {
   if (!args || args.legth < 2) client.handle(new Error('wrong argument number'), 'config command', message);
   if (args[0] === 'check' || args[0] === 'c') {
-    console.log(client.config);
-    const configList = Object.keys(client.config);
-    console.log(configList);
-    let configs = [];
-    configList.forEach((config) => {
-      configs.push({
-        name: config,
-        value: client.config[config],
-        inline: true
-      })
-    });
     const Discord = require('discord.js');
     const embed = new Discord.MessageEmbed().setTitle('Configurations');
-    if (configs.length > 0) embed.addFields(configs);
+    const configList = Object.keys(client.config);
+    let configs = [];
+    configList.forEach((config) => {
+      embed.addField(config, client.config[config], true);
+    });
     message.channel.send(embed);
   }
   client.configDB.update(args[0], args[1], 'config_value')
