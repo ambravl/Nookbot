@@ -28,6 +28,7 @@ module.exports.vote = (client, message, args, positive) => {
   client.userDB.ensure(member.id, '', '*')
     .then(async (result) => {
       if (result && result.rows && result.rows.length > 0) {
+        console.log(result[list]);
         if (result[list].includes(message.author.id)) {
           return client.error(
             message.channel,

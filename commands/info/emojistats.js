@@ -16,7 +16,7 @@ const types = {
 };
 
 class EmojiList{
-  constructor(client, message, args){
+  constructor(client, message, args) {
     this.args = args;
     const info = this.validate(args);
     this.type = info.type;
@@ -24,22 +24,24 @@ class EmojiList{
     this.message = message;
     this.client = client;
   }
-  validate(rawArgs){
+
+  validate(args) {
     // UGLY look at the size of this thing
-    const args = [parseInt(rawArgs[0], 10),parseInt(rawArgs[1], 10)];
-      let validated = {
+    const num = parseInt(args[1], 10);
+    let validated = {
       type: types[args[0]],
-      value: (Number.isNaN(args[1]) || args[1] <= 0) ? undefined : args[1]
+      value: (Number.isNaN(args[1]) || num <= 0) ? undefined : num
     };
     if (!validated.type) {
       if (args.length === 2 && Number.isInteger(args[0]) && Number.isInteger(args[0])) {
+        const num2 = parseInt(args[0]);
         validated.type = 'offset';
-        if (args[0] <= 0 || args[1] <= 0) validated.value = undefined;
-        validated.value = args[0] < args[1] ? [args[0], args[1] - args[0]] : [args[1], args[0] - args[1]];
+        if (num2 <= 0 || num <= 0) validated.value = undefined;
+        validated.value = num2 < num ? [num2, num - num2] : [num, num2 - num];
       } else {
         validated.type = 'search';
         let value = [];
-        rawArgs.forEach((arg) => {
+        args.forEach((arg) => {
           let emojiID = arg.replace(/<a?:\w+:([\d]+)>/g, '\\$1');
           if (emojiID) value.push(emojiID);
         });
