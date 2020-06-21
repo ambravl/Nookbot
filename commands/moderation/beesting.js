@@ -122,7 +122,7 @@ If you wish to contact the moderators about your warning, please send a message 
 
   // Create infraction in the users to store important information
   client.userDB.push(member.id, {
-    case: caseNum,
+    case: caseNum.rows[0].casenumber,
     action: action,
     points: newPoints,
     reason: `${reason}${message.attachments.size > 0 ? `\n${message.attachments.map((a) => `${a.url}`).join('\n')}` : ''}`,
