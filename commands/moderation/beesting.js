@@ -122,13 +122,13 @@ If you wish to contact the moderators about your warning, please send a message 
 
   // Create infraction in the users to store important information
   const infraction = {
-    case: JSON.stringify(caseNum.rows[0].casenumber),
+    case: caseNum.rows[0].casenumber,
     action: action,
-    points: JSON.stringify(newPoints),
+    points: newPoints,
     reason: `${reason}${message.attachments.size > 0 ? `\n${message.attachments.map((a) => `${a.url}`).join('\n')}` : ''}`,
     moderator: message.author.id,
     dmSent: dmSent ? "true" : "false",
-    date: JSON.stringify(time)
+    date: time
   };
   console.log(infraction);
   client.userDB.push(member.id, infraction, 'infractions');
