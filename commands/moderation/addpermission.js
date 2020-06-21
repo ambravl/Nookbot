@@ -11,7 +11,7 @@ module.exports.run = async (client, message, args) => {
   if (!permission) return newPermission(strings, role, message.channel);
   client.permissionDB.safeUpdate(role.id, permission, ['level', 'name'], false)
     .then(() => {
-      client.success(channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`)
+      client.success(message.channel, strings.updated.title, `**${role.name}** ${strings.updated.desc} ${permission[0]}`)
     })
     .catch((err) => client.handle(err, 'updating permissions', message));
 };
@@ -20,9 +20,9 @@ function newPermission(strings, role, channel, client) {
   const filter = response => {
     return (response.content.toLowerCase() === 'cancel' || (response.content.length < 3 && !isNaN(response)));
   };
-  message.channel.send(`**${strings.newPermission.title}**\n${strings.newPermission.desc}`)
+  channel.send(`**${strings.newPermission.title}**\n${strings.newPermission.desc}`)
     .then(() => {
-      message.channel.awaitMessages(filter, {max: 1})
+      channel.awaitMessages(filter, {max: 1})
         .then(collected => {
           if (collected.first().content.toLowerCase() === 'cancel') return client.error(channel, strings.cancel.title, strings.cancel.desc);
           const newLevel = parseInt(collected.first().content);
