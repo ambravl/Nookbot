@@ -39,7 +39,6 @@ module.exports = (client) => {
         const Discord = require('discord.js');
         const modmail = res.rows[0];
         const newEmbed = new Discord.MessageEmbed(messageReaction.message.embeds[0]);
-        newEmbed.fields = [];
         newEmbed.setTimestamp();
         const DMChannel = await client.users.cache.get(modmail.memberid).createDM();
         const DMMessage = DMChannel.messages.cache.get(modmail.dmid);
@@ -49,9 +48,9 @@ module.exports = (client) => {
         if (modmail.mailtype === 'suggestion') {
           let count = {'down': 0, 'up': 0, 'love': 0};
           messageReaction.message.reactions.cache.each((reaction) => {
-            if (reaction.emoji.name === '💞') count.love = reaction.count;
-            else if (reaction.emoji.name === '❎') count.down = reaction.count;
-            else if (reaction.emoji.name === '✅') count.up = reaction.count;
+            if (reaction.emoji.name === '💞') count.love = reaction.count - 1;
+            else if (reaction.emoji.name === '❎') count.down = reaction.count - 1;
+            else if (reaction.emoji.name === '✅') count.up = reaction.count - 1;
           });
           const total = count.up + count.down + count.love;
           const score = total ? Math.floor(100 * (count.up + (1.5 * count.love) - count.down) / total) : '--';
@@ -61,6 +60,7 @@ module.exports = (client) => {
           });
           return;
         }
+        newEmbed.fields = [];
         if (messageReaction.emoji.name === '❗' && modmail.status !== 'open') {
           const embed = new Discord.MessageEmbed()
             .setTitle('Ticket Reopened!')
