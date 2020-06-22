@@ -362,9 +362,9 @@ FROM  (
    FROM   ${this.name}, unnest(${column}) to_remove
    WHERE  to_remove->>'${field}' = $2
    ) d
-WHERE  d.${this.mainColumn} = $1 RETURNING d`;
+WHERE  d.${this.mainColumn} = $1 RETURNING d.to_remove`;
       // const query = `UPDATE ${this.name} SET ${column} = array_remove(${column}, $1) WHERE ${this.mainColumn} = $2`;
-      client.db.query(query, [primaryKey, value])
+      return client.db.query(query, [primaryKey, value])
         .catch((err) => {
           client.handle(new DBError(query, err), 'pop')
         });
