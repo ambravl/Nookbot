@@ -27,6 +27,10 @@ module.exports.run = async (client, message, args, level, Discord) => {
     const collected = await confirm.awaitReactions(filter, {max: 1, time: 3600000, errors: ['time']});
     const reaction = collected.first();
     for (let cat in strings) if (strings.hasOwnProperty(cat) && strings[cat].emoji === reaction.emoji.name) command = cat;
+    if (command === 'cancel') {
+      client.success(dmChannel, strings.cancel.title, strings.cancel.desc);
+      return;
+    }
   }
 
   const dmEmbed = new Discord.MessageEmbed()
@@ -41,7 +45,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     .setColor(strings[command].color)
     .setAuthor(message.author.username, message.author.displayAvatarURL(), 'https://discordapp.com/users/' + message.author.id)
     .addField('\u200b', '\u200b')
-    .setFooter('❕ = I got this! | ✅ Complete');
+    .setTimestamp();
   dmChannel.send(dmEmbed)
     .then((sentDM) => {
       if (command === 'suggestion') {
@@ -49,7 +53,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
           .addField('❎ Downvote', '0', true)
           .addField('✅ Upvote', '0', true)
           .addField('💞 I love it!', '0', true)
-          .setFooter('Final Score: --');
+          .setFooter('Total Score: --');
         modMailChannel.send(embed)
           .then((sent) => {
             client.suggestions.push(sent.id);
@@ -62,6 +66,10 @@ module.exports.run = async (client, message, args, level, Discord) => {
             client.handle(err, 'sending suggestion to channel')
           })
       } else {
+        embed
+          .addField('❕', 'I Got This!', true)
+          .addField('✅', 'Mark Complete', true)
+          .setFooter('Ticket opened at');
         const channel = (command === 'report' || command === 'scam') ? reportChannel : modMailChannel;
         channel.send(embed)
           .then((sent) => {

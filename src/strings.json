@@ -391,27 +391,60 @@
   "modMail": {
     "thanks": {
       "title": "Thanks for the message!",
-      "desc": "I've forwarded it to the mods and will let you know as soon as someome answers or something changes!"
+      "desc": "I've forwarded it to the mods and will let you know as soon as someone answers!"
+    },
+    "none": {
+      "title": "No Message!",
+      "desc": "You need to write a message to go with your modmail, please try again!"
+    },
+    "dm": {
+      "title": "Hello!",
+      "desc": "Was this supposed to be a modmail? Don't worry, I've saved your message, so just tell me which category your modmail falls into!"
+    },
+    "modmail": {
+      "title": "Just one more step!",
+      "desc": "In the name of organization, which category does your modmail fall into?"
     },
     "scam": {
       "name": "Scam Report",
-      "emoji": "‼️"
+      "emoji": "‼️",
+      "title": "Thanks for the report!",
+      "desc": "Catching scammers is very important for us, and we're really sorry you had to go through that! Our team will being investigating this as soon as possible!",
+      "color": "F42C2C"
     },
     "report": {
       "name": "Report Rule-Breaking",
-      "emoji": "❕"
+      "emoji": "❕",
+      "title": "Thanks for the report!",
+      "desc": "We'll start investigating this as soon as possible!",
+      "color": "F8306D"
     },
     "suggestion": {
       "name": "Suggestion",
-      "emoji": "💭"
+      "emoji": "💭",
+      "title": "Thanks for the suggestion!",
+      "desc": "We're always striving to improve our server, and will definitely take this into consideration!",
+      "color": "1DB954"
     },
     "question": {
       "name": "Question",
-      "emoji": "❔"
+      "emoji": "❔",
+      "title": "Good question!",
+      "desc": "We'll answer it as soon as we can!",
+      "color": "FFA12F"
     },
     "other": {
       "name": "Other",
-      "emoji": "💬"
+      "emoji": "💬",
+      "title": "Thanks for the message!",
+      "desc": "We'll take a look at it as soon as possible and reply if needed!",
+      "color": "0AB4FF"
+    },
+    "cancel": {
+      "name": "Cancel",
+      "emoji": "❌",
+      "title": "Cancelled!",
+      "desc": "No worries, I've already deleted your message from my memory!"
     }
   }
 }

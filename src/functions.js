@@ -34,37 +34,102 @@ module.exports = (client) => {
     if (messageReaction.message.channel.id !== client.config.modMail && messageReaction.message.channel.id !== client.config.reportMail) return;
     if (messageReaction.count > 2) return;
     client.modMailDB.selectAll(messageReaction.message.id, false)
-      .then((res) => {
+      .then(async (res) => {
         if (!res || !res.rows || res.rows.length < 1) return;
+        const Discord = require('discord.js');
         const modmail = res.rows[0];
-        if (modmail.mailtype === 'suggestion') pass;
-        if (messageReaction.emoji.name === '✅' && modmail.status !== 'complete') {
-          const Discord = require('discord.js');
+        const newEmbed = new Discord.MessageEmbed(messageReaction.message.embeds[0]);
+        newEmbed.fields = [];
+        newEmbed.setTimestamp();
+        const DMChannel = await client.users.cache.get(modmail.memberid).createDM();
+        const DMMessage = DMChannel.messages.cache.get(modmail.dmid);
+        const DMEmbed = new Discord.MessageEmbed(DMMessage.embeds[0]);
+        DMEmbed.setTimestamp();
+        let values;
+        if (modmail.mailtype === 'suggestion') {
+          let count = {'down': 0, 'up': 0, 'love': 0};
+          messageReaction.message.reactions.cache.each((reaction) => {
+            if (reaction.emoji.name === '💞') count.love = reaction.count;
+            else if (reaction.emoji.name === '❎') count.down = reaction.count;
+            else if (reaction.emoji.name === '✅') count.up = reaction.count;
+          });
+          const total = count.up + count.down + count.love;
+          const score = total ? Math.floor(100 * (count.up + (1.5 * count.love) - count.down) / total) : '--';
+          newEmbed.setFooter(`Total Score: ${score}%`);
+          messageReaction.message.edit(newEmbed).catch((err) => {
+            client.handle(err)
+          });
+          return;
+        }
+        if (messageReaction.emoji.name === '❗' && modmail.status !== 'open') {
           const embed = new Discord.MessageEmbed()
             .setTitle('Ticket Reopened!')
             .setDescription(`${user.username} reopened ticket #${messageReaction.message.id}!`)
             .setURL(`https://discordapp.com/channels/717575621420646432/${messageReaction.me.channel.id}/${messageReaction.message.id}`)
             .setColor('#ff0000');
           messageReaction.message.channel.send(embed);
-          const oldEmbed = messageReaction.message.embeds[0];
-          const newEmbed = new Discord.MessageEmbed(oldEmbed).setFooter('❕ = I got this! | ✅ Complete').setTimestamp();
-          messageReaction.message.edit(newEmbed);
-          messageReaction.message.reactions.removeAll()
-            .then(() => {
-              messageReaction.message.react('❕');
-              messageReaction.message.react('✅');
-            });
-          client.modMailDB.update(messageReaction.message.id, 'open', 'status');
-          client.modMail[messageReaction.message.id] = 'open';
-        } else if (messageReaction.emoji.name === '❕' && modmail.status !== 'read') pass;
+          values = {
+            footer: `Reopened by ${user.username} at`,
+            emoji1: '❕',
+            desc1: 'I got this!',
+            emoji2: '✅',
+            desc2: 'Complete',
+            dmFooter: 'Ticket reopened on',
+            status: 'open'
+          };
+
+        } else if (messageReaction.emoji.name === '❕' && modmail.status !== 'read') {
+          values = {
+            footer: `Assigned to ${user.username} at`,
+            emoji1: '❗',
+            desc1: 'I need help!',
+            emoji2: '✅',
+            desc2: 'Complete',
+            dmFooter: 'We started working on it on',
+            status: 'read'
+          }
+        } else if (messageReaction.emoji.name === '✅' && modmail.status !== 'complete') {
+          values = {
+            footer: `Closed by ${user.username} at`,
+            emoji1: '❕',
+            desc1: 'On second thought...',
+            emoji2: '❗',
+            desc2: 'Reopen and ask for help',
+            dmFooter: 'Ticket closed on',
+            status: 'complete'
+          }
+        }
+        newEmbed.addField(values.emoji1, values.desc1, true).addField(values.emoji2, values.des2, true).setFooter(values.footer);
+        const colorPercentage = 100 + (25 * ((values.status === 'open') + (modmail.status === 'complete') - (values.status === 'complete') - (modmail.status === 'open')));
+        newEmbed.setColor(client.dimColor(messageReaction.message.embeds[0].color, colorPercentage));
+        DMEmbed.setFooter(values.dmFooter);
+        messageReaction.message.edit(newEmbed).catch((err) => {
+          client.handle(err, 'editing message', messageReaction.message)
+        });
+        DMMessage.edit(DMEmbed).catch((err) => {
+          client.handle(err, 'editing DM', messageReaction.message)
+        });
+        messageReaction.message.reactions.removeAll()
+          .then(() => {
+            messageReaction.message.react(values.emoji1);
+            messageReaction.message.react(values.emoji2);
+          });
+        client.modMailDB.update(messageReaction.message.id, values.status, 'status');
+        client.modMail[messageReaction.message.id] = values.status;
       })
   };
 
-  // class EmbedEditor extends {
-  //   constructor(messageID, channelID) {
-  //     this.messageID = messageID
-  //   }
-  // }
+  client.dimColor = (color, percentage) => {
+    const hex = color.toString(16);
+    let res = '';
+    for (let i = 0; i < 6; i += 2) {
+      let clr = hex.slice(i, i + 2);
+      clr = parseInt(clr, 16) * percentage / 100;
+      clr = clr.toString(16);
+      res += clr;
+    }
+    return res;
+  };
 
   client.permLevel = (message) => {
     let permission;
