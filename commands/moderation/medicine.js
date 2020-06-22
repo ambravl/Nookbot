@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args) => {
           .catch((err) => {
             client.handle(err, 'popping medicine', message)
           });
-        const user = await client.users.fetch(userID);
+        const user = await client.users.fetch(res.rows[0].userid);
         client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
       } else client.error(message.channel, 'Invalid Case Number!', 'Please provide a valid case number to apply medicine to!');
     })
