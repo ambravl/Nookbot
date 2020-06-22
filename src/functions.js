@@ -84,7 +84,7 @@ module.exports = (client) => {
     }
   }
 
-  client.checkers = [new AttachmentChecker(), new ImageChecker(), new MentionChecker(), new NewlineChecker()];
+  client.checkers = [new ImageChecker(), new MentionChecker(), new NewlineChecker()];
 
   client.handleReaction = async (client, messageReaction, user) => {
     if (user.bot || (messageReaction.message.guild && messageReaction.message.guild.id !== client.config.mainGuild)) {
