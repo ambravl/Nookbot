@@ -8,9 +8,27 @@ module.exports.run = (client, message, args) => {
     });
     message.channel.send(msg.join('\n'));
   } else {
+    if (args[1] === 'pop') {
+      client.configDB.select(args[0], 'config_value')
+        .then((res) => {
+          client.configDB.update(args[0], res.replace(args[2], '').replace(/, ?,/, ','), 'config_value')
+        })
+        .catch((err) => {
+          client.handle(err, 'popping from config array', message)
+        });
+      client.config[args[0]].pop(args[2]);
+    } else if (args[1] === 'push')
+      client.configDB.select(args[0], 'config_value')
+        .then((res) => {
+          client.configDB.update(args[0], `${res}, ${args[2]}`, 'config_value')
+        })
+        .catch((err) => {
+          client.handle(err, 'pushing to config array', message)
+        })
     client.configDB.update(args[0], args[1], 'config_value')
       .then(() => {
-        client.config[args[0]] = args[1]
+        client.config[args[0]] = args[1];
+        client.success(message.channel, 'Done!', 'Successfully set that config!')
       })
       .catch((err) => {
         client.handle(err, 'config command', message)
