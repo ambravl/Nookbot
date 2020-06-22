@@ -11,7 +11,7 @@ module.exports.run = (client, message, args) => {
     if (args[1] === 'pop') {
       client.configDB.select(args[0], 'config_value')
         .then((res) => {
-          client.configDB.update(args[0], res.replace(args[2], '').replace(/, ?,/, ','), 'config_value')
+          if (res) client.configDB.update(args[0], res.replace(args[2], '').replace(/, ?,/, ','), 'config_value')
         })
         .catch((err) => {
           client.handle(err, 'popping from config array', message)
@@ -20,7 +20,7 @@ module.exports.run = (client, message, args) => {
     } else if (args[1] === 'push')
       client.configDB.select(args[0], 'config_value')
         .then((res) => {
-          client.configDB.update(args[0], `${res}, ${args[2]}`, 'config_value')
+          client.configDB.update(args[0], res ? `${res}, ${args[2]}` : args[2], 'config_value')
         })
         .catch((err) => {
           client.handle(err, 'pushing to config array', message)
