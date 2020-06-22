@@ -26,7 +26,7 @@ module.exports = (client) => {
     }
 
     checker(message) {
-      if (this.channels.includes(message.channel.id)) {
+      if (this.channels && this.channels.includes(message.channel.id)) {
         if (!message.deleted && message.deletable) {
           return true;
         }
@@ -84,7 +84,7 @@ module.exports = (client) => {
     }
   }
 
-  client.checkers = [new ImageChecker(), new MentionChecker(), new NewlineChecker()];
+  client.checkers = [new AttachmentChecker(), new ImageChecker(), new MentionChecker(), new NewlineChecker()];
 
   client.handleReaction = async (client, messageReaction, user) => {
     if (user.bot || (messageReaction.message.guild && messageReaction.message.guild.id !== client.config.mainGuild)) {
