@@ -86,7 +86,7 @@ class Profile {
           try {
             member = await this.client.users.fetch(args[1]);
           } catch (err) {
-            console.log(err);
+            this.client.handle(err, 'modding profile', message);
           }
         }
       }
@@ -327,7 +327,6 @@ async makeImage(memberCount, color) {
     let embeds = [];
     if (this.userInfo) {
       ['friendcode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
-        console.log(category);
         if (this.userInfo[category]) {
           embeds.push({
             name: strings[category].name,

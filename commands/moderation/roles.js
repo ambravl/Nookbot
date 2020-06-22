@@ -18,12 +18,10 @@ module.exports.run = (client, message, args) => {
         for (const match of matches) {
           const emojiID = match[1] ? match[1] : match[2];
           if (emojiID && match[3]) {
-            console.log(`[${match[3]}]`);
             const roleID = message.guild.roles.cache.find((r) => r.name.toLowerCase() === match[3].trim().toLowerCase()).id;
             reactions.push({roleID: roleID, emojiID: emojiID});
             msg.react(emojiID)
               .then(() => {
-                console.log(`reacted with ${emojiID}`);
               })
               .catch((err) => {
                 client.handle(err, 'reactionRole setup reaction', message)

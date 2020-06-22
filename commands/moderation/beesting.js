@@ -130,7 +130,6 @@ If you wish to contact the moderators about your warning, please send a message 
     dmSent: dmSent ? "true" : "false",
     date: time
   };
-  console.log(infraction);
   client.userDB.push(member.id, infraction, 'infractions');
 
   // Perform the required action
