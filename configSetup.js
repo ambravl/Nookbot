@@ -46,6 +46,7 @@ module.exports = (client) => {
       return client.levelCache.find((level) => level.name === 'Server Owner');
     if (message.author.id === client.config.botOwner)
       return client.levelCache.find((level) => level.name === 'Bot Owner');
+    console.log(client.guilds.cache.get(client.config.mainGuild).members.fetch(message.author.id));
     const highest = member ? member.roles.highest.id : client.guilds.cache.get(client.config.mainGuild).members.fetch(message.author.id).roles.highest.id;
     const highestLevel = client.levelCache.find((level) => level.roleID === highest);
     return highestLevel ? highestLevel : client.levelCache.find((level) => level.level === 0);
