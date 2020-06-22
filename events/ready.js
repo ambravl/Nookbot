@@ -86,7 +86,8 @@ module.exports = (client) => {
           res.rows.forEach((mail) => {
             if (mail.mailtype === 'suggestion') {
               client.suggestions.push(mail.messageid);
-              client.channels.cache.get(client.config.modMail).messages.fetch(mail.messageid);
+              const channel = mail.mailtype === 'report' || mail.mailtype === 'scam' ? client.config.reportMail : client.config.modMail;
+              client.channels.cache.get(channel).messages.fetch(mail.messageid);
             } else {
               client.modMail[mail.messageid] = mail.status;
               if (mail.mailtype === 'report' || mail.mailtype === 'scam') client.channels.cache.get(client.config.reportMail).messages.fetch(mail.messageid);
