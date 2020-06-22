@@ -15,8 +15,8 @@ module.exports.run = async (client, message, args, level, Discord) => {
       .setDescription(strings[command].desc);
     const promises = [];
     for (let cat in strings) if (strings.hasOwnProperty(cat) && strings[cat].emoji) askEmbed.addField(strings[cat].emoji, strings[cat].name, true);
-    const filter = (reaction) => {
-      if (reaction.user.bot) return false;
+    const filter = (reaction, user) => {
+      if (user.bot) return false;
       for (let cat in strings)
         if (strings.hasOwnProperty(cat) && strings[cat].emoji === reaction.emoji.name) return true
     };
