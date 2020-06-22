@@ -15,6 +15,7 @@ module.exports.run = async (client, message, args) => {
             client.users.fetch(res.rows[0].userid)
               .then((user) => {
                 client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
+                client.success(message.guild.channels.cache.get(client.config.modLog), 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
               })
               .catch((err) => {
                 client.handle(err, 'fetching healed user')

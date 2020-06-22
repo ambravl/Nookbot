@@ -143,7 +143,7 @@ If you wish to contact the moderators about your warning, please send a message 
       // Update unmuteTime on users
       client.mutedUsers.set(member.id, (mute * 60000) + time);
       const guildMember = await message.guild.members.fetch(member);
-      await guildMember.roles.add('495854925054607381', '[Auto] Beestings');
+      await guildMember.roles.add(client.config.mutedRole, '[Auto] Beestings');
 
       // Kick and mute/deafen member if in voice
       if (guildMember.voice.channel) {
@@ -154,7 +154,7 @@ If you wish to contact the moderators about your warning, please send a message 
       setTimeout(() => {
         if ((client.mutedUsers.get(member.id) || 0) < Date.now()) {
           client.mutedUsers.delete(member.id);
-          guildMember.roles.remove('495854925054607381', `Scheduled unmute after ${mute} minutes.`).catch((err) => {
+          guildMember.roles.remove(client.config.mutedRole, `Scheduled unmute after ${mute} minutes.`).catch((err) => {
             client.error(message.guild.channels.cache.get(client.config.modLog), 'Unmute Failed!', `I've failed to unmute this member! ${err}\nID: ${member.id}`);
           });
         }

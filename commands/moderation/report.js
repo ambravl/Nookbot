@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 module.exports.run = async (client, message, args, level, Discord) => {
-  const reportMailCh = client.guilds.cache.first().channels.cache.get(client.config.reportMail);
+  const reportMailCh = client.channels.cache.get(client.config.reportMail);
 
   if (message.channel.id === client.config.reportMail) {
     // This was sent in the staff channel, so they are trying to reply to the report.
