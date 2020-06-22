@@ -32,26 +32,22 @@ module.exports = (client) => {
   client.permissionDB.cacheDB().then((res) => {
     client.levelCache = [];
     res.rows.forEach(row => {
-      client.levelCache[parseInt(row.level)] = {
+      client.levelCache.push({
         roleID: row.roleid,
         name: row.name,
         level: parseInt(row.level)
-      }
+      })
     })
   })
     .catch((err) => client.handle(err, 'levelCache'));
 
-
-  client.levelCheck = (role, client, message) => {
-    if (role.roleID.length < 3) return null;
-    if (role.level === 0) return true;
-    if (role.name === 'Server Owner' && !!(message.guild && message.author.id === message.guild.ownerID)) return true;
-    if (message.author.id === '258373545258778627') return true;
-    if (message.guild) {
-      const levelObj = message.guild.roles.cache.get(role.roleID);
-      if (levelObj && message.member.roles.cache.has(levelObj.id)) return true;
-      if (role.name === 'Admin' && message.member.hasPermission('ADMINISTRATOR')) return true;
-    }
-    return false;
+  client.getHighestRole = (client, message, member) => {
+    if (message.guild && member.id === message.guild.owner.id)
+      return client.levelCache.find((level) => level.name === 'Server Owner');
+    if (message.author.id === client.config.botOwner)
+      return client.levelCache.find((level) => level.name === 'Bot Owner');
+    const highest = member ? member.roles.highest.id : client.guilds.cache.get(client.config.mainGuild).members.fetch(message.author.id).roles.highest.id;
+    const highestLevel = client.levelCache.find((level) => level.roleID === highest);
+    return highestLevel ? highestLevel : client.levelCache.find((level) => level.level === 0);
   }
 };

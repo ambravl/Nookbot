@@ -225,19 +225,6 @@ module.exports = (client) => {
     return res;
   };
 
-  client.permLevel = (message) => {
-    let permission;
-    let i = 0;
-    while (i < client.levelCache.length) {
-      let currentLevel = client.levelCache[i];
-      const lvlCheck = client.levelCheck(currentLevel, client, message);
-      if (lvlCheck) permission = currentLevel;
-      else if (lvlCheck === false) i = client.levelCache.length;
-      i++;
-    }
-    return permission;
-  };
-
   client.clean = async (clientParam, txt) => {
     let text = txt;
     if (text && text.constructor.name === 'Promise') {

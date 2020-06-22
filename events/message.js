@@ -17,7 +17,7 @@ module.exports = async (client, message) => {
     // Anti Mention Spam
     if (message.mentions.members && message.mentions.members.size > 10) {
       // They mentioned more than 10 members, automute them for 10 mintues.
-      if (message.member && client.permLevel(message).level < 4) {
+      if (message.member && client.getHighestRole(client, message, message.member).level < 4) {
         // Mute
         message.member.roles.add(client.config.mutedRole, 'Mention Spam');
         // Delete Message
@@ -99,7 +99,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
     if (message.content.indexOf(client.config.prefix) !== 0) return client.easter(message);
   }
 
-  const permissionLevel = client.permLevel(message);
+  const permissionLevel = client.getHighestRole(client, message, message.member);
 
   // Our standard argument/command name definition.
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
