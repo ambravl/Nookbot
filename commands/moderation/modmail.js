@@ -48,6 +48,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     for (let cat in strings) if (strings.hasOwnProperty(cat) && strings[cat].emoji === reaction.emoji.name) command = cat;
     if (command === 'cancel') {
       client.success(dmChannel, strings.cancel.title, strings.cancel.desc);
+      getCategory.delete();
       return;
     }
   }
