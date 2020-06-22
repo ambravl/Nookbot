@@ -49,6 +49,7 @@ module.exports = (client) => {
     const highest = member ? member.roles.highest.id : client.guilds.cache.get(client.config.mainGuild).members.cache.get(message.author.id).roles.highest.id;
     console.log(highest);
     const highestLevel = client.levelCache.find((level) => level.roleID === highest);
+    console.log(highestLevel);
     return highestLevel ? highestLevel : client.levelCache.find((level) => level.level === 0);
   }
 };
