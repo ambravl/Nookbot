@@ -4,7 +4,7 @@ const moment = require('moment');
 
 module.exports = (client) => {
   client.handleReaction = async (client, messageReaction, user) => {
-    if (user.bot || messageReaction.message.guild.id !== client.config.mainGuild) {
+    if (user.bot || (messageReaction.message.guild && messageReaction.message.guild.id !== client.config.mainGuild)) {
       return;
     }
 

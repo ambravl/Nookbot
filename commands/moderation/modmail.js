@@ -25,7 +25,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       .catch((err) => {
         client.handle(err)
       });
-    const collected = await confirm.awaitReactions(filter, {max: 1, time: 3600000, errors: ['time']});
+    const collected = await getCategory.awaitReactions(filter, {max: 1, time: 3600000, errors: ['time']});
     const reaction = collected.first();
     for (let cat in strings) if (strings.hasOwnProperty(cat) && strings[cat].emoji === reaction.emoji.name) command = cat;
     if (command === 'cancel') {
