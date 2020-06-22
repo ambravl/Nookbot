@@ -15,10 +15,11 @@ module.exports.run = async (client, message, args, level, Discord) => {
       .setTitle(`Additional information for ticket #${open.rows[0].messageid}!`)
       .setURL(link)
       .setColor('7B68EE')
-      .setFooter('click the title to go to the original message!')
+      .setDescription(message.content)
+      .setFooter('click the title to go to the original message!');
     if (channel === 'report') reportChannel.send(addInfo);
     else modMailChannel.send(addInfo);
-    client.success(modMailChannel, 'Thanks for the message!', 'Your additional information has been sent to the mods!');
+    client.success(dmChannel, 'Thanks for the message!', 'Your additional information has been sent to the mods!');
     return;
   }
   if (args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
