@@ -2,10 +2,26 @@
 // eslint-disable-next-line no-unused-vars
 module.exports.run = async (client, message, args, level, Discord) => {
   const strings = client.mStrings.modMail;
-  if (args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
   const reportChannel = client.channels.cache.get(client.config.reportMail);
   const modMailChannel = client.channels.cache.get(client.config.modMail);
   const dmChannel = message.guild ? await message.member.createDM() : message.channel;
+  const open = await client.db.query(`SELECT * FROM modMailDB WHERE memberID = '${message.author.id}' AND (status = 'open' OR status = 'read')`);
+  if (open && open.rows && open.rows[0]) {
+    const addInfo = new Discord.MessageEmbed();
+    const channel = open.rows[0].mailtype === 'scam' || open.rows[0].mailtype === 'report' ? 'report' : 'modmail';
+    const channelID = channel === 'report' ? client.config.reportMail : client.config.modMail;
+    const link = `https://discordapp.com/channels/717575621420646432/${channelID}/${open.rows[0].messageid}`;
+    addInfo.setAuthor(message.author.username, message.author.displayAvatarURL(), link)
+      .setTitle(`Additional information for ticket #${open.rows[0].messageid}!`)
+      .setURL(link)
+      .setColor('7B68EE')
+      .setFooter('click the title to go to the original message!')
+    if (channel === 'report') reportChannel.send(addInfo);
+    else modMailChannel.send(addInfo);
+    client.success(modMailChannel, 'Thanks for the message!', 'Your additional information has been sent to the mods!');
+    return;
+  }
+  if (args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
   let command = args.shift().replace(/^(mm|mod|mail)$/, 'modmail').replace('scammer', 'scam');
   // noinspection FallThroughInSwitchStatementJS
   if (command === 'dm' || command === 'modmail') {

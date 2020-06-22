@@ -451,5 +451,11 @@
       "title": "Cancelled!",
       "desc": "No worries, I've already deleted your message from my memory!"
     }
+  },
+  "filters": {
+    "imageOnly": "Image Only Channel!\nThis channel only allows posts with images or links in them. Everything else is automatically deleted.",
+    "newlineLimit": "Too Many New Lines!\nThis channel only allows posts with less than 10 newline characters in them. Messages with more than that are automatically deleted.",
+    "attachmentLimit": "Too Many Attachments + Links!\nThis channel only allows posts with less than 3 attachments + links in them. Messages with more than that are automatically deleted.",
+    "noMention": "No Mention Channel!\nThis channel is to be kept clear of @ mentions of any members. Any message mentioning another member will be automatically deleted."
   }
 }

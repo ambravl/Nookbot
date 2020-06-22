@@ -86,11 +86,6 @@ client.songQueue = {
   lastUpdateDesc: '',
 };
 
-// Auto-Filter Message Reminder Counts
-client.imageOnlyFilterCount = 0;
-client.newlineLimitFilterCount = 0;
-client.noMentionFilterCount = 0;
-
 client.login(client.token).then(() => {
   console.log('Bot successfully logged in.');
 }).catch(() => {

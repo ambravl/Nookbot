@@ -3,6 +3,89 @@ const Discord = require('discord.js');
 const moment = require('moment');
 
 module.exports = (client) => {
+  class Checker {
+    constructor(name) {
+      this.count = 0;
+      this.channels = client.config[`${name}Channels`];
+      this.string = client.mStrings.filters[name];
+      this.config = client.config[name];
+    }
+
+    delete(message) {
+      message.delete();
+      this.count += 1;
+      if (this.count === 5) {
+        this.count = 0;
+        message.channel.send(this.string).then((autoMsg) => {
+          setTimeout(() => {
+            autoMsg.delete();
+          }, 30000);
+        })
+      }
+      return true;
+    }
+
+    checker(message) {
+      if (this.channels.includes(message.channel.id)) {
+        if (!message.deleted && message.deletable) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    run(message) {
+      if (this.checker(message)) return this.delete(message);
+      else return false;
+    }
+  }
+
+  class ImageChecker extends Checker {
+    constructor() {
+      super('imageOnly');
+    }
+
+    checker(message) {
+      if (!super.checker(message)) return false;
+      if (message.attachments.size === 0) return true;
+    }
+  }
+
+  class NewlineChecker extends Checker {
+    constructor() {
+      super('newLineLimit');
+    }
+
+    checker(message) {
+      if (!super.checker(message)) return false;
+      if ((message.content.match(/\n/g) || []).length >= this.config) return true;
+    }
+  }
+
+  class AttachmentChecker extends Checker {
+    constructor() {
+      super('imageLinkLimit');
+    }
+
+    checker(message) {
+      if (!super.checker(message)) return false;
+      if ((message.attachments.size + (message.content.match(/https?:\/\//gi) || []).length) >= this.config) return true;
+    }
+  }
+
+  class MentionChecker extends Checker {
+    constructor() {
+      super('noMention');
+    }
+
+    checker(message) {
+      if (!super.checker(message)) return false;
+      if (message.mentions.members.size > 0) return true;
+    }
+  }
+
+  client.checkers = [new AttachmentChecker(), new ImageChecker(), new MentionChecker(), new NewlineChecker()];
+
   client.handleReaction = async (client, messageReaction, user) => {
     if (user.bot || (messageReaction.message.guild && messageReaction.message.guild.id !== client.config.mainGuild)) {
       return;

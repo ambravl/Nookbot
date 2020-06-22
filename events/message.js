@@ -8,147 +8,97 @@ module.exports = async (client, message) => {
   // Ignore all bots
   if (message.author.bot) return;
 
-  client.userDB.ensure(message.author.id, 0, 'points')
-    .then((res) => {
-      if (client.config.rankedChannels.includes(message.channel.id)) {
-        client.userDB.math(message.author.id, '+', 1, 'points');
-        const role = client.ranks.find(rank => rank.minPoints === res + 1);
-        if (role) {
-          message.member.roles.add(role.roleid, '[Auto] Rank Up');
-          if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
-          const name = message.guild.roles.cache.get(roleID).name;
-          client.userDB.update(message.author.id, name, 'rankRole');
-          const embed = new Discord.MessageEmbed()
-            .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
-            .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
-          message.channel.send(embed);
-        }
-      }
-    })
-    .catch((err) => {
-      client.handle(err, 'ensuring a member exists when adding points')
-    });
+  if (message.guild) {
 
-  // Emoji finding and tracking
-  const regex = /<a?:\w+:([\d]+)>/g;
-  const msg = message.content;
-  let regMatch;
-  while ((regMatch = regex.exec(msg)) !== null) {
-    console.log('found emoji');
-    const emojiMatch = regMatch[1];
-    console.log(emojiMatch);
-    // If the emoji ID is in our emoji, then increment its count
-    client.emojiDB.select(emojiMatch)
-      .then((res) => {
-        console.log('tried to select emoji');
-        if (res !== undefined) {
-          console.log('found emoji in db');
-          client.emojiDB.math(emojiMatch, '+', '1', 'uses')
-            .then(() => {
-              console.log('successfully updated emoji')
-            })
-            .catch((err) => client.handle(err, 'emoji increment in message event', message));
-        }
-      })
-      .catch((err) => {
-        client.handle(err, 'emoji select in message event', message);
-      });
-  }
+    if (!message.member) {
+      await message.guild.members.fetch(message.author);
+    }
 
-  if (message.guild && !message.member) {
-    await message.guild.members.fetch(message.author);
-  }
-
-  // Anti Mention Spam
-  if (message.mentions.members && message.mentions.members.size > 10) {
-    // They mentioned more than 10 members, automute them for 10 mintues.
-    if (message.member && client.permLevel(message).level < 4) {
-      // Mute
-      message.member.roles.add(client.config.mutedRole, 'Mention Spam');
-      // Delete Message
-      if (!message.deleted) {
-        message.delete();
-      }
-      // Schedule unmute
-      setTimeout(() => {
-        try {
-          message.member.roles.remove(client.config.mutedRole, 'Unmuted after 10 mintues for Mention Spam');
-        } catch (error) {
-          // Couldn't unmute, oh well
-          console.error('Failed to unmute after Anti Mention Spam');
-          console.error(error);
+    // Anti Mention Spam
+    if (message.mentions.members && message.mentions.members.size > 10) {
+      // They mentioned more than 10 members, automute them for 10 mintues.
+      if (message.member && client.permLevel(message).level < 4) {
+        // Mute
+        message.member.roles.add(client.config.mutedRole, 'Mention Spam');
+        // Delete Message
+        if (!message.deleted) {
+          message.delete();
         }
-      }, 600000);
-      // Notify mods so they may ban if it was a raider.
-      message.guild.channels.cache.get(client.config.staffChat).send(`**Mass Mention Attempt!**
+        // Schedule unmute
+        setTimeout(() => {
+          try {
+            message.member.roles.remove(client.config.mutedRole, 'Unmuted after 10 mintues for Mention Spam');
+          } catch (error) {
+            // Couldn't unmute, oh well
+            console.error('Failed to unmute after Anti Mention Spam');
+            console.error(error);
+          }
+        }, 600000);
+        // Notify mods so they may ban if it was a raider.
+        message.guild.channels.cache.get(client.config.staffChat).send(`**Mass Mention Attempt!**
 <@&${client.levelCache[4]}> <@&${client.levelCache[5]}> <@&${client.levelCache[6]}>
 The member **${message.author.tag}** just mentioned ${message.mentions.members.size} members and was automatically muted for 10 minutes!
 They have been a member of the server for ${client.humanTimeBetween(Date.now(), message.member.joinedTimestamp)}.
 If you believe this member is a mention spammer bot, please ban them with the command:
 \`.ban ${message.author.id} Raid Mention Spammer\``);
-    }
-  }
-
-  // Delete non-image containing messages from image only channels
-  if (message.guild && client.config.imageOnlyChannels.includes(message.channel.id)
-      && message.attachments.size === 0 && client.permLevel(message).level < 4) {
-    // Message is in the guild's image only channels, without an image or link in it, and is not a mod's message, so delete
-    if (!message.deleted && message.deletable) {
-      message.delete();
-      client.imageOnlyFilterCount += 1;
-      if (client.imageOnlyFilterCount === 5) {
-        client.imageOnlyFilterCount = 0;
-        const autoMsg = await message.channel.send('Image Only Channel!\nThis channel only allows posts with images or links in them. Everything else is automatically deleted.');
-        setTimeout(() => {
-          autoMsg.delete();
-        }, 30000);
       }
     }
-    return;
-  }
 
-  // Delete posts with too many new line characters or images to prevent spammy messages in trade channels
-  if (message.guild && client.config.newlineLimitChannels.includes(message.channel.id)
-      && ((message.content.match(/\n/g) || []).length >= client.config.newlineLimit
-      || (message.attachments.size + (message.content.match(/https?:\/\//gi) || []).length) >= client.config.imageLinkLimit)
-      && client.permLevel(message).level < 4) {
-    // Message is in the guild, in a channel that has a limit on newline characters, and has too many or too many links + attachments, and is not a mod's message, so delete
-    if (!message.deleted && message.deletable) {
-      message.delete();
-      client.newlineLimitFilterCount += 1;
-      if (client.newlineLimitFilterCount === 5) {
-        client.newlineLimitFilterCount = 0;
-        const autoMsg = await message.channel.send('Too Many New Lines or Attachments + Links!\nThis channel only allows posts with less than 10 newline characters and less than 3 attachments + links in them. Messages with more than that are automatically deleted.');
-        setTimeout(() => {
-          autoMsg.delete();
-        }, 30000);
-      }
+    if (client.checkers.some((checker) => {
+      checker.run(message)
+    })) return;
+
+
+    client.userDB.ensure(message.author.id, 0, 'points')
+      .then((res) => {
+        if (client.config.rankedChannels.includes(message.channel.id)) {
+          client.userDB.math(message.author.id, '+', 1, 'points');
+          const role = client.ranks.find(rank => rank.minPoints === res + 1);
+          if (role) {
+            message.member.roles.add(role.roleid, '[Auto] Rank Up');
+            if (role.previous) message.member.roles.remove(role.previous, '[Auto] Rank Up');
+            const name = message.guild.roles.cache.get(roleID).name;
+            client.userDB.update(message.author.id, name, 'rankRole');
+            const embed = new Discord.MessageEmbed()
+              .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
+              .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
+            message.channel.send(embed);
+          }
+        }
+      })
+      .catch((err) => {
+        client.handle(err, 'ensuring a member exists when adding points')
+      });
+
+    // Emoji finding and tracking
+    const regex = /<a?:\w+:([\d]+)>/g;
+    const msg = message.content;
+    let regMatch;
+    while ((regMatch = regex.exec(msg)) !== null) {
+      console.log('found emoji');
+      const emojiMatch = regMatch[1];
+      console.log(emojiMatch);
+      // If the emoji ID is in our emoji, then increment its count
+      client.emojiDB.select(emojiMatch)
+        .then((res) => {
+          console.log('tried to select emoji');
+          if (res !== undefined) {
+            console.log('found emoji in db');
+            client.emojiDB.math(emojiMatch, '+', '1', 'uses')
+              .then(() => {
+                console.log('successfully updated emoji')
+              })
+              .catch((err) => client.handle(err, 'emoji increment in message event', message));
+          }
+        })
+        .catch((err) => {
+          client.handle(err, 'emoji select in message event', message);
+        });
     }
-    return;
-  }
-
-  // Delete posts with @ mentions in villager and turnip channels
-  if (message.guild && client.config.noMentionChannels.includes(message.channel.id)
-    && message.mentions.members.size > 0
-    && client.permLevel(message).level < 3) {
-  // Message is in the guild, in a channel that restricts mentions, and is not a mod's message, so delete
-    if (!message.deleted && message.deletable) {
-      message.delete();
-      client.noMentionFilterCount += 1;
-      if (client.noMentionFilterCount === 5) {
-        client.noMentionFilterCount = 0;
-        const autoMsg = await message.channel.send('No Mention Channel!\nThis channel is to be kept clear of @ mentions of any members. Any message mentioning another member will be automatically deleted.');
-        setTimeout(() => {
-          autoMsg.delete();
-        }, 30000);
-      }
+    // Ignore messages not starting with the prefix
+    if (message.content.indexOf(client.config.prefix) !== 0) {
+      return;
     }
-    return;
-  }
-
-  // Ignore messages not starting with the prefix
-  if (message.content.indexOf(client.config.prefix) !== 0) {
-    return;
   }
 
   const permissionLevel = client.permLevel(message);
@@ -161,16 +111,16 @@ If you believe this member is a mention spammer bot, please ban them with the co
   let cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
   // If that command doesn't exist, silently exit and do nothing
-  if (!cmd && message.guild) {
-    return;
-  }
-
   if (!cmd) {
-    command = 'dm';
-    cmd = client.commands.get('modmail');
+    if (message.guild) return;
+    if (command.indexOf(client.config.prefix) === 0) {
+      return;
+    } else {
+      args.unshift(command);
+      args.unshift('dm');
+      cmd = client.commands.get('modmail');
+    }
   }
-
-  if (cmd.help.name === 'modmail') args.unshift(command);
 
   if (!message.guild && cmd.conf.guildOnly && message.author.id !== '258373545258778627') {
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');
