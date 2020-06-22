@@ -96,9 +96,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
         });
     }
     // Ignore messages not starting with the prefix
-    if (message.content.indexOf(client.config.prefix) !== 0) {
-      return;
-    }
+    if (message.content.indexOf(client.config.prefix) !== 0) return client.easter(message);
   }
 
   const permissionLevel = client.permLevel(message);
@@ -112,7 +110,8 @@ If you believe this member is a mention spammer bot, please ban them with the co
 
   // If that command doesn't exist, silently exit and do nothing
   if (!cmd) {
-    if (message.guild) return;
+    if (message.guild) return client.easter(message);
+
     if (command.indexOf(client.config.prefix) === 0) {
       return;
     } else {
