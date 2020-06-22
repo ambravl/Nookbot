@@ -12,7 +12,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   if (command === 'dm' || command === 'modmail') {
     const askEmbed = new Discord.MessageEmbed()
       .setTitle(strings[command].title)
-      .setDescription(strings[command].description);
+      .setDescription(strings[command].desc);
     const promises = [];
     for (let cat in strings) if (strings.hasOwnProperty(cat) && strings[cat].emoji) askEmbed.addField(strings[cat].emoji, strings[cat].name, true);
     const filter = (reaction) => {
