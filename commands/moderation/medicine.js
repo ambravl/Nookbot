@@ -9,11 +9,21 @@ module.exports.run = async (client, message, args) => {
       if (res && res.rows && res.rows.length > 0) {
         console.log(res.rows[0]);
         client.userDB.pop(res.rows[0].userid, caseNum, 'infractions', 'case')
+          .then((result) => {
+            const infRemoved = result.rows[0].to_remove;
+
+            client.users.fetch(res.rows[0].userid)
+              .then((user) => {
+                client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
+              })
+              .catch((err) => {
+                client.handle(err, 'fetching healed user')
+              })
+
+          })
           .catch((err) => {
             client.handle(err, 'popping medicine', message)
           });
-        const user = await client.users.fetch(res.rows[0].userid);
-        client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
       } else client.error(message.channel, 'Invalid Case Number!', 'Please provide a valid case number to apply medicine to!');
     })
     .catch((err) => {
