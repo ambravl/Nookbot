@@ -6,7 +6,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   const reportChannel = client.channels.cache.get(client.config.reportMail);
   const modMailChannel = client.channels.cache.get(client.config.modMail);
   console.log(message.guild);
-  const dmChannel = message.guild ? message.channel : await message.member.createDM();
+  const dmChannel = message.guild ? await message.member.createDM() : message.channel;
   let command = args.shift().replace(/^(mm|mod|mail)$/, 'modmail').replace('scammer', 'scam');
   // noinspection FallThroughInSwitchStatementJS
   if (command === 'dm' || command === 'modmail') {
