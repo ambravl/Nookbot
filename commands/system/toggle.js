@@ -1,6 +1,6 @@
 module.exports.run = (client, message, args) => {
   if (!args[0]) return client.error(message.channel, 'Wrong argument number!', 'You need to provide a command to disable!');
-  const command = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+  const command = client.commands.get(args[0]) || client.commands.get(client.aliases.get(args[0]));
   if (command) {
     if (command.help.category === 'system') return client.error(message.channel, 'Forbidden', "You can't disable this command!");
     else {
