@@ -44,7 +44,7 @@ module.exports = (client) => {
             .setTitle('Ticket Reopened!')
             .setDescription(`${user.username} reopened ticket #${messageReaction.message.id}!`)
             .setURL(`https://discordapp.com/channels/717575621420646432/${messageReaction.me.channel.id}/${messageReaction.message.id}`)
-            .setColor('#ff0000')
+            .setColor('#ff0000');
           messageReaction.message.channel.send(embed);
           const oldEmbed = messageReaction.message.embeds[0];
           const newEmbed = new Discord.MessageEmbed(oldEmbed).setFooter('❕ = I got this! | ✅ Complete').setTimestamp();
@@ -59,6 +59,10 @@ module.exports = (client) => {
         } else if (messageReaction.emoji.name === '❕' && modmail.status !== 'read') pass;
       })
   };
+
+  client.editEmbed = async (client, messageID, channelID) => {
+
+  }
 
   client.permLevel = (message) => {
     let permission;

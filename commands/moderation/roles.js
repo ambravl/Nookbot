@@ -6,6 +6,7 @@ module.exports.run = (client, message, args) => {
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
+      console.log('got heree');
       const matches = msg.content.matchAll(emojiRE);
       let reactions = [];
       if (roleType.toLowerCase() === 'verified') {
@@ -15,6 +16,7 @@ module.exports.run = (client, message, args) => {
             client.handle(err, 'reacting with verified emoji', message)
           })
       } else {
+        console.log('got here');
         for (const match of matches) {
           const emojiID = match[1] ? match[1] : match[2];
           console.log('Found emoji: ' + emojiID);
