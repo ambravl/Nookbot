@@ -23,8 +23,13 @@ module.exports.run = (client, message, args) => {
             });
         }
       }
-      if (reactions.length === 0 && roleType.toLowerCase() === 'verified')
+      if (reactions.length === 0 && roleType.toLowerCase() === 'verified') {
         reactions.push({roleID: client.config.verified, emojiID: client.config.verifiedEmoji});
+        msg.react(client.config.verifiedEmoji)
+          .catch((err) => {
+            client.handle(err, 'reacting with verified emoji', message)
+          })
+      }
       client.reactionRoles.insert(link[3], [link[2], roleType, reactions], ['channelID', 'type', 'reactions'])
         .catch((err) => {
           client.handle(err, 'reactionRole setup insertion', message)
