@@ -39,16 +39,17 @@ module.exports.run = async (client, message, args, level, Discord) => {
           client.handle(err, 'tag modification', message)
         });
     }
+  } else {
+    client.tags.levenshtein(args[0].toLowerCase(), 'content')
+      .then((tag) => {
+        if (tag) {
+          message.channel.send(tag.content);
+        } else client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to display does not exist!');
+      })
+      .catch((err) => {
+        client.handle(err, 'sending tag content', message)
+      });
   }
-  tags.levenshtein(args[0].toLowerCase(), 'content')
-    .then((tag) => {
-      if (tag) {
-        message.channel.send(tag.content);
-      } else client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to display does not exist!');
-    })
-    .catch((err) => {
-      client.handle(err, 'sending tag content', message)
-    });
 };
 
 module.exports.conf = {
