@@ -8,27 +8,28 @@ module.exports.run = (client, message, args) => {
     .then((msg) => {
       const matches = msg.content.matchAll(emojiRE);
       let reactions = [];
-      for (const match of matches) {
-        const emojiID = match[1] ? match[1] : match[2];
-        if (emojiID && match[3]) {
-          console.log(`[${match[3]}]`);
-          const roleID = message.guild.roles.cache.find((r) => r.name.toLowerCase() === match[3].trim().toLowerCase()).id;
-          reactions.push({roleID: roleID, emojiID: emojiID});
-          msg.react(emojiID)
-            .then(() => {
-              console.log(`reacted with ${emojiID}`);
-            })
-            .catch((err) => {
-              client.handle(err, 'reactionRole setup reaction', message)
-            });
-        }
-      }
-      if (reactions.length === 0 && roleType.toLowerCase() === 'verified') {
+      if (roleType.toLowerCase() === 'verified') {
         reactions.push({roleID: client.config.verified, emojiID: client.config.verifiedEmoji});
         msg.react(client.config.verifiedEmoji)
           .catch((err) => {
             client.handle(err, 'reacting with verified emoji', message)
           })
+      } else {
+        for (const match of matches) {
+          const emojiID = match[1] ? match[1] : match[2];
+          if (emojiID && match[3]) {
+            console.log(`[${match[3]}]`);
+            const roleID = message.guild.roles.cache.find((r) => r.name.toLowerCase() === match[3].trim().toLowerCase()).id;
+            reactions.push({roleID: roleID, emojiID: emojiID});
+            msg.react(emojiID)
+              .then(() => {
+                console.log(`reacted with ${emojiID}`);
+              })
+              .catch((err) => {
+                client.handle(err, 'reactionRole setup reaction', message)
+              });
+          }
+        }
       }
       client.reactionRoles.insert(link[3], [link[2], roleType, reactions], ['channelID', 'type', 'reactions'])
         .then(() => {
