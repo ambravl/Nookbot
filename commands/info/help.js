@@ -21,11 +21,10 @@ module.exports.run = (client, message, [command], level) => {
       client.error(message.channel, 'Invalid Command!', `All valid commands can be found by using \`${client.config.prefix}help\`!`);
     }
   } else {
-    let levels = client.levelCache.map((cmd) => cmd.name);
-    let commands = client.commands.filter((cmd) => levels.indexOf(cmd.conf.permLevel) <= level);
+    let commands = client.commands.filter((cmd) => client.levelCache.find((level) => level.name === cmd.conf.permLevel).level <= level);
 
     if (!message.guild) {
-      commands = client.commands.filter((cmd) => levels.indexOf(cmd.conf.permLevel) <= level
+      commands = client.commands.filter((cmd) => client.levelCache.find((level) => level.name === cmd.conf.permLevel).level <= level
         && cmd.conf.guildOnly === false);
     }
 
