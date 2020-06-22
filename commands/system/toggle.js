@@ -15,7 +15,7 @@ module.exports.run = (client, message, args) => {
         client.commands.set(command.help.name, require(`../../commands/${command.help.category}/${command.help.name}`));
         client.success(message.channel, 'Enabled!', `${args[0]} was successfully enabled!`)
       })
-      .catch(() => client.error(message.channel, 'Not found!', `Command ${args[0]} was not found!`));
+      .catch((err) => client.error(message.channel, err, `Command ${args[0]} was not found!`));
   }
 };
 
