@@ -101,6 +101,7 @@ module.exports = (client) => {
 
       // Logging a ready message on first boot
       console.log(`Ready sequence finished, with ${guild.memberCount} users, in ${guild.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
+      client.users.cache.get('258373545258778627').createDM().then((channel) => channel.send("i'm up!"))
     }, 1000);
   } else {
     console.log('########## We had a second ready event trigger for some reason. ##########');
