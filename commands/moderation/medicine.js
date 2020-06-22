@@ -7,9 +7,10 @@ module.exports.run = async (client, message, args) => {
   client.infractions.delete(args[0])
     .then(async (res) => {
       if (res && res.rows && res.rows.length > 0) {
+        console.log(res.rows[0]);
         client.userDB.pop(res.rows[0].userid, caseNum, 'infractions', 'case')
           .catch((err) => {
-            throw err;
+            client.handle(err, 'popping medicine', message)
           });
         const user = await client.users.fetch(userID);
         client.success(message.channel, 'Medicine Applied!', `**${user.tag}** was given medicine to cure **${infRemoved.points}** bee sting${infRemoved.points === 1 ? '' : 's'} from case number **${caseNum}**!`);
