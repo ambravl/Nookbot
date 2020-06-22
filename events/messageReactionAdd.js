@@ -24,7 +24,7 @@ module.exports = async (client, messageReaction, user) => {
   }
   // Members can have any number of the roles in this menu.
   if (!member.roles.cache.has(reactionRoleMenu.roleid)) {
-    console.log('tried adding a role');
+    console.log(`tried adding role #${reactionRoleMenu.roleid}`);
     member.roles.add(reactionRoleMenu.roleid, '[Auto] Reaction Role Add')
       .catch((err) => {
         client.handle(err, 'adding reaction role')

@@ -18,7 +18,7 @@ module.exports = (client) => {
     reactionRoleMenu = reactionRoleMenu.rows[0];
     console.log(reactionRoleMenu);
 
-    let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleID: ''};
+    let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleid: ''};
 
     for (let reaction of reactionRoleMenu.reactions) {
       if (reaction.emojiID === messageReaction.emoji.id || reaction.emojiID === messageReaction.emoji.identifier || reaction.emojiID === messageReaction.emoji.name) {
