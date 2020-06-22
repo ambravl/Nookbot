@@ -7,13 +7,22 @@ module.exports.run = (client, message, args) => {
       client.enabledCommands.update(command.help.name, 'false', 'enabled')
         .then(() => {
           client.commands.delete(command.help.name);
+          delete require.cache[require.resolve(`../../commands/${command.help.category}/${command.help.name}.js`)];
+          client.success(message.channel, 'Disabled!', `${args[0]} was successfully disabled!`);
         })
     }
   } else {
     client.enabledCommands.update(args[0], 'true', 'enabled')
       .then(() => {
-        client.commands.set(command.help.name, require(`../../commands/${command.help.category}/${command.help.name}`));
-        client.success(message.channel, 'Enabled!', `${args[0]} was successfully enabled!`)
+        ['fun', 'game', 'info', 'misc', 'moderation'].forEach((category) => {
+          try {
+            const props = require(`../../commands/${category}/${args[0]}`);
+            client.commands.set(args[0], props);
+            client.success(message.channel, 'Enabled!', `${args[0]} was successfully enabled!`);
+          } catch (err) {
+            if (!err.message.startsWith('Cannot find module')) client.handle(err, 'looping through folders', message)
+          }
+        })
       })
       .catch((err) => client.error(message.channel, err, `Command ${args[0]} was not found!`));
   }
