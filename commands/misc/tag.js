@@ -40,7 +40,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         });
     }
   } else {
-    client.tags.levenshtein(args[0].toLowerCase(), 'content')
+    client.tags.levenshtein(args[0].toLowerCase(), 'tag')
       .then((tag) => {
         if (tag) {
           message.channel.send(tag.content);
