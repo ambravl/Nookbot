@@ -71,7 +71,9 @@ module.exports = (client) => {
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
+            console.log('tried reaction');
             client.channels.cache.get(msg.channelid).messages.fetch(msg.messageid);
+            console.log('got reaction')
           })
         })
         .catch((err) => {
@@ -87,11 +89,15 @@ module.exports = (client) => {
             if (mail.mailtype === 'suggestion') {
               client.suggestions.push(mail.messageid);
               const channel = mail.mailtype === 'report' || mail.mailtype === 'scam' ? client.config.reportMail : client.config.modMail;
+              console.log('tried cache modmail');
               client.channels.cache.get(channel).messages.fetch(mail.messageid);
+              console.log('got cache modmail')
             } else {
               client.modMail[mail.messageid] = mail.status;
+              console.log('tried cache modmail 2');
               if (mail.mailtype === 'report' || mail.mailtype === 'scam') client.channels.cache.get(client.config.reportMail).messages.fetch(mail.messageid);
               else client.channels.cache.get(client.config.modMail).messages.fetch(mail.messageid);
+              console.log('got cache modmail 2')
             }
 
           })
