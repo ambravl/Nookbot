@@ -1,6 +1,6 @@
 module.exports.run = (client, message, args) => {
   if (!args) return;
-  const link = /http.?:..discordapp.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
+  const link = /http.?:..discord(?:app)?.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
   const roleType = args.length === 2 ? args[1] : 'exclusive';
   const emojiRE = /(?:([^\x00-\x7F])|<:\w+:(\d+)>)[\W ]+([\w ']+)/gu;
   if (!link) return;

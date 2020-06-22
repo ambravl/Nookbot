@@ -60,9 +60,11 @@ module.exports = (client) => {
       })
   };
 
-  client.editEmbed = async (client, messageID, channelID) => {
-
-  }
+  // class EmbedEditor extends {
+  //   constructor(messageID, channelID) {
+  //     this.messageID = messageID
+  //   }
+  // }
 
   client.permLevel = (message) => {
     let permission;
