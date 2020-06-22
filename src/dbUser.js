@@ -225,7 +225,7 @@ module.exports = async (client) => {
      */
     async delete(primaryKey) {
       const query = `DELETE FROM ${this.name} WHERE ${this.mainColumn} = $1 RETURNING ${this.secondaryColumn}`;
-      client.db.query(query, [primaryKey])
+      return client.db.query(query, [primaryKey])
         .catch((err) => {
           client.handle(new DBError(query, err), 'remove');
         });
