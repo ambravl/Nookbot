@@ -9,7 +9,7 @@ module.exports = (client) => {
           client.config[row.config_name] = parseInt(configValue);
           break;
         case 'array':
-          client.config[row.config_name] = configValue.split(",");
+          client.config[row.config_name] = configValue ? configValue.split(",") : [];
           break;
         default:
           client.config[row.config_name] = configValue;
