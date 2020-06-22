@@ -42,7 +42,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     .setTimestamp();
   const embed = new Discord.MessageEmbed()
     .setTitle(strings[command].channel)
-    .setDescription(message.content)
+    .setDescription(args.join(' '))
     .setColor(strings[command].color)
     .setAuthor(message.author.username, message.author.displayAvatarURL(), 'https://discordapp.com/users/' + message.author.id)
     .addField('\u200b', '\u200b')
@@ -58,7 +58,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         modMailChannel.send(embed)
           .then((sent) => {
             client.suggestions.push(sent.id);
-            client.modMailDB.insert(sent.id, [message.author.id, message.content, sentDM.id, 'open', 'suggestion'], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
+            client.modMailDB.insert(sent.id, [message.author.id, args.join(' '), sentDM.id, 'open', 'suggestion'], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
             sent.react('❎');
             sent.react('✅');
             sent.react('💞');
@@ -75,7 +75,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
         channel.send(embed)
           .then((sent) => {
             client.modMail[sent.id] = 'unread';
-            client.modMailDB.insert(sent.id, [message.author.id, message.content, sentDM.id, 'open', command], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
+            client.modMailDB.insert(sent.id, [message.author.id, args.join(' '), sentDM.id, 'open', command], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
             sent.react('❕');
             sent.react('✅');
           })

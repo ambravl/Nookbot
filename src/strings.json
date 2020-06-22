@@ -410,35 +410,40 @@
       "emoji": "‼️",
       "title": "Thanks for the report!",
       "desc": "Catching scammers is very important for us, and we're really sorry you had to go through that! Our team will being investigating this as soon as possible!",
-      "color": "F42C2C"
+      "color": "F42C2C",
+      "channel": "Scammer Alert!"
     },
     "report": {
       "name": "Report Rule-Breaking",
       "emoji": "❕",
       "title": "Thanks for the report!",
       "desc": "We'll start investigating this as soon as possible!",
-      "color": "F8306D"
+      "color": "F8306D",
+      "channel": "Report!"
     },
     "suggestion": {
       "name": "Suggestion",
       "emoji": "💭",
       "title": "Thanks for the suggestion!",
       "desc": "We're always striving to improve our server, and will definitely take this into consideration!",
-      "color": "1DB954"
+      "color": "1DB954",
+      "channel": "New Suggestion!"
     },
     "question": {
       "name": "Question",
       "emoji": "❔",
       "title": "Good question!",
       "desc": "We'll answer it as soon as we can!",
-      "color": "FFA12F"
+      "color": "FFA12F",
+      "channel": "Question!"
     },
     "other": {
       "name": "Other",
       "emoji": "💬",
       "title": "Thanks for the message!",
       "desc": "We'll take a look at it as soon as possible and reply if needed!",
-      "color": "0AB4FF"
+      "color": "0AB4FF",
+      "channel": "We got a message!"
     },
     "cancel": {
       "name": "Cancel",
