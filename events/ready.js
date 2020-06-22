@@ -71,9 +71,7 @@ module.exports = (client) => {
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
-            console.log('tried reaction');
             client.channels.cache.get(msg.channelid).messages.fetch(msg.messageid);
-            console.log('got reaction')
           })
         })
         .catch((err) => {
@@ -83,28 +81,24 @@ module.exports = (client) => {
       client.suggestions = [];
       client.modMail = {};
 
-      client.modMailDB.cacheDB()
-        .then((res) => {
-          res.rows.forEach((mail) => {
-            if (mail.mailtype === 'suggestion') {
-              client.suggestions.push(mail.messageid);
-              const channel = mail.mailtype === 'report' || mail.mailtype === 'scam' ? client.config.reportMail : client.config.modMail;
-              console.log('tried cache modmail');
-              client.channels.cache.get(channel).messages.fetch(mail.messageid);
-              console.log('got cache modmail')
-            } else {
-              client.modMail[mail.messageid] = mail.status;
-              console.log('tried cache modmail 2');
-              if (mail.mailtype === 'report' || mail.mailtype === 'scam') client.channels.cache.get(client.config.reportMail).messages.fetch(mail.messageid);
-              else client.channels.cache.get(client.config.modMail).messages.fetch(mail.messageid);
-              console.log('got cache modmail 2')
-            }
-
-          })
-        })
-        .catch((err) => {
-          client.handle(err, 'caching modmails')
-        });
+      // client.modMailDB.cacheDB()
+      //   .then((res) => {
+      //     res.rows.forEach((mail) => {
+      //       if (mail.mailtype === 'suggestion') {
+      //         client.suggestions.push(mail.messageid);
+      //         const channel = mail.mailtype === 'report' || mail.mailtype === 'scam' ? client.config.reportMail : client.config.modMail;
+      //         client.channels.cache.get(channel).messages.fetch(mail.messageid);
+      //       } else {
+      //         client.modMail[mail.messageid] = mail.status;
+      //         if (mail.mailtype === 'report' || mail.mailtype === 'scam') client.channels.cache.get(client.config.reportMail).messages.fetch(mail.messageid);
+      //         else client.channels.cache.get(client.config.modMail).messages.fetch(mail.messageid);
+      //       }
+      //
+      //     })
+      //   })
+      //   .catch((err) => {
+      //     client.handle(err, 'caching modmails')
+      //   });
 
       // Logging a ready message on first boot
       console.log(`Ready sequence finished, with ${guild.memberCount} users, in ${guild.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
