@@ -31,6 +31,9 @@ module.exports.run = (client, message, args) => {
           })
       }
       client.reactionRoles.insert(link[3], [link[2], roleType, reactions], ['channelID', 'type', 'reactions'])
+        .then(() => {
+          client.success(message.channel, 'Done!', 'Successfully set up reaction roles!')
+        })
         .catch((err) => {
           client.handle(err, 'reactionRole setup insertion', message)
         });
