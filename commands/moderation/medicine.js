@@ -7,7 +7,7 @@ module.exports.run = async (client, message, args) => {
   client.infractions.delete(args[0])
     .then(async (res) => {
       if (res && res.rows && res.rows.length > 0) {
-        client.userDB.pop(res.rows[0].userID, caseNum, 'infractions', 'case')
+        client.userDB.pop(res.rows[0].userid, caseNum, 'infractions', 'case')
           .catch((err) => {
             throw err;
           });
