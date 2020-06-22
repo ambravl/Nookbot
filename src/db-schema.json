@@ -64,12 +64,12 @@
     "roleid": "text PRIMARY KEY",
     "minPoints": "integer"
   },
-  "modMail": {
-    "tickedID": "text PRIMARY KEY",
-    "messageID": "text",
+  "modMailDB": {
+    "messageid": "text PRIMARY KEY",
     "memberid": "text",
+    "content": "text",
     "dmID": "text",
     "status": "text",
-    "notes": "text[]"
+    "mailtype": "text"
   }
 }

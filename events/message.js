@@ -155,15 +155,22 @@ If you believe this member is a mention spammer bot, please ban them with the co
 
   // Our standard argument/command name definition.
   const args = message.content.slice(client.config.prefix.length).trim().split(/ +/g);
-  const command = args.shift().toLowerCase();
+  let command = args.shift().toLowerCase();
 
   // Grab the command data and aliases from the client.commands Enmap
-  const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
+  let cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 
   // If that command doesn't exist, silently exit and do nothing
-  if (!cmd) {
+  if (!cmd && message.guild) {
     return;
   }
+
+  if (!cmd) {
+    command = 'dm';
+    cmd = client.commands.get('modmail');
+  }
+
+  if (cmd.help.name === 'modmail') args.unshift(command);
 
   if (!message.guild && cmd.conf.guildOnly && message.author.id !== '258373545258778627') {
     return client.error(message.channel, 'Command Not Available in DMs!', 'This command is unavailable in DMs. Please use it in a server!');

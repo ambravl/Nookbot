@@ -392,6 +392,26 @@
     "thanks": {
       "title": "Thanks for the message!",
       "desc": "I've forwarded it to the mods and will let you know as soon as someome answers or something changes!"
+    },
+    "scam": {
+      "name": "Scam Report",
+      "emoji": "‼️"
+    },
+    "report": {
+      "name": "Report Rule-Breaking",
+      "emoji": "❕"
+    },
+    "suggestion": {
+      "name": "Suggestion",
+      "emoji": "💭"
+    },
+    "question": {
+      "name": "Question",
+      "emoji": "❔"
+    },
+    "other": {
+      "name": "Other",
+      "emoji": "💬"
     }
   }
 }

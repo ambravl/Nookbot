@@ -12,7 +12,7 @@ module.exports = (client) => {
 
     // If not there isn't a type, then this is not a reaction role message.
     if (!reactionRoleMenu || !reactionRoleMenu.rows || reactionRoleMenu.rows.length < 1) {
-      return;
+      return client.handleModmailReactions(client, messageReaction, user);
     }
 
     reactionRoleMenu = reactionRoleMenu.rows[0];
@@ -29,6 +29,37 @@ module.exports = (client) => {
     }
     return result;
   };
+
+  client.handleModmailReactions = async (client, messageReaction, user) => {
+    if (messageReaction.message.channel.id !== client.config.modMail && messageReaction.message.channel.id !== client.config.reportMail) return;
+    if (messageReaction.count > 2) return;
+    client.modMailDB.selectAll(messageReaction.message.id, false)
+      .then((res) => {
+        if (!res || !res.rows || res.rows.length < 1) return;
+        const modmail = res.rows[0];
+        if (modmail.mailtype === 'suggestion') pass;
+        if (messageReaction.emoji.name === '✅' && modmail.status !== 'complete') {
+          const Discord = require('discord.js');
+          const embed = new Discord.MessageEmbed()
+            .setTitle('Ticket Reopened!')
+            .setDescription(`${user.username} reopened ticket #${messageReaction.message.id}!`)
+            .setURL(`https://discordapp.com/channels/717575621420646432/${messageReaction.me.channel.id}/${messageReaction.message.id}`)
+            .setColor('#ff0000')
+          messageReaction.message.channel.send(embed);
+          const oldEmbed = messageReaction.message.embeds[0];
+          const newEmbed = new Discord.MessageEmbed(oldEmbed).setFooter('❕ = I got this! | ✅ Complete').setTimestamp();
+          messageReaction.message.edit(newEmbed);
+          messageReaction.message.reactions.removeAll()
+            .then(() => {
+              messageReaction.message.react('❕');
+              messageReaction.message.react('✅');
+            });
+          client.modMailDB.update(messageReaction.message.id, 'open', 'status');
+          client.modMail[messageReaction.message.id] = 'open';
+        } else if (messageReaction.emoji.name === '❕' && modmail.status !== 'read') pass;
+      })
+  };
+
   client.permLevel = (message) => {
     let permission;
     let i = 0;
