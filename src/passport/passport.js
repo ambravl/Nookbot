@@ -5,7 +5,6 @@ module.exports.Passport = class Passport {
     this.Canvas.registerFont('./src/passport/Humming.otf', {family: 'Humming'});
     this.canvas = this.Canvas.createCanvas(1094, 626);
     this.ctx = this.canvas.getContext('2d');
-    this.ctx.drawImage(this.drawIcon(), 97, 119);
     this.color = "#AAD022";
     this.coords = {
       island: [467, 216, false],
@@ -34,6 +33,7 @@ module.exports.Passport = class Passport {
   }
 
   async background() {
+    this.ctx.drawImage(await this.drawIcon(), 97, 119);
     const bgMask = await this.Canvas.loadImage('./src/passport/bgMask.png');
     this.ctx.drawImage(bgMask, 0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
