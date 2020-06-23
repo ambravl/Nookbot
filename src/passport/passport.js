@@ -27,9 +27,13 @@ module.exports.Passport = class Passport {
   }
 
   async middleBackground() {
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "darken";
+    this.ctx.globalAlpha = 0.2;
     const background = await this.Canvas.loadImage('./src/passport/middlePattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat");
     this.ctx.fillRect(0, 130, this.canvas.width, 720)
+    this.ctx.restore();
   }
 
   async draw() {
