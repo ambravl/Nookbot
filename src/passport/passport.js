@@ -32,7 +32,7 @@ module.exports.Passport = class Passport {
   }
 
   async icon() {
-    const iconBoundary = await this.Canvas.loadImage('./src/avvy.png');
+    const iconBoundary = await this.Canvas.loadImage('./src/passport/avvy.png');
     this.ctx.drawImage(iconBoundary, this.coords.icon[0], this.coords.icon[1]);
     this.ctx.save();
     this.ctx.globalCompositeOperation = "source-in";
