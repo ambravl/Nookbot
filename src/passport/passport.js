@@ -7,16 +7,16 @@ module.exports.Passport = class Passport {
     this.ctx = this.canvas.getContext('2d');
     this.color = "#AAD022";
     this.coords = {
-      island: [467, 206, false],
-      islandIcon: [424, 202],
-      fruit: [670, 206, true],
-      fruitIcon: [626, 202],
-      bio: [430, 120, true],
-      role: [423, 261, false],
-      characterName: [426, 328, false],
-      sign: [413, 391],
-      birthday: [462, 402, true],
-      friendcode: [508, 500, true],
+      island: [467, 216, false],
+      islandIcon: [424, 212],
+      fruit: [670, 216, true],
+      fruitIcon: [626, 212],
+      bio: [430, 150, true],
+      role: [423, 281, false],
+      characterName: [426, 348, false],
+      sign: [413, 411],
+      birthday: [462, 422, true],
+      friendcode: [508, 520, true],
       icon: [97, 119]
     }
   }
