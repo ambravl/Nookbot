@@ -29,10 +29,13 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
-    const icon = await this.Canvas.loadImage(this.info.icon);
-    this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
     const background = await this.Canvas.loadImage('./src/passport/bg.png');
     this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "source-out";
+    const icon = await this.Canvas.loadImage(this.info.icon);
+    this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
+    this.ctx.restore();
   }
 
   async text(name) {
@@ -50,9 +53,16 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(this.info.fruit, x, this.coords.island[0])
   }
 
+  async name() {
+    this.ctx.fillStyle = '#59440b';
+    this.ctx.font = '32px "Humming"';
+    this.ctx.fillText(this.info.characterName, 426, 353);
+  }
+
   async draw() {
     await this.background();
     await this.islandInfo();
+    await this.name();
     await this.text('bio');
     await this.text('characterName');
     await this.text('friendcode');
