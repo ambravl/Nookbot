@@ -1,4 +1,5 @@
 module.exports.run = async (client, message, args, level, Discord) => {
+  const st = client.mStrings.tags;
   if (args.length === 0) {
     let listTags = [];
     client.tags.cacheDB()
@@ -11,7 +12,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
           .setColor('#1de9b6')
           .setTitle(`Tags (${client.tags.count()})`)
           .setDescription(listTags.join(', ').slice(0, 2000) || 'No tags.')
-          .setFooter('Use ".t name" to show a tag');
+          .setFooter(st.usage);
 
         message.channel.send(embed);
       })
@@ -23,17 +24,17 @@ module.exports.run = async (client, message, args, level, Discord) => {
   // Reserved words that cannot be used for tag names
   const reserved = ['create', 'c', 'add', 'make', 'edit', 'e', 'set', 'delete', 'del', 'd', 'remove', 'r'];
   if (reserved.includes(args[0])) {
-    if (level < 5) return client.error(message.channel, 'Cannot Edit!', 'You do not have permission to edit tags!');
-    if (args.length === 1) return client.error(message.channel, 'No Tag Name!', 'Make sure you include a tag name!');
+    if (level < 5) return client.error(message.channel, st.noEdit.title, st.noEdit.desc);
+    if (args.length === 1) return client.error(message.channel, st.noName.title, st.noName.desc);
     if (['delete', 'del', 'd', 'remove', 'r'].includes(args[0])) {
       client.tags.delete(args[1].toLowerCase());
-      client.success(message.channel, 'Tag Deleted!', `The tag **${args[1].toLowerCase()}** has been deleted!`);
+      client.success(message.channel, st.deleted.title, st.deleted.descL + args[1].toLowerCase() + st.deleted.descR);
     } else {
-      if (args.length === 2) return client.error(message.channel, 'No Tag Content!', 'Make sure you include the content for the tag!');
-      if (reserved.includes(args[1].toLowerCase())) return client.error(message.channel, 'Reserved Word!', "You can't use this word for tags!");
-      client.tags.safeUpdate(args[1].toLowerCase(), args.slice(2).join(' '), 'content')
+      if (args.length === 2) return client.error(message.channel, st.noContent.title, st.noContent.desc);
+      if (reserved.includes(args[1].toLowerCase())) return client.error(message.channel, st.reserved.title, st.reserved.desc);
+      client.tags.safeUpdate(args[1].toLowerCase(), args.slice(2).join(' '), 'content', false)
         .then(() => {
-          client.success(message.channel, 'Tag Modified!', `The tag **${args[1].toLowerCase()}** has been modified!`);
+          client.success(message.channel, st.modified.title, st.modified.descL + args[1].toLowerCase() + st.modified.descR);
         })
         .catch((err) => {
           client.handle(err, 'tag modification', message)
@@ -44,7 +45,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       .then((tag) => {
         if (tag) {
           message.channel.send(tag.content);
-        } else client.error(message.channel, 'Tag Does Not Exist!', 'The tag you attempted to display does not exist!');
+        } else client.error(message.channel, st.notFound.title, st.notFound.desc);
       })
       .catch((err) => {
         client.handle(err, 'sending tag content', message)

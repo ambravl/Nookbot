@@ -147,6 +147,10 @@
       "clear": {
         "title": "Successfully cleared your island's native fruit!",
         "desc": "To set your island's native fruit again, use `.island fruit <fruit>`!"
+      },
+      "mod": {
+        "descL": "Would you like to moderate `",
+        "descR": "`'s island settings?"
       }
     },
     "charactername": {
@@ -450,6 +454,42 @@
       "emoji": "❌",
       "title": "Cancelled!",
       "desc": "No worries, I've already deleted your message from my memory!"
+    }
+  },
+  "reputation": {
+    "unknown": "'s Reputation is **unknown**."
+  },
+  "tags": {
+    "usage": "Use '.t name' to show a tag",
+    "noEdit": {
+      "title": "Cannot Edit!",
+      "desc": "You do not have permission to edit tags!"
+    },
+    "noName": {
+      "title": "No Tag Name!",
+      "desc": "Make sure you include a tag name!"
+    },
+    "deleted": {
+      "title": "Tag Deleted!",
+      "descL": "The tag **",
+      "descR": "** has been deleted!"
+    },
+    "noContent": {
+      "title": "No Tag Content!",
+      "desc": "Make sure you include the content for the tag!"
+    },
+    "reserved": {
+      "title": "Reserved Word!",
+      "desc": "You can't use this word for tags!"
+    },
+    "modified": {
+      "title": "Tag Modified!",
+      "descL": "The tag **",
+      "descR": "** has been modified!"
+    },
+    "notFound": {
+      "title": "Tag Does Not Exist!",
+      "desc": "The tag you attempted to display does not exist!"
     }
   },
   "filters": {

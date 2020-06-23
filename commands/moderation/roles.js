@@ -1,12 +1,11 @@
 module.exports.run = (client, message, args) => {
+  const emojiRE = /(?:([^\x32-\x7F])|<:\w+:(\d+)>)[\W ]+([\w ']+)/gu;
   if (!args) return;
   const link = /http.?:..discord(?:app)?.com.channels.([0-9]+).([0-9]+).([0-9]+)/.exec(args[0]);
-  const roleType = args.length === 2 ? args[1] : 'exclusive';
-  const emojiRE = /(?:([^\x00-\x7F])|<:\w+:(\d+)>)[\W ]+([\w ']+)/gu;
+  const roleType = 2 === args.length ? args[1] : 'exclusive';
   if (!link) return;
   client.channels.cache.get(link[2]).messages.fetch(link[3])
     .then((msg) => {
-      console.log('got heree');
       const matches = msg.content.matchAll(emojiRE);
       let reactions = [];
       if (roleType.toLowerCase() === 'verified') {
@@ -16,7 +15,6 @@ module.exports.run = (client, message, args) => {
             client.handle(err, 'reacting with verified emoji', message)
           })
       } else {
-        console.log('got here');
         for (const match of matches) {
           const emojiID = match[1] ? match[1] : match[2];
           console.log('Found emoji: ' + emojiID);

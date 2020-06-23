@@ -96,7 +96,7 @@ class Profile {
         if (searchedMember) {
           const decision = await this.client.reactPrompt(
             message,
-            `Would you like to moderate \`${searchedMember.user.tag}\`'s island settings?`
+            this.client.mStrings.island.mod.descL + searchedMember.user.tag + this.client.mStrings.island.mod.descL
           );
           if (decision) {
             member = searchedMember;
@@ -236,89 +236,6 @@ class Search extends Profile {
     return message.member;
   }
 
-async makeImage(memberCount, color) {
-  const Canvas = require('canvas');
-  const canvas = Canvas.createCanvas(700, 200);
-  const ctx = canvas.getContext('2d');
-  const bg = this.userInfo.bg ? this.userInfo.bg : './src/bg.png';
-  const background = await Canvas.loadImage(bg);
-  ctx.fillStyle = ctx.createPattern(background, "repeat-x");
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  const applyText = (canvas, text) => {
-    const ctx = canvas.getContext('2d');
-
-    // Declare a base size of the font
-    let fontSize = 70;
-
-    do {
-      // Assign the font to the context and decrement it so it can be measured again
-      ctx.font = `${fontSize -= 10}px sans-serif`;
-      // Compare pixel width of the text to the canvas minus the approximate avatar size
-      } while (ctx.measureText(text).width > canvas.width - 300);
-
-      // Return the result to use in the actual canvas
-      return ctx.font;
-    };
-
-
-    // Slightly smaller text placed above the member's display name
-    ctx.font = '28px sans-serif';
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(`${this.userInfo.rankRole ? this.userInfo.rankRole : 'Placeholder'} - #${this.userInfo.rank}/${memberCount}`, canvas.width / 2.5, canvas.height / 3.5);
-
-  // Add an exclamation point here and below
-  ctx.font = applyText(canvas, this.user.displayName);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(this.user.displayName, canvas.width / 2.5, canvas.height / 1.8);
-
-
-  let posX = 200;
-  let posY = 150;
-  let width = 400;
-  let height = 30;
-  let number = 50;
-  let percentage = number / 100 * width;
-  // Visualize -------
-  ctx.beginPath();
-  ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI / 2, 3 / 2 * Math.PI);
-  ctx.lineTo(width - height + posX, posY);
-  ctx.arc(width - height / 2 + posX, height / 2 + posY, height / 2, 3 / 2 * Math.PI, Math.PI / 2);
-  ctx.lineTo(height / 2 + posX, height + posY);
-  ctx.strokeStyle = '#000000';
-  ctx.stroke();
-  ctx.closePath();
-  // -----------------
-  if (percentage <= height) {
-    ctx.beginPath();
-    ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI - Math.acos((height - percentage) / height), Math.PI + Math.acos((height - percentage) / height));
-    ctx.save();
-    ctx.scale(-1, 1);
-    ctx.arc((height / 2) - percentage - posX, height / 2 + posY, height / 2, Math.PI - Math.acos((height - percentage) / height), Math.PI + Math.acos((height - percentage) / height));
-    ctx.restore();
-    ctx.closePath();
-  } else {
-    ctx.beginPath();
-    ctx.arc(height / 2 + posX, height / 2 + posY, height / 2, Math.PI / 2, 3 / 2 * Math.PI);
-    ctx.lineTo(percentage - height + posX, posY);
-    ctx.arc(percentage - (height / 2) + posX, height / 2 + posY, height / 2, 3 / 2 * Math.PI, Math.PI / 2);
-    ctx.lineTo(height / 2 + posX, height + posY);
-    ctx.closePath();
-  }
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
-  ctx.closePath();
-  ctx.clip();
-
-  const avatar = await Canvas.loadImage(this.user.user.displayAvatarURL({format: 'jpg'}));
-  ctx.drawImage(avatar, 25, 25, 150, 150);
-
-  return canvas.toBuffer();
-}
-
-
   makeEmbed(strings, color, Discord) {
     const embed = new Discord.MessageEmbed()
       .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
@@ -355,7 +272,9 @@ async makeImage(memberCount, color) {
           role ? role.color : '#ffffff',
           Discord
         );
-        const image = await this.makeImage(message.guild.memberCount, role ? role.color : '#ffffff');
+        const Pass = require('../../src/passport/passport').Passport;
+        const passport = new Pass({});
+        const image = await passport.draw();
         embed.attachFiles([new Discord.MessageAttachment(image)]);
         message.channel.send(embed);
       })
@@ -368,7 +287,7 @@ async makeImage(memberCount, color) {
 
 module.exports.conf = {
   guildOnly: true,
-  aliases: ['is', 'profile', 'rank'],
+  aliases: ['is', 'profile', 'rank', 'island', 'passport', 'pass'],
   permLevel: 'User',
   allowedChannels: true,
 };

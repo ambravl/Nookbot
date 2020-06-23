@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-module.exports.run = (client, message, args, level) => {
+module.exports.run = (client, message, args) => {
   const inputNumber = parseInt(args[0], 10);
 
   if (!inputNumber) {
