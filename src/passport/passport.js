@@ -31,7 +31,7 @@ module.exports.Passport = class Passport {
     ctx.drawImage(iconMask, 0, 0, 245, 245);
     ctx.globalCompositeOperation = "source-in";
     ctx.drawImage(icon, 0, 0, 245, 245);
-    return canvas;
+    return canvas.toBuffer();
   }
 
   async background() {
@@ -73,6 +73,11 @@ module.exports.Passport = class Passport {
     const text = this.info.switchName + ' on ' + this.info.friendcode;
     const x = 716 - (this.ctx.measureText(text).width / 2);
     this.ctx.fillText(text, x, 520);
+  }
+
+  async drawBio() {
+    // 400, 105 / 105
+
   }
 
   async draw() {
