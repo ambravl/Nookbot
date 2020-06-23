@@ -7,7 +7,7 @@ module.exports.Passport = class Passport {
   }
 
   async placeholder() {
-    const background = await this.Canvas.loadImage('./placeholder.png');
+    const background = await this.Canvas.loadImage('../../src/passport/placeholder.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat-x");
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
