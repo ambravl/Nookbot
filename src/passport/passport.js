@@ -22,20 +22,17 @@ module.exports.Passport = class Passport {
   }
 
   async background() {
-    this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.save();
-    this.ctx.globalCompositeOperation = "destination-in";
     const bgMask = await this.Canvas.loadImage('./src/passport/bgMask.png');
     this.ctx.drawImage(bgMask, 0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "source-out";
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
-    const background = await this.Canvas.loadImage('./src/passport/bg.png');
-    this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
-  }
-
-  async icon() {
     const icon = await this.Canvas.loadImage(this.info.icon);
     this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
+    const background = await this.Canvas.loadImage('./src/passport/bg.png');
+    this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
   }
 
   async text(name) {
@@ -46,15 +43,18 @@ module.exports.Passport = class Passport {
 
   async islandInfo() {
     this.ctx.fillStyle = '#59440b';
+    this.ctx.font = '24px "Humming"';
+    this.ctx.fillText(this.info.island, this.coords.island[0], this.coords.island[0]);
+    this.ctx.fillStyle = "#999073";
+    const x = this.info.island[0] + this.ctx.measureText(this.info.island).width + 77;
+    this.ctx.fillText(this.info.fruit, x, this.coords.island[0])
   }
 
   async draw() {
-    await this.icon();
     await this.background();
-    await this.text('island');
+    await this.islandInfo();
     await this.text('bio');
     await this.text('characterName');
-    await this.text('fruit');
     await this.text('friendcode');
     await this.text('role');
     return this.canvas.toBuffer();
