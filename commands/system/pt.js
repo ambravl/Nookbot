@@ -1,5 +1,6 @@
-module.exports.run = async (client, message, args) => {
-  const pass = require('../../src/passport/passport').Passport
+module.exports.run = async (client, message) => {
+  const Discord = require('discord.js');
+  const pass = require('../../src/passport/passport').Passport;
   const passport = new pass({});
   passport.draw().then((image) => {
     message.channel.send({files: [new Discord.MessageAttachment(image)]})
