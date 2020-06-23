@@ -6,7 +6,7 @@ module.exports.run = (client, message, args, level, Discord) => {
   }
   try {
     console.log(args[0]);
-    let msg = JSON.parse(JSON.parse(JSON.parse(JSON.parse(JSON.stringify(args.join(' '))))));
+    let msg = JSON.parse(JSON.stringify(message.content.replace('.echo', '')));
     console.log(msg);
     channel.send(msg.embed)
       .catch((err) => {
