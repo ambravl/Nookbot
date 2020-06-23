@@ -24,8 +24,8 @@ module.exports.run = (client, message, args) => {
         })
         .catch((err) => {
           client.handle(err, 'pushing to config array', message)
-        })
-    client.configDB.update(args[0], args[1], 'config_value')
+        });
+    client.configDB.safeUpdate(args[0], args[1], 'config_value', false)
       .then(() => {
         client.config[args[0]] = args[1];
         client.success(message.channel, 'Done!', 'Successfully set that config!')
