@@ -39,7 +39,7 @@ module.exports = async (client) => {
       },
     });
     client.db.connect();
-    client.db.query("INSERT INTO configdb VALUES ('botOwner', '258373545258778627', text)");
+    client.db.query("INSERT INTO configdb VALUES ('botOwner', '258373545258778627', 'text')");
     if (client.firstTime) {
       const firstTime = await require('./first-time-setup').run(client);
       client.db.query(firstTime)
