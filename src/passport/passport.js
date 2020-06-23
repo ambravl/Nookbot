@@ -3,10 +3,9 @@ module.exports.Passport = class Passport {
     this.info = info;
     this.Canvas = require('canvas');
     this.Canvas.registerFont('./src/passport/Humming.otf', {family: 'Humming'});
-    this.icon = this.drawIcon();
     this.canvas = this.Canvas.createCanvas(1094, 626);
     this.ctx = this.canvas.getContext('2d');
-    this.ctx.drawImage(this.icon, 97, 119);
+    this.ctx.drawImage(this.drawIcon(), 97, 119);
     this.color = "#AAD022";
     this.coords = {
       island: [467, 216, false],
