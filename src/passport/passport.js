@@ -47,7 +47,7 @@ module.exports.Passport = class Passport {
   async islandInfo() {
     this.ctx.fillStyle = '#59440b';
     this.ctx.font = '24px "Humming"';
-    this.ctx.fillText(this.info.island, this.coords.island[0], this.coords.island[0]);
+    this.ctx.fillText(this.info.island, this.coords.island[0], this.coords.island[1]);
     this.ctx.fillStyle = "#999073";
     const x = this.info.island[0] + this.ctx.measureText(this.info.island).width + 77;
     this.ctx.fillText(this.info.fruit, x, this.coords.island[0])
