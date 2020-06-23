@@ -10,7 +10,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = "#AFD528";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
-    this.ctx.globalAlpha = 0.8;
+    this.ctx.globalAlpha = 0.7;
     this.ctx.fillStyle = "#ffffff";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
@@ -21,7 +21,7 @@ module.exports.Passport = class Passport {
     this.ctx.globalCompositeOperation = "hue";
     const background = await this.Canvas.loadImage('./src/passport/bottomPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat-x");
-    this.ctx.fillRect(0, 850, this.canvas.width, 150);
+    this.ctx.fillRect(0, 470, this.canvas.width, 150);
     this.ctx.restore();
   }
 
