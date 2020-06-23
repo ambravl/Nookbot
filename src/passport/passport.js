@@ -8,7 +8,7 @@ module.exports.Passport = class Passport {
 
   async placeholder() {
     const background = await this.Canvas.loadImage('./src/passport/placeholder.png');
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
   }
 
   async bottomBackground() {
