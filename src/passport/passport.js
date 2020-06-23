@@ -12,8 +12,8 @@ module.exports.Passport = class Passport {
       fruit: [670, 216, true],
       fruitIcon: [626, 212],
       bio: [430, 150, true],
-      role: [423, 281, false],
-      characterName: [426, 348, false],
+      role: [423, 279, false],
+      characterName: [426, 353, false],
       sign: [413, 411],
       birthday: [462, 422, true],
       friendcode: [508, 520, true],
@@ -44,8 +44,8 @@ module.exports.Passport = class Passport {
   }
 
   async text(name) {
-    this.ctx.fillStyle = this.coords[name][2] ? '#59440b' : '#59440b';
-    this.ctx.font = name === 'characterName' ? '35px "Humming"' : '25px "Humming"';
+    this.ctx.fillStyle = this.coords[name][2] ? '#999073' : '#59440b';
+    this.ctx.font = name === 'characterName' ? '32px "Humming"' : '24px "Humming"';
     this.ctx.fillText(this.info[name], this.coords[name][0], this.coords[name][1], 480);
   }
 
