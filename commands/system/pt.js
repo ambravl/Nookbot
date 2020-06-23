@@ -1,7 +1,22 @@
 module.exports.run = async (client, message) => {
   const Discord = require('discord.js');
   const pass = require('../../src/passport/passport').Passport;
-  const passport = new pass({});
+  const passport = new pass({
+    icon: message.author.displayAvatarURL(),
+    username: message.author.username,
+    island: 'WWWWWWWWWW',
+    fruit: 'Oranges',
+    friendcode: 'SW-0123-4567-8910',
+    switchName: 'WWWWWWWWWW',
+    characterName: 'WWWWWWWWWW',
+    rank: 4000,
+    userCount: 4000,
+    role: 'Lily of the Valley',
+    points: 9999,
+    nextRole: 10000,
+    hemisphere: 'Southern',
+    bio: `What's a queen to a dog?`
+  });
   passport.draw().then((image) => {
     message.channel.send({files: [new Discord.MessageAttachment(image)]})
   })
