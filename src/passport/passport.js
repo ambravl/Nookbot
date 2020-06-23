@@ -25,7 +25,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "source-in";
+    this.ctx.globalCompositeOperation = "destination-in";
     const background = await this.Canvas.loadImage('./src/passport/bg.png');
     this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
@@ -37,7 +37,7 @@ module.exports.Passport = class Passport {
     this.ctx.save();
     this.ctx.globalCompositeOperation = "source-atop";
     const icon = await this.Canvas.loadImage(this.info.icon);
-    this.ctx.drawImage(icon, 97, 119, this.coords.icon[0], this.coords.icon[1]);
+    this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
     this.ctx.restore();
   }
 
