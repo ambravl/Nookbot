@@ -11,7 +11,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
     this.ctx.globalAlpha = 0.4;
-    this.ctx.fillStyle = "white";
+    this.ctx.fillStyle = "#ffffff";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
   }
