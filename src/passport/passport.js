@@ -2,7 +2,7 @@ module.exports.Passport = class Passport {
   constructor(info) {
     this.info = info;
     this.Canvas = require('canvas');
-    this.canvas = this.Canvas.createCanvas(500, 310);
+    this.canvas = this.Canvas.createCanvas(1000, 620);
     this.ctx = this.canvas.getContext('2d');
   }
 
@@ -15,13 +15,13 @@ module.exports.Passport = class Passport {
     const background = await this.Canvas.loadImage('./src/passport/bottomPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat-x");
     this.ctx.globalCompositeOperation = "destination-over";
-    this.ctx.fillRect(0, 235, this.canvas.width, 75);
+    this.ctx.fillRect(0, 235, this.canvas.width, 150);
   }
 
   async topBackground() {
     const background = await this.Canvas.loadImage('./src/passport/topPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat");
-    this.ctx.fillRect(0, 0, this.canvas.width, 70);
+    this.ctx.fillRect(0, 0, this.canvas.width, 140);
   }
 
   async draw() {
