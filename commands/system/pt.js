@@ -6,7 +6,7 @@ module.exports.run = async (client, message) => {
     username: message.author.username,
     island: 'WWWWWWWWWW',
     fruit: 'Oranges',
-    friendcode: 'WWWWWWWWWW on SW-0123-4567-8910',
+    friendcode: 'SW-0123-4567-8910',
     switchName: 'WWWWWWWWWW',
     characterName: 'WWWWWWWWWW',
     rank: 4000,

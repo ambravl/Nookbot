@@ -3,8 +3,10 @@ module.exports.Passport = class Passport {
     this.info = info;
     this.Canvas = require('canvas');
     this.Canvas.registerFont('./src/passport/Humming.otf', {family: 'Humming'});
+    this.icon = this.drawIcon();
     this.canvas = this.Canvas.createCanvas(1094, 626);
     this.ctx = this.canvas.getContext('2d');
+    this.ctx.drawImage(this.icon, 97, 119);
     this.color = "#AAD022";
     this.coords = {
       island: [467, 216, false],
@@ -21,6 +23,17 @@ module.exports.Passport = class Passport {
     }
   }
 
+  async drawIcon() {
+    const canvas = this.Canvas.createCanvas(245, 245);
+    const ctx = canvas.getContext("2d");
+    const iconMask = await this.Canvas.loadImage('./src/passport/avvy.png');
+    const icon = await this.Canvas.loadImage(this.info.icon);
+    ctx.drawImage(iconMask, 0, 0, 245, 245);
+    ctx.globalCompositeOperation = "source-in";
+    ctx.drawImage(icon, 0, 0, 245, 245);
+    return canvas;
+  }
+
   async background() {
     const bgMask = await this.Canvas.loadImage('./src/passport/bgMask.png');
     this.ctx.drawImage(bgMask, 0, 0, this.canvas.width, this.canvas.height);
@@ -31,11 +44,6 @@ module.exports.Passport = class Passport {
     this.ctx.restore();
     const background = await this.Canvas.loadImage('./src/passport/bg.png');
     this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.save();
-    this.ctx.globalCompositeOperation = "source-out";
-    const icon = await this.Canvas.loadImage(this.info.icon);
-    this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
-    this.ctx.restore();
   }
 
   async text(name) {
@@ -59,13 +67,20 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(this.info.characterName, 426, 353);
   }
 
+  async friendcode() {
+    this.ctx.fillStyle = "#999073";
+    this.ctx.font = '24px "Humming';
+    const text = this.info.switchName + ' on ' + this.info.friendcode;
+    const x = 716 - (this.ctx.measureText(text).width / 2);
+    this.ctx.fillText(text, x, 520);
+  }
+
   async draw() {
     await this.background();
     await this.islandInfo();
     await this.name();
     await this.text('bio');
-    await this.text('characterName');
-    await this.text('friendcode');
+    await this.friendcode();
     await this.text('role');
     return this.canvas.toBuffer();
   }
