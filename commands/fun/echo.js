@@ -1,6 +1,18 @@
 module.exports.run = (client, message, args, level, Discord) => {
   let channel = message.channel;
-  if (!isNaN(args[0]) && level > 4) return;
+  if (level > 3 && args[0].match(/<#\d+>/)) {
+    channel = message.mentions.channels.first();
+    args.unshift();
+  }
+  try {
+    let msg = JSON.parse(args.join(' '));
+    channel.send(msg.embed)
+      .catch((err) => {
+        client.handle(err, 'sending parsed echo', message)
+      })
+  } catch (err) {
+    client.error(channel, err.name, err.message);
+  }
 
   //   .setAuthor(message.author.username, message.author.displayAvatarURL());
   //   const regexp = /^(?:(title|color|footer|channel|timestamp|field.+):(.+))|(?:(content|description|text):([\s\S]+))|(?:(url|link): ?(https?:\/\/[^ \n\r]+))|(?:(thumbnail|image|img|icon): ?(https?:\/\/[^ \n\r]+(?:png|gif|jpg|bmp|svg)$))/gmu;
