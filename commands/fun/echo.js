@@ -5,7 +5,7 @@ module.exports.run = (client, message, args, level, Discord) => {
     args.unshift();
   }
   try {
-    let msg = JSON.parse(args.join(' ').replace('\n', '\\n'));
+    let msg = JSON.parse(JSON.stringify(args.join(' ')));
     console.log(msg);
     channel.send(msg.embed)
       .catch((err) => {
