@@ -6,6 +6,7 @@ module.exports.run = (client, message, args, level, Discord) => {
   }
   try {
     let msg = JSON.parse(args.join(' '));
+    console.log(msg);
     channel.send(msg.embed)
       .catch((err) => {
         client.handle(err, 'sending parsed echo', message)
