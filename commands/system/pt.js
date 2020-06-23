@@ -14,8 +14,8 @@ module.exports.conf = {
 };
 
 module.exports.help = {
-  name: 'profile',
-  category: 'game',
+  name: 'pt',
+  category: 'system',
   description: 'Profile information display',
   usage: 'profile <bio|background|islandname|fruit|charactername|hemisphere|profilename|friendcode> <bio|backgrounddurl|name|fruit|hemisphere|code>',
   details: '<islandname> => Set the name of your \n<fruit> => Set the fruit that is native on your \n<charactername> => Set the name of your character on the \n<hemisphere> => Set the hemisphere your island is in.\n<profilename> => Set the name of your Switch profile.\n<friendcode> => Set your Switch friendcode.',
