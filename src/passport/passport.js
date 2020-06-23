@@ -31,7 +31,7 @@ module.exports.Passport = class Passport {
     ctx.drawImage(iconMask, 0, 0, 245, 245);
     ctx.globalCompositeOperation = "source-in";
     ctx.drawImage(icon, 0, 0, 245, 245);
-    return canvas.toBuffer();
+    return canvas;
   }
 
   async background() {
@@ -76,15 +76,27 @@ module.exports.Passport = class Passport {
   }
 
   async drawBio() {
-    // 400, 105 / 105
-
+    const pixel = this.ctx.getImageData(410, 140, 1, 1).data;
+    this.ctx.fillStyle = "#999073";
+    this.ctx.font = '24px "Humming';
+    const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
+    this.ctx.fillText(this.info.bio, 430, 150, 480);
+    this.ctx.beginPath();
+    this.ctx.fillStyle = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
+    this.ctx.moveTo(423, 105);
+    this.ctx.lineTo(423 + width, 105);
+    this.ctx.arc(423 + width, 105, 210, 1.5 * Math.PI, 0.5 * Math.PI);
+    this.ctx.lineTo(423, 210);
+    this.ctx.lineTo(423, 105);
+    this.ctx.closePath();
+    this.ctx.fill();
   }
 
   async draw() {
     await this.background();
     await this.islandInfo();
     await this.name();
-    await this.text('bio');
+    await this.drawBio();
     await this.friendcode();
     await this.text('role');
     return this.canvas.toBuffer();
