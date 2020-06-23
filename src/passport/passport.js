@@ -6,9 +6,9 @@ module.exports.Passport = class Passport {
     this.ctx = this.canvas.getContext('2d');
   }
 
-  async placeholder() {
-    const background = await this.Canvas.loadImage('./src/passport/placeholder.png');
-    this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
+  async color() {
+    this.ctx.fillStyle = "#AFD528";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   async bottomBackground() {
@@ -29,15 +29,15 @@ module.exports.Passport = class Passport {
   async middleBackground() {
     this.ctx.save();
     this.ctx.globalCompositeOperation = "darken";
-    this.ctx.globalAlpha = 0.2;
+    this.ctx.globalAlpha = 0.1;
     const background = await this.Canvas.loadImage('./src/passport/middlePattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat");
-    this.ctx.fillRect(0, 130, this.canvas.width, 720)
+    this.ctx.fillRect(0, 130, this.canvas.width, 340)
     this.ctx.restore();
   }
 
   async draw() {
-    await this.placeholder();
+    await this.color();
     await this.bottomBackground();
     await this.topBackground();
     await this.middleBackground();
