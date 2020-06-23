@@ -9,6 +9,11 @@ module.exports.Passport = class Passport {
   async color() {
     this.ctx.fillStyle = "#AFD528";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.save();
+    this.ctx.globalAlpha = 0.4;
+    this.ctx.fillStyle = "white";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.restore();
   }
 
   async bottomBackground() {
