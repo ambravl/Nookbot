@@ -34,13 +34,8 @@ module.exports.Passport = class Passport {
   }
 
   async icon() {
-    const iconBoundary = await this.Canvas.loadImage('./src/passport/avvy.png');
-    this.ctx.drawImage(iconBoundary, this.coords.icon[0], this.coords.icon[1]);
-    this.ctx.save();
-    this.ctx.globalCompositeOperation = "source-atop";
     const icon = await this.Canvas.loadImage(this.info.icon);
     this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
-    this.ctx.restore();
   }
 
   async text(name) {
