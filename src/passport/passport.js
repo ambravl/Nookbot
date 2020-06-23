@@ -14,7 +14,6 @@ module.exports.Passport = class Passport {
   async bottomBackground() {
     const background = await this.Canvas.loadImage('./src/passport/bottomPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat-x");
-    this.ctx.globalCompositeOperation = "destination-over";
     this.ctx.fillRect(0, 235, this.canvas.width, 150);
   }
 
