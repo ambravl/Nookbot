@@ -2,7 +2,7 @@ module.exports.run = async (client, message) => {
   const Discord = require('discord.js');
   const pass = require('../../src/passport/passport').Passport;
   const passport = new pass({
-    icon: message.author.displayAvatarURL(),
+    icon: message.author.displayAvatarURL({format: 'jpg'}),
     username: message.author.username,
     island: 'WWWWWWWWWW',
     fruit: 'Oranges',
