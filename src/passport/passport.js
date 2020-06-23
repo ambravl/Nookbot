@@ -14,13 +14,16 @@ module.exports.Passport = class Passport {
   async bottomBackground() {
     const background = await this.Canvas.loadImage('./src/passport/bottomPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat-x");
-    this.ctx.fillRect(0, 235, this.canvas.width, 150);
+    this.ctx.save();
+    this.ctx.globalCompositeOperation = "destination-over";
+    this.ctx.fillRect(0, 870, this.canvas.width, 150);
+    this.ctx.restore();
   }
 
   async topBackground() {
     const background = await this.Canvas.loadImage('./src/passport/topPattern.png');
     this.ctx.fillStyle = this.ctx.createPattern(background, "repeat");
-    this.ctx.fillRect(0, 0, this.canvas.width, 140);
+    this.ctx.fillRect(0, 0, this.canvas.width, 130);
   }
 
   async draw() {
