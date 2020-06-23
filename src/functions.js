@@ -8,7 +8,7 @@ module.exports = (client) => {
     if (adjective) {
       if (adjective[0].toLowerCase() === 'good') message.channel.send("Thanks! I'm happy to help this happy little server!");
       else if (adjective[0].toLowerCase() === 'bad') {
-        if (message.author.id === '258373545258778627') message.channel.send('Bad programmer!');
+        if (message.author.id === client.config.botOwner) message.channel.send('Bad programmer!');
         else message.channel.send(`Oh I'm sorry, could your happy little mind do better, ${message.author.username}?`)
       }
     }

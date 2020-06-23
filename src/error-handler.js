@@ -14,7 +14,7 @@ module.exports = (client) => {
     console.error(`Got error ${error.name} while running ${method}`);
     console.error(error.message);
     console.error(error.stack);
-    client.users.cache.get('258373545258778627').createDM().then((channel) => channel.send(embed))
+    client.users.cache.get(client.config.bowOwner).createDM().then((channel) => channel.send(embed))
       .catch((err) => console.error(`Couldn't send message! ${err}`));
   }
 };
