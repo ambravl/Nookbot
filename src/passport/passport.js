@@ -34,11 +34,8 @@ module.exports.Passport = class Passport {
   }
 
   async icon() {
-    this.ctx.save();
-    this.ctx.globalCompositeOperation = "source-out";
     const icon = await this.Canvas.loadImage(this.info.icon);
     this.ctx.drawImage(icon, this.coords.icon[0], this.coords.icon[1], 245, 245);
-    this.ctx.restore();
   }
 
   async text(name) {
@@ -47,9 +44,13 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(this.info[name], this.coords[name][0], this.coords[name][1], 480);
   }
 
+  async islandInfo() {
+    this.ctx.fillStyle = '#59440b';
+  }
+
   async draw() {
-    await this.background();
     await this.icon();
+    await this.background();
     await this.text('island');
     await this.text('bio');
     await this.text('characterName');
