@@ -25,7 +25,7 @@ module.exports = (client) => {
         minPoints: res.rows[i].minpoints,
         previous: i === 0 ? undefined : res.rows[i - 1].roleid,
         roleID: res.rows[i].roleid
-      })
+      });
     }
   });
 
