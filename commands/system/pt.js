@@ -15,7 +15,9 @@ module.exports.run = async (client, message) => {
     points: 9999,
     nextRole: 20000,
     hemisphere: 'Southern',
-    bio: "Bio here"
+    bio: "Bio here",
+    color: "#9600ff",
+    joined: 'March 20th, 2020'
   });
   passport.draw().then((image) => {
     message.channel.send({files: [new Discord.MessageAttachment(image)]})

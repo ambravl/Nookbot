@@ -272,6 +272,7 @@ class Search extends Profile {
         else if (role.color) color = role.color;
         else color = 'white';
         const Pass = require('../../src/passport/passport').Passport;
+        const moment = require('moment-timezone');
         const passport = new Pass({
           icon: message.author.displayAvatarURL({format: 'jpg'}),
           username: message.author.username,
@@ -287,7 +288,8 @@ class Search extends Profile {
           nextRole: this.client.ranks.find((r) => r.previous === role.id).minPoints,
           hemisphere: this.userInfo.hemisphere || 'Central',
           bio: this.userInfo.bio || "This user didn't set a bio!",
-          color: color
+          color: color,
+          joined: moment(message.member.joinedAt).format('MMMM Do YYYY')
         });
         const image = await passport.draw();
         message.channel.send({files: [new Discord.MessageAttachment(image)]});

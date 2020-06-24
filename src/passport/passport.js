@@ -1,4 +1,23 @@
 module.exports.Passport = class Passport {
+  /**
+   * @param {Object} info - an object containing the user's information
+   * @param {string} info.icon - url to the user's avatar
+   * @param {string} info.username // TODO
+   * @param {string} info.island - the name of the user's island
+   * @param {string} info.fruit - the user's native fruit
+   * @param {string} info.friendcode - the user's friendcode
+   * @param {string} info.switchName - the user's Switch profile name
+   * @param {string} info.characterName - the user's in-game name
+   * @param {int} info.rank - the user's ranking within the server
+   * @param {int} info.userCount - the number of members in the server
+   * @param {string} info.role - the name of the user's ranked role
+   * @param {int} info.points - the amount of points the user has
+   * @param {int} info.nextRole - the amount of points needed to get the next ranked role
+   * @param {string} info.hemisphere // TODO
+   * @param {string} info.bio - a short description the user has set
+   * @param {string} info.joined - the day the user joined the server
+   * @param {string} info.color - the color of the passport
+   */
   constructor(info) {
     this.info = info;
     this.Canvas = require('canvas');
@@ -92,17 +111,36 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(this.info.bio, 430, 147, 480);
   }
 
-  async birthday() {
+  async rank() {
     this.ctx.font = '24px "Humming"';
     this.ctx.fillStyle = "#999073";
     this.ctx.fillText("Ranked #", 457, 422);
     const red = Math.floor(this.info.rank * 150 / this.info.memberCount);
     const blue = Math.floor(this.info.rank * 108 / this.info.memberCount);
     this.ctx.fillStyle = `rgb(${red}, 139, ${blue})`;
-    this.ctx.fillText(this.info.rank, 457 + this.ctx.measureText('Ranked #'), 422);
+    this.ctx.fillText(`${this.info.rank}`, 457 + this.ctx.measureText('Ranked #').width, 422);
     this.ctx.fillStyle = "#999073";
-    this.ctx.fillText(` out of ${this.info.userCount}`, 457 + this.ctx.measureText(`Ranked #${this.info.rank}`), 422);
+    this.ctx.fillText(` out of ${this.info.userCount}`, 457 + this.ctx.measureText(`Ranked #${this.info.rank}`).width, 422);
   }
+
+  async role() {
+    this.ctx.fillStyle = '#59440b';
+    this.ctx.font = '24px "Humming"';
+    this.ctx.fillText(this.info.role, 423, 279, 480);
+    this.ctx.fillStyle = "#999073";
+    const x = this.ctx.measureText(this.info.role).width + 433;
+    this.ctx.fillText(`${this.info.nextRole - this.info.points} points left to level up!`, x, 279);
+  }
+
+  async username() {
+    this.ctx.font = '24px "Humming"';
+    this.ctx.fillStyle = '#59440b';
+    this.ctx.fillText(this.info.username, 83, 577);
+    this.ctx.fillStyle = "#999073";
+    this.ctx.fillText(` joined ${this.info.joined}`, 83 + this.ctx.measureText(this.info.username), 577)
+  }
+
+  // 83, 577 is the text on the bottom left corner
 
   async draw() {
     await this.background();
@@ -111,7 +149,7 @@ module.exports.Passport = class Passport {
     await this.drawBio();
     await this.friendcode();
     await this.text('role');
-    await this.birthday();
+    await this.rank();
     return this.canvas.toBuffer();
   }
 };
