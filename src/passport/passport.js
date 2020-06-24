@@ -90,7 +90,18 @@ module.exports.Passport = class Passport {
     this.ctx.fill();
     this.ctx.fillStyle = "#999073";
     this.ctx.fillText(this.info.bio, 430, 147, 480);
-    this.ctx.filter = ""
+  }
+
+  async birthday() {
+    this.ctx.font = '24px "Humming"';
+    this.ctx.fillStyle = "#999073";
+    this.ctx.fillText("Ranked #", 457, 422);
+    const red = Math.floor(this.info.rank * 150 / this.info.memberCount);
+    const blue = Math.floor(this.info.rank * 108 / this.info.memberCount);
+    this.ctx.fillStyle = `rgb(${red}, 139, ${blue})`;
+    this.ctx.fillText(this.info.rank, 457 + this.ctx.measureText('Ranked #'), 422);
+    this.ctx.fillStyle = "#999073";
+    this.ctx.fillText(` out of ${this.info.userCount}`, 457 + this.ctx.measureText(`Ranked #${this.info.rank}`), 422);
   }
 
   async draw() {

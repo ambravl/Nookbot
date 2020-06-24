@@ -4,18 +4,18 @@ module.exports.run = async (client, message) => {
   const passport = new pass({
     icon: message.author.displayAvatarURL({format: 'jpg'}),
     username: message.author.username,
-    island: 'WWWWWWWWWW',
+    island: 'Isle Name',
     fruit: 'Oranges',
     friendcode: 'SW-0123-4567-8910',
-    switchName: 'WWWWWWWWWW',
-    characterName: 'WWWWWWWWWW',
+    switchName: 'Switch UN',
+    characterName: 'Char Name',
     rank: 4000,
     userCount: 4000,
-    role: 'Lily of the Valley',
+    role: 'Role Name',
     points: 9999,
-    nextRole: 10000,
+    nextRole: 20000,
     hemisphere: 'Southern',
-    bio: "What's a queen to a dog?"
+    bio: "Bio here"
   });
   passport.draw().then((image) => {
     message.channel.send({files: [new Discord.MessageAttachment(image)]})
