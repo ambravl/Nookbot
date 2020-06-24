@@ -60,10 +60,6 @@
     }
   },
   "friendcode": {
-    "noCode": {
-      "title": "No Code Given!",
-      "desc": "Please supply your Switch friend code!"
-    },
     "invalidCode": {
       "title": "Invalid Code!",
       "desc": "The code must have 12 digits!"
