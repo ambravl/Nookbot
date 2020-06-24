@@ -129,7 +129,7 @@ module.exports.Passport = class Passport {
   }
 
   async username() {
-    this.ctx.font = '24px "Humming"';
+    this.ctx.font = '18px "Humming"';
     this.ctx.fillStyle = '#59440b';
     this.ctx.fillText(this.info.username, 83, 577);
     this.ctx.fillStyle = "#999073";
