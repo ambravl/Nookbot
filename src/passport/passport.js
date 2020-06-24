@@ -136,14 +136,14 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = '#59440b';
     this.ctx.fillText(this.info.username, 83, 577);
     this.ctx.fillStyle = "#999073";
-    this.ctx.fillText(` joined ${this.info.joined}`, 63 + this.ctx.measureText(this.info.username).width, 587)
+    this.ctx.fillText(` joined ${this.info.joined}`, 63 + this.ctx.measureText(this.info.username).width, 577)
   }
 
   async hemisphere() {
     this.ctx.fillStyle = "#99764d";
     this.ctx.font = '24px "Humming"';
     this.ctx.rotate(6 * 3.14 / 180);
-    this.ctx.fillText(this.info.hemisphere, 155, 395);
+    this.ctx.fillText(this.info.hemisphere, 155, 400);
   }
 
   async draw() {
