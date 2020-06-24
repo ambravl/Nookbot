@@ -142,8 +142,8 @@ module.exports.Passport = class Passport {
   async hemisphere() {
     this.ctx.fillStyle = "#99764d";
     this.ctx.font = '24px "Humming"';
-    this.ctx.rotate(5 * 3.14 / 180);
-    this.ctx.fillText(this.info.hemisphere, 155, 390);
+    this.ctx.rotate(6 * 3.14 / 180);
+    this.ctx.fillText(this.info.hemisphere, 155, 395);
   }
 
   async draw() {
