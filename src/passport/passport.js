@@ -98,7 +98,8 @@ module.exports.Passport = class Passport {
     await this.drawBio();
     await this.friendcode();
     await this.text('role');
-    return this.canvas.toBuffer();
+    // return this.canvas.toBuffer();
+    return (await this.drawIcon()).toBuffer();
   }
 };
 
