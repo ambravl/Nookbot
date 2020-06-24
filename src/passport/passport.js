@@ -75,18 +75,17 @@ module.exports.Passport = class Passport {
   }
 
   async drawBio() {
-    const pixel = this.ctx.getImageData(410, 140, 1, 1).data;
     this.ctx.fillStyle = "#999073";
     this.ctx.font = '24px "Humming';
     const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
     this.ctx.fillText(this.info.bio, 430, 137, 480);
     this.ctx.beginPath();
-    this.ctx.fillStyle = 'rgba(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ', ' + (pixel[3] / 255) + ')';
+    this.ctx.fillStyle = 'rgba(98, 97, 87, 90)';
     this.ctx.moveTo(423, 105);
     this.ctx.lineTo(423 + width, 105);
     this.ctx.arc(423 + width, 137, 32, 1.5 * Math.PI, 0.5 * Math.PI);
     this.ctx.lineTo(423, 167);
-    this.ctx.lineTo(423, 105);
+    this.ctx.arc(423, 167, 32, 0.5 * Math.PI, 1.5 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
   }
