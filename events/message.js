@@ -23,7 +23,7 @@ module.exports = async (client, message) => {
             if (!res) return client.error(message.channel, 'Not found!', "Couldn't find the modmail's author!");
             const dmChannel = await client.users.cache.get(res).createDM();
             const dmEmbed = new Discord.MessageEmbed().setTitle('New reply to your modmail!');
-            dmEmbed.setDescription(message.content.replace(/https?:\/\/.+discord.+com\/\d+\/\d+\/\d+\/? ?/, ''))
+            dmEmbed.setDescription(message.content.replace(/https?:\/\/discord.+com\/channels\/\d+\/\d+\/\d+/, ''))
             dmChannel.send(dmEmbed);
             return client.success(message.channel, 'Sent!', 'Your reply was sent to the modmail author!')
           })
