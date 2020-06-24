@@ -111,6 +111,7 @@ module.exports.Passport = class Passport {
     await this.drawBio();
     await this.friendcode();
     await this.text('role');
+    await this.birthday();
     return this.canvas.toBuffer();
   }
 };
