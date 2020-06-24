@@ -201,7 +201,21 @@ module.exports = (client) => {
             desc2: 'Reopen and ask for help',
             dmFooter: 'Ticket closed on',
             status: 'complete'
-          }
+          };
+          const newPin = modmail.mailtype === 'report' || modmail.mailtype === 'scam' ? client.reportPin.embeds[0] : client.modMailPin.embeds[0];
+          const typeToField = {
+            report: 'Rule Breakers',
+            scam: 'Scam Reports',
+            suggestion: 'Suggestions',
+            question: 'Questions',
+            other: 'Misc'
+          };
+          const regex = new RegExp(`.+${messageReaction.message.id}.+\n?`, "");
+          newPin.fields.find((field) => typeToField[modmail.mailtype] === field.name).value.replace(regex, '');
+          if (newPin.description.indexOf('*1*') === -1) {
+            newPin.description = `Right now, we have **${parseInt(newPin.description.match(/\d+/g)[1]) - 1}** open tickets. Let's close some!`;
+          } else newPin.description = "Right now, we gave no open tickets!";
+          modmail.mailtype === 'report' || modmail.mailtype === 'scam' ? client.reportPin.edit(newPin) : client.modMailPin.edit(newPin);
         }
         newEmbed.addField(values.emoji1, values.desc1, true).addField(values.emoji2, values.des2, true).setFooter(values.footer);
         const colorPercentage = 100 + (25 * ((values.status === 'open') + (modmail.status === 'complete') - (values.status === 'complete') - (modmail.status === 'open')));

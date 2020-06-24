@@ -380,6 +380,7 @@
     },
     "scam": {
       "name": "Scam Report",
+      "field": "Scam Reports",
       "emoji": "‼️",
       "title": "Thanks for the report!",
       "desc": "Catching scammers is very important for us, and we're really sorry you had to go through that! Our team will being investigating this as soon as possible!",
@@ -388,6 +389,7 @@
     },
     "report": {
       "name": "Report Rule-Breaking",
+      "field": "Rule Breakers",
       "emoji": "❕",
       "title": "Thanks for the report!",
       "desc": "We'll start investigating this as soon as possible!",
@@ -396,6 +398,7 @@
     },
     "suggestion": {
       "name": "Suggestion",
+      "field": "Suggestions",
       "emoji": "💭",
       "title": "Thanks for the suggestion!",
       "desc": "We're always striving to improve our server, and will definitely take this into consideration!",
@@ -404,6 +407,7 @@
     },
     "question": {
       "name": "Question",
+      "field": "Questions",
       "emoji": "❔",
       "title": "Good question!",
       "desc": "We'll answer it as soon as we can!",
@@ -412,6 +416,7 @@
     },
     "other": {
       "name": "Other",
+      "field": "Misc",
       "emoji": "💬",
       "title": "Thanks for the message!",
       "desc": "We'll take a look at it as soon as possible and reply if needed!",

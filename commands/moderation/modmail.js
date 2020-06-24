@@ -84,6 +84,12 @@ module.exports.run = async (client, message, args, level, Discord) => {
           .setFooter('Total Score: --');
         modMailChannel.send(embed)
           .then((sent) => {
+            const newPin = client.modMailPin.embeds[0];
+            newPin.fields.find((field) => field.name === 'Suggestions').value += `[${args[0]} ${args[1]} ${args[2]}... (${message.author.username})](${sent.url})\n`;
+            if (newPin.description.indexOf('*') === -1) {
+              newPin.description = "Right now, we gave **1** open ticket. Let's close some!";
+            } else newPin.description = `Right now, we have **${parseInt(newPin.description.match(/\d+/g)[1]) + 1}** open tickets. Let's close some!`;
+            client.modMailPin.edit(newPin);
             client.suggestions.push(sent.id);
             client.modMailDB.insert(sent.id, [message.author.id, args.join(' '), sentDM.id, 'open', 'suggestion'], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
             sent.react('❎');
@@ -99,8 +105,14 @@ module.exports.run = async (client, message, args, level, Discord) => {
           .addField('✅', 'Mark Complete', true)
           .setFooter('Ticket opened at');
         const channel = (command === 'report' || command === 'scam') ? reportChannel : modMailChannel;
+        const newPin = (command === 'report' || command === 'scam') ? client.reportPin.embeds[0] : client.modMailPin.embeds[0];
         channel.send(embed)
           .then((sent) => {
+            newPin.fields.find((field) => field.name === strings[command].field).value += `[${args[0]} ${args[1]} ${args[2]}... (${message.author.username})](${sent.url})\n`;
+            if (newPin.description.indexOf('*') === -1) {
+              newPin.description = "Right now, we gave **1** open ticket. Let's close some!";
+            } else newPin.description = `Right now, we have **${parseInt(newPin.description.match(/\d+/g)[1]) + 1}** open tickets. Let's close some!`;
+            (command === 'report' || command === 'scam') ? client.reportPin.edit(newPin) : client.modMailPin.edit(newPin);
             client.modMail[sent.id] = 'unread';
             client.modMailDB.insert(sent.id, [message.author.id, args.join(' '), sentDM.id, 'open', command], ['memberid', 'content', 'dmid', 'status', 'mailtype']);
             sent.react('❕');

@@ -84,15 +84,18 @@ module.exports = (client) => {
 
       client.modMailDB.cacheDB()
         .then((res) => {
+          const modMailChannel = client.channels.cache.get(client.config.modMail).messages;
+          const reportChannel = client.channels.cache.get(client.config.reportMail).messages;
+          client.modMailPin = modMailChannel.fetch('725331823915434004');
+          client.reportPin = reportChannel.fetch('725331519912280125');
           res.rows.forEach((mail) => {
             if (mail.mailtype === 'suggestion') {
               client.suggestions.push(mail.messageid);
-              const channel = mail.mailtype === 'report' || mail.mailtype === 'scam' ? client.config.reportMail : client.config.modMail;
-              client.channels.cache.get(channel).messages.fetch(mail.messageid);
+              modMailChannel.fetch(mail.messageid);
             } else {
               client.modMail[mail.messageid] = mail.status;
-              if (mail.mailtype === 'report' || mail.mailtype === 'scam') client.channels.cache.get(client.config.reportMail).messages.fetch(mail.messageid);
-              else client.channels.cache.get(client.config.modMail).messages.fetch(mail.messageid);
+              if (mail.mailtype === 'report' || mail.mailtype === 'scam') reportChannel.fetch(mail.messageid);
+              else modMailChannel.fetch(mail.messageid);
             }
 
           })
