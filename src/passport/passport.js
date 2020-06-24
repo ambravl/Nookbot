@@ -51,8 +51,8 @@ module.exports.Passport = class Passport {
   }
 
   async islandInfo() {
-    const islandIcon = this.Canvas.loadImage('./src/passport/islandName.png');
-    // this.ctx.filter = 'brightness(0.5) sepia(1) saturate(10000%) hue-rotate(120deg)';
+    const islandIcon = await this.Canvas.loadImage('./src/passport/islandName.png');
+    this.ctx.filter = 'brightness(0.5) sepia(1) saturate(10000%) hue-rotate(120deg)';
     this.ctx.drawImage(islandIcon, 424, 212, 40, 40);
     this.ctx.fillStyle = '#59440b';
     this.ctx.font = '24px "Humming"';
