@@ -2,7 +2,7 @@ module.exports.Passport = class Passport {
   /**
    * @param {Object} info - an object containing the user's information
    * @param {string} info.icon - url to the user's avatar
-   * @param {string} info.username // TODO
+   * @param {string} info.username - the user's display name
    * @param {string} info.island - the name of the user's island
    * @param {string} info.fruit - the user's native fruit
    * @param {string} info.friendcode - the user's friendcode
@@ -148,7 +148,8 @@ module.exports.Passport = class Passport {
     await this.name();
     await this.drawBio();
     await this.friendcode();
-    await this.text('role');
+    await this.role();
+    await this.username();
     await this.rank();
     return this.canvas.toBuffer();
   }
