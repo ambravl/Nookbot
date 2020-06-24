@@ -95,7 +95,9 @@ If you believe this member is a mention spammer bot, please ban them with the co
               .then((res) => {
                 const points = Math.floor(length < 100 ? Math.max(1, length / 20) : Math.min(10, 6 + (length / 100)));
                 client.userDB.math(message.author.id, '+', points, 'points');
+                console.log(res);
                 const role = client.rankFinder(res, res + points);
+                console.log(role);
                 if (role) {
                   message.member.roles.add(role.roleID, '[Auto] Level Up');
                   if (role.previous) message.member.roles.remove(role.previous, '[Auto] Level Up');
