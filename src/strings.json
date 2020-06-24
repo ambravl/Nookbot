@@ -497,5 +497,119 @@
     "newlineLimit": "Too Many New Lines!\nThis channel only allows posts with less than 10 newline characters in them. Messages with more than that are automatically deleted.",
     "attachmentLimit": "Too Many Attachments + Links!\nThis channel only allows posts with less than 3 attachments + links in them. Messages with more than that are automatically deleted.",
     "noMention": "No Mention Channel!\nThis channel is to be kept clear of @ mentions of any members. Any message mentioning another member will be automatically deleted."
+  },
+  "layouts": {
+    "start": {
+      "title": "Yuecrossing's Garden Layout Decisions",
+      "desc": "Hello! You know what's best for your garden, but I'd be happy to help! Would you kindly tell me your objective?"
+    },
+    "cloning": {
+      "title": "\uD83E\uDDEC Cloning",
+      "desc": "You want more of the flowers you already have",
+      "emoji": "\uD83E\uDDEC"
+    },
+    "breeding": {
+      "title": "\uD83D\uDC90 Breeding",
+      "desc": "You know which flowers you want and how to get them",
+      "emoji": "\uD83D\uDC90"
+    },
+    "testing": {
+      "title": "\uD83E\uDDEA Testing",
+      "desc": "You want to know your flower's genotype",
+      "emoji": "\uD83E\uDDEA"
+    },
+    "all": {
+      "title": "⚜️ All Flowers",
+      "desc": "You want every single flower variation in the game!",
+      "emoji": "⚜"
+    },
+    "cliffs": {
+      "title": "Do you mind cliffs?",
+      "desc": "Using cliffs is the most space-efficient way to achieve your goals! They are extremely space-efficient. The downside, other than aesthetics, is that you need to keep going up and down the cliffs to water your flowers, will need more watering can uses, some guests won't want to water your flowers, and you'll have to keep spare ladders in case a waterer didn't expect you to use these layouts. With that in mind, would you use cliffs or not?"
+    },
+    "yesCliffs": {
+      "title": "✅ I would!",
+      "desc": "\u200B",
+      "emoji": "✅"
+    },
+    "noCliffs": {
+      "title": "❌ I won't!",
+      "desc": "\u200B",
+      "emoji": "❌"
+    },
+    "species": {
+      "title": "Number of species",
+      "desc": "How many flower species are you working with? Remember, we're talking about species, not color variations!"
+    },
+    "visitors": {
+      "title": "How popular are you?",
+      "desc": "The more people water your flowers, the more likely they are to produce new flowers! (this caps at five visitors). How many people are you planning on inviting to your island to water your flowers each day?"
+    },
+    "fewVisitors": {
+      "title": "\uD83D\uDC64 Less than three",
+      "desc": "\u200B",
+      "emoji": "\uD83D\uDC64"
+    },
+    "lotsVisitors": {
+      "title": "\uD83D\uDC65 Three or more",
+      "desc": "\u200B",
+      "emoji": "\uD83D\uDC65"
+    },
+    "parents": {
+      "title": "Parents",
+      "desc": "Are the flowers you're trying to breed identical, or of different colors?"
+    },
+    "identical": {
+      "title": "\uD83D\uDC6F Identical",
+      "desc": "Although they might have a different genotype, their color is the same",
+      "emoji": "\uD83D\uDC6F"
+    },
+    "different": {
+      "title": "❄️ Different",
+      "desc": "They're of the same species, but not the same color.",
+      "emoji": "❄️"
+    },
+    "space": {
+      "title": "Available space",
+      "desc": "How much space do you have for your flowers? The ideal layout needs lots of space, but that might not be an option for you."
+    },
+    "lotsSpace": {
+      "title": "\uD83E\uDE90 Lots!",
+      "desc": "You have a good chunk of your island reserved for flowers.",
+      "emoji": "\uD83E\uDE90"
+    },
+    "fewSpace": {
+      "title": "\uD83C\uDFEC Not Much",
+      "desc": "You have a happy little garden, emphasis on little.",
+      "emoji": "\uD83C\uDFEC"
+    },
+    "numbers": {
+      "one": "1️⃣",
+      "two": "2️⃣",
+      "three": "3️⃣",
+      "four": "4️⃣"
+    },
+    "jmaster": {
+      "title": "J_MASTER's 12x12",
+      "desc": "Pay attention to each zone! First, plant all flowers marked with the seed icon. They must be planted from seeds, you can't get them from anywhere else! Once that's done, water (and get visitors to water) your flowers everyday. In zone 1, except for the white roses, as soon as a flower couple breeds one of the flowers marked with a star in zone 2, move them to zone 2. The white roses must be children of the yellow and white rose couple.\n\nNow that you're in zone 2, once again, as soon as a couple produces a flower marked with a yellow star in zone 3, move them to zone 3. The exception is purple roses! When your purple/white couple has produced a purple rose, you need to keep the child apart and breed it with seed yellow roses. If they produce a yellow rose, the purple rose can proceed to zone 3. Once you get both purple and orange roses in zone 3, breed them until you get an orange rose, and move it to zone 4. Now all your zones are ready!\n\nIf you get five visitors to water your garden every day, this can take as little as 13 days! It can take 9 days if you double the layout as well (it's still less space than the 'A Lot!' option).\n\nYou can remove couples that already gave you all wanted hybrids if you want to conserve watering cans or space.\n\nNot depicted in the image are the endgame hybrids: in zone 2, orange cosmos make black; orange/yellow tulips make purple; and orange/yellow hyacinths make purple. In zone 3, red windflowers make purple, red pansies make purple, and purple mums make green. In zone 4, red/orange windflowers make pink, red/white mums make pink, red/yellow pansies make orange, red lilies make black and pink, red/yellow lilies make orange, red roses make black and pink, red tulips make black, red/white tulips make pink, red/white hyacinths make pink, white hyacinths make blue, orange roses make blue, and red/white cosmos make pink.",
+      "image": "https://media.discordapp.net/attachments/720568062490705931/725313299490537502/unknown.png",
+      "link": "https://cdn.discordapp.com/attachments/694317725190717440/712583018732322826/12x12_breed_all_flowers_final6.png"
+    },
+    "backwards": {
+      "title": "BackwardsN's 39x21",
+      "desc": "You should plant the following flowers from seeds (you can't get them from anywhere else, they must be from seeds!):\n\n40 White pansies, the 18 red pansies that will be next to blue and yellow pansies, 9 yellow pansies, 40 white windflowers, 21 red windflowers, 9 orange windflowers, 36 red lilies, 4 yellow lilies, 9 red mums, 9 yellow mums, 12 red cosmos, 12 yellow cosmos, 12 red tulips, the 12 yellow tulips next to them, 9 red hyacinths, the 9 yellow hyacinths next to them, 12 white roses, and the 12 red roses next to them.\n\nEvery red-only square is made of hybrids, and same for every orange square. Additionally, the yellow mum square is also made of hybrids. The yellow/red rose and pansy square has red hybrids.\n\nThe order of planting roses is important. First, plant the orange-red-white rose/windflower square with seeds. Then, move all red rose children to the yellow/red rose/pansy square. Then, move their red children to the red rose square. Their children should be moved to the black/orange/red rose square.",
+      "image": "https://i.imgur.com/FP0p4va.png",
+      "link": "https://i.imgur.com/VQHoob8.png"
+    },
+    "offsetDenseIP": {
+      "title": "Offset Dense Isolated Pairs",
+      "desc": "Leave a column of space at each end, especially if you have lots of visitors watering your flowers.",
+      "image": "https://yuexr.github.io/img/layouts/offset_dense_pairs_t.PNG"
+    },
+    "doubleDiamonds": {
+      "title": "Dense Diamonds",
+      "desc": "4.5% more efficient than Isolated Pairs if you have no visitors, but not very space efficient. You need to be extra careful with the placement of your flowers, so pay attention to the chart!",
+      "image": "https://yuexr.github.io/img/layouts/dense_diamonds_t.PNG"
+    }
   }
 }
