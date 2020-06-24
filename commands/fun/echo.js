@@ -1,22 +1,37 @@
 module.exports.run = (client, message, args, level, Discord) => {
-  const embed = new Discord.MessageEmbed();
-  embed.setAuthor(message.author.username, message.author.displayAvatarURL());
-  const regexp = /^(?:(title|color|footer|channel|timestamp|field.+):(.+))|(?:(content|description|text):([\s\S]+))|(?:(url|link): ?(https?:\/\/[^ \n\r]+))|(?:(thumbnail|image|img|icon): ?(https?:\/\/[^ \n\r]+(?:png|gif|jpg|bmp|svg)$))/gmu;
-  const matches = message.content.slice(6).matchAll(regexp);
   let channel = message.channel;
-  for (let fields of matches) {
-    if (fields[1]) {
-      const content = fields[2].trim();
-      if (['title', 'color', 'footer'].includes(fields[1].toLowerCase())) {
-        embed[`set${fields[1].toProperCase()}`](content);
-      } else if (fields[1].startsWith('field')) embed.addField(fields[1].slice(6), content);
-      else if (fields[1].toLowerCase() === 'timestamp') embed.setTimestamp();
-      else if (fields[1].toLowerCase() === 'channel' && level > 3) channel = client.channels.cache.get(content);
-    } else if (fields[5]) embed.setURL(fields[6]);
-
-    else if (fields[3]) embed.setDescription(fields[4].trim());
+  if (level > 3 && args[0].match(/<#\d+>/)) {
+    channel = message.mentions.channels.first();
+    args.unshift();
   }
-  channel.send(embed);
+  try {
+    let msg = JSON.parse(JSON.stringify(args.join(' ')));
+    console.log({embed: msg.embed});
+    // channel.send({embed: msg.embed})
+    //   .catch((err) => {
+    //     client.handle(err, 'sending parsed echo', message)
+    //   })
+  } catch (err) {
+    client.error(channel, err.name, err.message);
+  }
+
+  //   .setAuthor(message.author.username, message.author.displayAvatarURL());
+  //   const regexp = /^(?:(title|color|footer|channel|timestamp|field.+):(.+))|(?:(content|description|text):([\s\S]+))|(?:(url|link): ?(https?:\/\/[^ \n\r]+))|(?:(thumbnail|image|img|icon): ?(https?:\/\/[^ \n\r]+(?:png|gif|jpg|bmp|svg)$))/gmu;
+  // const matches = message.content.slice(6).matchAll(regexp);
+  // let channel = message.channel;
+  // for (let fields of matches) {
+  //   if (fields[1]) {
+  //     const content = fields[2].trim();
+  //     if (['title', 'color', 'footer'].includes(fields[1].toLowerCase())) {
+  //       embed[`set${fields[1].toProperCase()}`](content);
+  //     } else if (fields[1].startsWith('field')) embed.addField(fields[1].slice(6), content);
+  //     else if(fields[1].toLowerCase() === 'timestamp') embed.setTimestamp();
+  //     else if (fields[1].toLowerCase() === 'channel' && level > 3) channel = client.channels.cache.get(content);
+  //   }
+  //   else if (fields[5]) embed.setURL(fields[6]);
+  //
+  //   else if (fields[3]) embed.setDescription(fields[4].trim());
+  // }
 };
 
 module.exports.conf = {
