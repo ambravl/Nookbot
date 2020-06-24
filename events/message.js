@@ -104,7 +104,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
                   const name = message.guild.roles.cache.get(role.roleID).name;
                   client.userDB.update(message.author.id, name, 'rankRole');
                   const embed = new Discord.MessageEmbed()
-                    .setTitle(`${client.mStrings.rank.up.title} <@#{message.author.id}>!`)
+                    .setTitle(`${client.mStrings.rank.up.title} <@${message.author.id}>!`)
                     .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
                   message.channel.send(embed);
                 }
