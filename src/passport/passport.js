@@ -82,9 +82,9 @@ module.exports.Passport = class Passport {
   }
 
   async friendcode() {
+    const text = `${this.info.switchName} on ${this.info.friendcode}`;
     this.ctx.fillStyle = "#999073";
     this.ctx.font = '24px "Humming';
-    const text = this.info.switchName + ' on ' + this.info.friendcode;
     const x = 716 - (this.ctx.measureText(text).width / 2);
     this.ctx.fillText(text, x, 520);
   }
@@ -101,6 +101,7 @@ module.exports.Passport = class Passport {
     this.ctx.arc(423, 137, 31, 0.5 * Math.PI, 1.5 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
+    this.ctx.font = '24px "Humming';
     this.ctx.fillStyle = "#999073";
     this.ctx.fillText(this.info.bio, 430, 147, 480);
   }
