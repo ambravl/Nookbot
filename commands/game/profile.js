@@ -267,8 +267,28 @@ class Search extends Profile {
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
         let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankrole);
+        let color;
+        if (this.userInfo.color) color = this.userInfo.color;
+        else if (role.color) color = role.color;
+        else color = 'white';
         const Pass = require('../../src/passport/passport').Passport;
-        const passport = new Pass({});
+        const passport = new Pass({
+          icon: message.author.displayAvatarURL({format: 'jpg'}),
+          username: message.author.username,
+          island: this.userInfo.islandname || 'Anysland',
+          fruit: this.userInfo.fruit || 'No fruit',
+          friendcode: this.userInfo.friendcode || 'No friend code',
+          switchName: this.userInfo.switchname || 'No name',
+          characterName: this.userInfo.charactername || 'No name',
+          rank: this.userInfo.rank,
+          userCount: this.message.guild.memberCount,
+          role: this.userInfo.rankrole,
+          points: this.userInfo.points,
+          nextRole: this.client.ranks.find((r) => r.previous === role.id).minPoints,
+          hemisphere: this.userInfo.hemisphere || 'Central',
+          bio: this.userInfo.bio || "This user didn't set a bio!",
+          color: color
+        });
         const image = await passport.draw();
         message.channel.send({files: [new Discord.MessageAttachment(image)]});
       })
