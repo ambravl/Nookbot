@@ -39,7 +39,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = this.info.color;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
-    this.ctx.drawImage(await this.drawIcon(), 97, 119);
+    this.ctx.drawImage(await this.drawIcon(), 96, 118);
     const background = await this.Canvas.loadImage('./src/passport/bg.png');
     this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
   }
@@ -59,7 +59,7 @@ module.exports.Passport = class Passport {
     const x = this.coords.island[0] + this.ctx.measureText(this.info.island).width + 77;
     this.ctx.fillText(this.info.fruit, x, this.coords.island[1]);
     const fruitIcon = await this.Canvas.loadImage(`./src/passport/${this.info.fruit}.png`);
-    this.ctx.drawImage(fruitIcon, x - 40, this.coords.island[1] - 40, 40, 40);
+    this.ctx.drawImage(fruitIcon, x - 40, this.coords.island[1] - 30, 40, 40);
   }
 
   async name() {
