@@ -27,7 +27,7 @@ module.exports.Passport = class Passport {
     const iconMask = await this.Canvas.loadImage('./src/passport/avvy.png');
     const icon = await this.Canvas.loadImage(this.info.icon);
     ctx.drawImage(iconMask, 0, 0, 245, 245);
-    ctx.globalCompositeOperation = "source-in";
+    // ctx.globalCompositeOperation = "source-in";
     ctx.drawImage(icon, 0, 0, 245, 245);
     return canvas;
   }
@@ -98,8 +98,7 @@ module.exports.Passport = class Passport {
     await this.drawBio();
     await this.friendcode();
     await this.text('role');
-    // return this.canvas.toBuffer();
-    return (await this.drawIcon()).toBuffer();
+    return this.canvas.toBuffer();
   }
 };
 
