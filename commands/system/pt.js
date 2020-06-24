@@ -15,7 +15,7 @@ module.exports.run = async (client, message) => {
     points: 9999,
     nextRole: 10000,
     hemisphere: 'Southern',
-    bio: `What's a queen to a dog?`
+    bio: "What's a queen to a dog?"
   });
   passport.draw().then((image) => {
     message.channel.send({files: [new Discord.MessageAttachment(image)]})
