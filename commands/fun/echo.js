@@ -6,9 +6,8 @@ module.exports.run = (client, message, args, level) => {
   }
   try {
     let msg = JSON.parse(JSON.stringify(args.join(' ')));
-    let options = {embed: JSON.parse(msg).embed};
     if (message.attachments) options.files = [message.attachments.first()];
-    channel.send(options)
+    channel.send({embed: JSON.parse(msg).embed})
       .catch((err) => {
         client.handle(err, 'sending parsed echo', message)
       })
