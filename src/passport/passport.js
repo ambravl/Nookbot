@@ -130,7 +130,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = "#999073";
     this.ctx.font = '18px "Humming"';
     const x = this.ctx.measureText(this.info.role).width + 433;
-    this.ctx.fillText(`${this.info.nextRole - this.info.points} points left to level up!`, x, 279);
+    this.ctx.fillText(`Level up in ${this.info.nextRole - this.info.points} points!`, x, 279);
   }
 
   async username() {
