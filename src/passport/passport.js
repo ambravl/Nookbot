@@ -77,7 +77,7 @@ module.exports.Passport = class Passport {
 
   async drawBio() {
     this.ctx.font = '24px "Humming';
-    const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
+    const width = Math.min(480, this.ctx.measureText(this.info.bio).width);
     this.ctx.beginPath();
     this.ctx.fillStyle = 'rgba(255, 248, 221, 0.9)';
     this.ctx.moveTo(423, 105);
