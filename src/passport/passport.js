@@ -59,7 +59,7 @@ module.exports.Passport = class Passport {
     const x = this.coords.island[0] + this.ctx.measureText(this.info.island).width + 77;
     this.ctx.fillText(this.info.fruit, x, this.coords.island[1]);
     const fruitIcon = await this.Canvas.loadImage(`./src/passport/${this.info.fruit}.png`);
-    this.ctx.drawImage(fruitIcon, x - 40, this.coord.island[1], 40, 40);
+    this.ctx.drawImage(fruitIcon, x - 40, this.coords.island[1], 40, 40);
   }
 
   async name() {
