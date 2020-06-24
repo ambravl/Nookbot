@@ -236,29 +236,29 @@ class Search extends Profile {
     return message.member;
   }
 
-  makeEmbed(strings, color, Discord) {
-    const embed = new Discord.MessageEmbed()
-      .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
-      .setColor(color);
-    if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
-    let embeds = [];
-    if (this.userInfo) {
-      ['friendcode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
-        if (this.userInfo[category]) {
-          embeds.push({
-            name: strings[category].name,
-            value: this.userInfo[category],
-            inline: true
-          });
-        }
-      });
-      if (embeds) embed.addFields(embeds);
-    }
-    if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
-      embed.setDescription(strings.search.none);
-    }
-    return embed;
-  }
+  // makeEmbed(strings, color, Discord) {
+  //   const embed = new Discord.MessageEmbed()
+  //     .setAuthor(`${this.user.displayName}'s Profile`, this.user.user.displayAvatarURL())
+  //     .setColor(color);
+  //   if (this.userInfo && this.userInfo.bio) embed.setDescription(this.userInfo.bio);
+  //   let embeds = [];
+  //   if (this.userInfo) {
+  //     ['friendcode', 'profilename', 'charactername', 'islandname', 'fruit', 'hemisphere'].forEach((category) => {
+  //       if (this.userInfo[category]) {
+  //         embeds.push({
+  //           name: strings[category].name,
+  //           value: this.userInfo[category],
+  //           inline: true
+  //         });
+  //       }
+  //     });
+  //     if (embeds) embed.addFields(embeds);
+  //   }
+  //   if (!this.userInfo || (!embeds && !this.userInfo.bio)) {
+  //     embed.setDescription(strings.search.none);
+  //   }
+  //   return embed;
+  // }
 
   async send(client, message) {
     client.userDB.selectAll(this.user.id, true)

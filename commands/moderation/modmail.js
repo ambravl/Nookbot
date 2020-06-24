@@ -4,7 +4,13 @@ module.exports.run = async (client, message, args, level, Discord) => {
   const strings = client.mStrings.modMail;
   const reportChannel = client.channels.cache.get(client.config.reportMail);
   const modMailChannel = client.channels.cache.get(client.config.modMail);
-  const dmChannel = message.guild ? await message.member.createDM() : message.channel;
+  let dmChannel;
+  if (message.guild) {
+    dmChannel = await message.member.createDM();
+    message.delete();
+  } else {
+    dmChannel = message.channel;
+  }
   const open = await client.db.query(`SELECT * FROM modMailDB WHERE memberID = '${message.author.id}' AND (status = 'open' OR status = 'read')`);
   if (open && open.rows && open.rows[0]) {
     const addInfo = new Discord.MessageEmbed();
@@ -119,6 +125,6 @@ module.exports.conf = {
 module.exports.help = {
   name: 'modmail',
   category: 'moderation',
-  description: 'Modmail is no longer done through Nookbot, please send your mail to Orvbot at the top of the server list',
+  description: 'Send mail to the mods! Use `.help modmail` to find out how to bypass the menu.',
   usage: 'modmail',
 };
