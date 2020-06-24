@@ -84,8 +84,8 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
     this.ctx.moveTo(423, 105);
     this.ctx.lineTo(423 + width, 105);
-    // this.ctx.arc(423 + width, 105, 52, 1.5 * Math.PI, 0.5 * Math.PI);
-    this.ctx.lineTo(423, 157);
+    this.ctx.arc(423 + width, 105, 32, 1.5 * Math.PI, 0.5 * Math.PI);
+    this.ctx.lineTo(423, 167);
     this.ctx.lineTo(423, 105);
     this.ctx.closePath();
     this.ctx.fill();
