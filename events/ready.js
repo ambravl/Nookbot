@@ -86,8 +86,12 @@ module.exports = (client) => {
         .then((res) => {
           const modMailChannel = client.channels.cache.get(client.config.modMail).messages;
           const reportChannel = client.channels.cache.get(client.config.reportMail).messages;
-          client.modMailPin = modMailChannel.fetch('725331823915434004');
-          client.reportPin = reportChannel.fetch('725331519912280125');
+          modMailChannel.fetch('725331823915434004').then((msg) => {
+            client.modMailPin = msg;
+          });
+          reportChannel.fetch('725331519912280125').then((msg) => {
+            client.reportPin = msg
+          });
           res.rows.forEach((mail) => {
             if (mail.mailtype === 'suggestion') {
               client.suggestions.push(mail.messageid);
