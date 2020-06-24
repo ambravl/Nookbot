@@ -1,6 +1,7 @@
 // TODO
 // eslint-disable-next-line no-unused-vars
 module.exports.run = async (client, message, args, level, Discord) => {
+  let command = args.shift().replace(/^(mm|mod|mail)$/, 'modmail').replace('scammer', 'scam');
   const strings = client.mStrings.modMail;
   const reportChannel = client.channels.cache.get(client.config.reportMail);
   const modMailChannel = client.channels.cache.get(client.config.modMail);
@@ -11,7 +12,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
   } else {
     dmChannel = message.channel;
   }
-  const open = await client.db.query(`SELECT * FROM modMailDB WHERE memberID = '${message.author.id}' AND (status = 'open' OR status = 'read')`);
+  const open = await client.db.query(`SELECT * FROM modMailDB WHERE memberID = '${message.author.id}' AND (status = 'open' OR status = 'read') AND mailtype = $1`, [command]);
   if (open && open.rows && open.rows[0]) {
     const addInfo = new Discord.MessageEmbed();
     const channel = open.rows[0].mailtype === 'scam' || open.rows[0].mailtype === 'report' ? 'report' : 'modmail';
@@ -29,7 +30,6 @@ module.exports.run = async (client, message, args, level, Discord) => {
     return;
   }
   if (args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
-  let command = args.shift().replace(/^(mm|mod|mail)$/, 'modmail').replace('scammer', 'scam');
   // noinspection FallThroughInSwitchStatementJS
   if (command === 'dm' || command === 'modmail') {
     console.log('got here');
