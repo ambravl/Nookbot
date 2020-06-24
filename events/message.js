@@ -16,7 +16,8 @@ module.exports = async (client, message) => {
 
     if (message.channel.id === client.config.modMail || message.channel.id === client.config.reportMail) {
       const messageID = message.content.match(/https?:\/\/discord.+com\/channels\/\d+\/\d+\/(\d+)/);
-      if (client.modMail[messageID[0]] || client.suggestions.includes(messageID[0])) {
+      console.log(messageID);
+      if (messageID && (client.modMail[messageID[0]] || client.suggestions.includes(messageID[0]))) {
         client.modMailDB.select(messageID[0], 'memberid')
           .then(async (res) => {
             if (!res) return client.error(message.channel, 'Not found!', "Couldn't find the modmail's author!");
