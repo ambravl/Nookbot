@@ -27,7 +27,7 @@ module.exports.Passport = class Passport {
     const iconMask = await this.Canvas.loadImage('./src/passport/avvy.png');
     const icon = await this.Canvas.loadImage(this.info.icon);
     ctx.drawImage(iconMask, 0, 0, 245, 245);
-    // ctx.globalCompositeOperation = "source-in";
+    ctx.globalCompositeOperation = "source-in";
     ctx.drawImage(icon, 0, 0, 245, 245);
     return canvas;
   }
@@ -37,7 +37,7 @@ module.exports.Passport = class Passport {
     const bgMask = await this.Canvas.loadImage('./src/passport/bgMask.png');
     this.ctx.drawImage(bgMask, 0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
-    this.ctx.globalCompositeOperation = "source-out";
+    //this.ctx.globalCompositeOperation = "source-out";
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
