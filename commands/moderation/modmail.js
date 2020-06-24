@@ -32,7 +32,6 @@ module.exports.run = async (client, message, args, level, Discord) => {
   if (args.length < 2) return client.error(message.channel, strings.none.title, strings.none.desc);
   // noinspection FallThroughInSwitchStatementJS
   if (command === 'dm' || command === 'modmail') {
-    console.log('got here');
     const askEmbed = new Discord.MessageEmbed()
       .setTitle(strings[command].title)
       .setDescription(strings[command].desc);

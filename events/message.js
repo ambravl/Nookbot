@@ -16,7 +16,6 @@ module.exports = async (client, message) => {
 
     if (message.channel.id === client.config.modMail || message.channel.id === client.config.reportMail) {
       const messageID = message.content.match(/https?:\/\/discord.+com\/channels\/\d+\/\d+\/(\d+)/);
-      console.log(messageID);
       if (messageID && (client.modMail[messageID[1]] || client.suggestions.includes(messageID[1]))) {
         client.modMailDB.select(messageID[1], 'memberid')
           .then(async (res) => {
@@ -69,18 +68,13 @@ If you believe this member is a mention spammer bot, please ban them with the co
     const msg = message.content;
     let regMatch;
     while ((regMatch = regex.exec(msg)) !== null) {
-      console.log('found emoji');
       const emojiMatch = regMatch[1];
-      console.log(emojiMatch);
       // If the emoji ID is in our emoji, then increment its count
       client.emojiDB.select(emojiMatch)
         .then((res) => {
-          console.log('tried to select emoji');
           if (res !== undefined) {
-            console.log('found emoji in db');
             client.emojiDB.math(emojiMatch, '+', '1', 'uses')
               .then(() => {
-                console.log('successfully updated emoji')
               })
               .catch((err) => client.handle(err, 'emoji increment in message event', message));
           }

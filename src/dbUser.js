@@ -91,7 +91,7 @@ module.exports = async (client) => {
 
     async dropDB() {
       client.db.query(`DROP TABLE ${this.name}`)
-        .catch((err) => console.log(err));
+        .catch((err) => client.handle(err, 'dropping db'));
       let columns = [];
       Object.keys(client.dbSchema[this.name]).forEach((key) => {
         columns.push(`${key} ${client.dbSchema[this.name][key]}`)

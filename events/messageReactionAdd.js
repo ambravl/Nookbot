@@ -2,13 +2,8 @@ module.exports = async (client, messageReaction, user) => {
   if (user.bot) return;
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
-  console.log('awaited');
-  console.log(member);
-  console.log(reactionRoleMenu);
   if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
-  console.log('passed checks');
   if (reactionRoleMenu.type === 'exclusive') {
-    console.log('got in the right type');
     const rolesToRemove = [];
     member.roles.cache.forEach((role, rID) => {
       if (rID !== reactionRoleMenu.roleid && reactionRoleMenu.roles.includes(rID)) {
@@ -24,7 +19,6 @@ module.exports = async (client, messageReaction, user) => {
   }
   // Members can have any number of the roles in this menu.
   if (!member.roles.cache.has(reactionRoleMenu.roleid)) {
-    console.log(`tried adding role #${reactionRoleMenu.roleid}`);
     member.roles.add(reactionRoleMenu.roleid, '[Auto] Reaction Role Add')
       .catch((err) => {
         client.handle(err, 'adding reaction role')

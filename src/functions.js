@@ -14,6 +14,7 @@ module.exports = (client) => {
   client.easter = (message) => {
     const adjective = message.content.match(/(good|bad) bot/i);
     if (adjective) {
+      console.log(adjective);
       if (adjective[0].toLowerCase() === 'good') message.channel.send("Thanks! I'm happy to help this happy little server!");
       else if (adjective[0].toLowerCase() === 'bad') {
         if (message.author.id === client.config.botOwner) message.channel.send('Bad programmer!');
@@ -118,7 +119,6 @@ module.exports = (client) => {
     }
 
     reactionRoleMenu = reactionRoleMenu.rows[0];
-    console.log(reactionRoleMenu);
 
     let result = {type: reactionRoleMenu.type, roles: [], emoji: [], roleid: ''};
 
