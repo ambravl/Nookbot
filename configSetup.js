@@ -22,7 +22,7 @@ module.exports = (client) => {
     client.ranks = [];
     for (let i = 0; i < res.rows.length; i++) {
       client.ranks.push({
-        minPoints: res.rows[i].minPoints,
+        minPoints: res.rows[i].minpoints,
         previous: i === 0 ? undefined : res.rows[i - 1].roleid,
         roleID: res.rows[i].roleid
       })
