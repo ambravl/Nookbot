@@ -3,6 +3,14 @@ const Discord = require('discord.js');
 const moment = require('moment');
 
 module.exports = (client) => {
+
+  client.rankFinder = (oldPoints, total) => {
+    for (let i = 0; i < client.ranks.length; i++) {
+      if (client.ranks[i].minPoints > total && client.ranks[i - 1].minPoints > oldPoints) return client.ranks[i - 1];
+    }
+    return null;
+  };
+
   client.easter = (message) => {
     const adjective = message.content.match(/(good|bad) bot/i);
     if (adjective) {

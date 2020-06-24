@@ -80,6 +80,7 @@ module.exports = (client) => {
 
       client.suggestions = [];
       client.modMail = {};
+      client.longest = {};
 
       client.modMailDB.cacheDB()
         .then((res) => {
