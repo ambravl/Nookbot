@@ -62,8 +62,8 @@ module.exports.run = async (client, message, args, level, Discord) => {
     .setTitle(strings[command].title)
     .setDescription(strings[command].desc)
     .setColor(strings[command].color)
-    .addField('\u200B', '\u200B')
-    .addField('\u200B', 'You can close this ticket anytime by reacting to this message with ❌')
+    // .addField('\u200B', '\u200B')
+    // .addField('\u200B', 'You can close this ticket anytime by reacting to this message with ❌')
     .setFooter('Status: Unread')
     .setTimestamp();
   const embed = new Discord.MessageEmbed()
@@ -75,7 +75,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     .setTimestamp();
   dmChannel.send(dmEmbed)
     .then((sentDM) => {
-      sentDM.react('❌');
+      // sentDM.react('❌');
       if (command === 'suggestion') {
         embed
           .addField('❎ Downvote', '0', true)
