@@ -78,12 +78,12 @@ module.exports.Passport = class Passport {
     this.ctx.font = '24px "Humming';
     const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
     this.ctx.beginPath();
-    this.ctx.fillStyle = 'rgba(100, 97, 86, 0.9)';
+    this.ctx.fillStyle = 'rgba(255, 248, 221, 0.9)';
     this.ctx.moveTo(423, 105);
     this.ctx.lineTo(423 + width, 105);
     this.ctx.arc(423 + width, 137, 32, 1.5 * Math.PI, 0.5 * Math.PI);
     this.ctx.lineTo(423, 167);
-    this.ctx.arc(423, 136, 32, 0.5 * Math.PI, 1.5 * Math.PI);
+    this.ctx.arc(423, 138, 32, 0.5 * Math.PI, 1.5 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
     this.ctx.fillStyle = "#999073";
