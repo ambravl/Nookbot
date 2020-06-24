@@ -56,6 +56,7 @@ module.exports.Passport = class Passport {
     this.ctx.font = '24px "Humming"';
     this.ctx.fillText(this.info.island, this.coords.island[0], this.coords.island[1]);
     this.ctx.fillStyle = "#999073";
+    this.ctx.font = '24px "Humming"';
     const x = this.info.island[0] + this.ctx.measureText(this.info.island).width + 77;
     this.ctx.fillText(this.info.fruit, x, this.coords.island[1])
   }
@@ -83,11 +84,11 @@ module.exports.Passport = class Passport {
     this.ctx.lineTo(423 + width, 105);
     this.ctx.arc(423 + width, 137, 32, 1.5 * Math.PI, 0.5 * Math.PI);
     this.ctx.lineTo(423, 167);
-    this.ctx.arc(423, 138, 32, 0.5 * Math.PI, 1.5 * Math.PI);
+    this.ctx.arc(423, 139, 32, 0.5 * Math.PI, 1.5 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
     this.ctx.fillStyle = "#999073";
-    this.ctx.fillText(this.info.bio, 430, 137, 480);
+    this.ctx.fillText(this.info.bio, 430, 147, 480);
   }
 
   async draw() {
