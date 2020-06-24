@@ -1,11 +1,11 @@
-module.exports.run = (client, message, args, level, Discord) => {
+module.exports.run = (client, message, args, level) => {
   let channel = message.channel;
   if (level > 3 && args[0].match(/<#\d+>/)) {
     channel = message.mentions.channels.first();
     args.unshift();
   }
   try {
-    let msg = JSON.stringify(args.join(' '));
+    let msg = JSON.parse(JSON.stringify(args.join(' ')));
     channel.send({embed: JSON.parse(msg).embed})
       .catch((err) => {
         client.handle(err, 'sending parsed echo', message)
