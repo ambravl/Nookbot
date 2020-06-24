@@ -79,7 +79,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = "#999073";
     this.ctx.font = '24px "Humming';
     const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
-    this.ctx.fillText(this.info.bio, 430, 150, 480);
+    this.ctx.fillText(this.info.bio, 430, 137, 480);
     this.ctx.beginPath();
     this.ctx.fillStyle = 'rgba(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ', ' + (pixel[3] / 255) + ')';
     this.ctx.moveTo(423, 105);
