@@ -25,6 +25,10 @@ module.exports.vote = (client, message, args, positive) => {
     );
   }
 
+  if (member.bot) {
+    return client.error(message.channel, strings.bot.title, strings.bot.desc)
+  }
+
   client.userDB.ensure(member.id, '', '*')
     .then(async (result) => {
       if (result) {
