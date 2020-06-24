@@ -22,13 +22,13 @@ module.exports.Passport = class Passport {
   }
 
   async drawIcon() {
-    const canvas = this.Canvas.createCanvas(245, 245);
+    const canvas = this.Canvas.createCanvas(250, 250);
     const ctx = canvas.getContext("2d");
     const iconMask = await this.Canvas.loadImage('./src/passport/avvy.png');
     const icon = await this.Canvas.loadImage(this.info.icon);
-    ctx.drawImage(iconMask, 0, 0, 245, 245);
+    ctx.drawImage(iconMask, 0, 0, 250, 250);
     ctx.globalCompositeOperation = "source-in";
-    ctx.drawImage(icon, 0, 0, 245, 245);
+    ctx.drawImage(icon, 0, 0, 250, 250);
     return canvas;
   }
 
@@ -84,7 +84,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
     this.ctx.moveTo(423, 105);
     this.ctx.lineTo(423 + width, 105);
-    this.ctx.arc(423 + width, 105, 210, 1.5 * Math.PI, 0.5 * Math.PI);
+    this.ctx.arc(423 + width, 105, 105, 1.5 * Math.PI, 0.5 * Math.PI);
     this.ctx.lineTo(423, 210);
     this.ctx.lineTo(423, 105);
     this.ctx.closePath();
