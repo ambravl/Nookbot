@@ -267,16 +267,10 @@ class Search extends Profile {
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
         let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankrole);
-        const embed = this.makeEmbed(
-          client.mStrings.island,
-          role ? role.color : '#ffffff',
-          Discord
-        );
         const Pass = require('../../src/passport/passport').Passport;
         const passport = new Pass({});
         const image = await passport.draw();
-        embed.attachFiles([new Discord.MessageAttachment(image)]);
-        message.channel.send(embed);
+        message.channel.send({files: [new Discord.MessageAttachment(image)]});
       })
       .catch((err) => {
         client.handle(err, 'search constructor')

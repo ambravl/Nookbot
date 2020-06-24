@@ -14,6 +14,21 @@ module.exports = async (client, message) => {
       await message.guild.members.fetch(message.author);
     }
 
+    if (message.channel.id === client.config.modMail || message.channel.id === client.config.reportMail) {
+      const messageID = message.content.match(/https?:\/\/.+discord.+com\/\d+\/\d+\/(\d+)/);
+      if (client.modMail[messageID[1]] || client.suggestions.includes(messageID[1])) {
+        client.modMailDB.select(messageID[1], 'memberid')
+          .then(async (res) => {
+            if (!res) return client.error(message.channel, 'Not found!', "Couldn't find the modmail's author!");
+            const dmChannel = await client.users.cache.get(res).createDM();
+            const dmEmbed = new Discord.MessageEmbed().setTitle('New reply to your modmail!');
+            dmEmbed.setDescription(message.content.replace(/https?:\/\/.+discord.+com\/\d+\/\d+\/\d+\/? ?/, ''))
+            dmChannel.send(dmEmbed);
+            return client.success(message.channel, 'Sent!', 'Your reply was sent to the modmail author!')
+          })
+      }
+    }
+
     // Anti Mention Spam
     if (message.mentions.members && message.mentions.members.size > 10) {
       // They mentioned more than 10 members, automute them for 10 mintues.
