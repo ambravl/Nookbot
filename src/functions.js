@@ -218,7 +218,7 @@ module.exports = (client) => {
           } else newPin.description = "Right now, we gave no open tickets!";
           modmail.mailtype === 'report' || modmail.mailtype === 'scam' ? client.reportPin.edit(newPin) : client.modMailPin.edit(newPin);
         }
-        newEmbed.addField(values.emoji1, values.desc1, true).addField(values.emoji2, values.des2, true).setFooter(values.footer);
+        newEmbed.addField(values.emoji1, values.desc1, true).addField(values.emoji2, values.desc2, true).setFooter(values.footer);
         const colorPercentage = 100 + (25 * ((values.status === 'open') + (modmail.status === 'complete') - (values.status === 'complete') - (modmail.status === 'open')));
         newEmbed.setColor(client.dimColor(messageReaction.message.embeds[0].color, colorPercentage));
         DMEmbed.setFooter(values.dmFooter);
