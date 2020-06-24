@@ -36,7 +36,7 @@ module.exports.Passport = class Passport {
     this.ctx.drawImage(bgMask, 0, 0, this.canvas.width, this.canvas.height);
     this.ctx.save();
     this.ctx.globalCompositeOperation = "source-out";
-    this.ctx.fillStyle = info.color;
+    this.ctx.fillStyle = this.info.color;
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
     this.ctx.drawImage(await this.drawIcon(), 97, 119);
