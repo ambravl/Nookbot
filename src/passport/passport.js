@@ -128,6 +128,7 @@ module.exports.Passport = class Passport {
     this.ctx.font = '24px "Humming"';
     this.ctx.fillText(this.info.role, 423, 279, 480);
     this.ctx.fillStyle = "#999073";
+    this.ctx.font = '18px "Humming"';
     const x = this.ctx.measureText(this.info.role).width + 433;
     this.ctx.fillText(`${this.info.nextRole - this.info.points} points left to level up!`, x, 279);
   }
@@ -137,13 +138,13 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = '#59440b';
     this.ctx.fillText(this.info.username, 83, 577);
     this.ctx.fillStyle = "#999073";
-    this.ctx.fillText(` joined ${this.info.joined}`, 83 + this.ctx.measureText(this.info.username), 577)
+    this.ctx.fillText(` joined ${this.info.joined}`, 83 + this.ctx.measureText(this.info.username).width, 577)
   }
 
   async hemisphere() {
     this.ctx.fillStyle = "#99764d";
     this.ctx.font = '24px "Humming"';
-    this.ctx.rotate(10 * Math.PI / 180);
+    this.ctx.rotate(10 * 3.14 / 180);
     this.ctx.fillText(this.info.hemisphere, 125, 389);
   }
 
