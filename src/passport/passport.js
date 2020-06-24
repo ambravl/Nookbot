@@ -89,7 +89,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(text, x, 520);
   }
 
-  async drawBio() {
+  async balloon() {
     this.ctx.font = '24px "Humming';
     const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 7;
     this.ctx.beginPath();
@@ -101,6 +101,9 @@ module.exports.Passport = class Passport {
     this.ctx.arc(423, 137, 31, 0.5 * Math.PI, 1.5 * Math.PI);
     this.ctx.closePath();
     this.ctx.fill();
+  }
+
+  async writeBio() {
     this.ctx.font = '24px "Humming';
     this.ctx.fillStyle = "#999073";
     this.ctx.fillText(this.info.bio, 430, 147, 480);
@@ -147,7 +150,8 @@ module.exports.Passport = class Passport {
     await this.background();
     await this.islandInfo();
     await this.name();
-    await this.drawBio();
+    await this.balloon();
+    await this.writeBio();
     await this.friendcode();
     await this.role();
     await this.username();
