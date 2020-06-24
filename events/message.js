@@ -6,7 +6,7 @@ const cooldowns = new Discord.Collection();
 
 module.exports = async (client, message) => {
   // Ignore all bots
-  if (message.author.bot || message.startsWith('!')) return;
+  if (message.author.bot || message.content.startsWith('!')) return;
 
   if (message.guild) {
 
