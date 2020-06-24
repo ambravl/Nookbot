@@ -1,4 +1,5 @@
 module.exports = async (client, messageReaction, user) => {
+  console.log('realized this is a reaction');
   if (user.bot) return;
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);

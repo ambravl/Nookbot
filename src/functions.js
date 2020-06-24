@@ -140,6 +140,7 @@ module.exports = (client) => {
     client.modMailDB.selectAll(messageReaction.message.id, false)
       .then(async (res) => {
         if (!res || !res.rows || res.rows.length < 1) return;
+        console.log('recognized reaction as modmail');
         const Discord = require('discord.js');
         const modmail = res.rows[0];
         const newEmbed = new Discord.MessageEmbed(messageReaction.message.embeds[0]);
