@@ -81,7 +81,7 @@ module.exports.Passport = class Passport {
     const width = Math.min(480, this.ctx.measureText(this.info.bio).width) + 40;
     this.ctx.fillText(this.info.bio, 430, 150, 480);
     this.ctx.beginPath();
-    this.ctx.fillStyle = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
+    this.ctx.fillStyle = 'rgba(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ', ' + pixel[3] * 0.5 + ')';
     this.ctx.moveTo(423, 105);
     this.ctx.lineTo(423 + width, 105);
     this.ctx.arc(423 + width, 137, 32, 1.5 * Math.PI, 0.5 * Math.PI);
