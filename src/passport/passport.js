@@ -63,12 +63,6 @@ module.exports.Passport = class Passport {
     this.ctx.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
   }
 
-  async text(name) {
-    this.ctx.fillStyle = this.coords[name][2] ? '#999073' : '#59440b';
-    this.ctx.font = name === 'characterName' ? '32px "Humming"' : '24px "Humming"';
-    this.ctx.fillText(this.info[name], this.coords[name][0], this.coords[name][1], 480);
-  }
-
   async islandInfo() {
     this.ctx.fillStyle = '#59440b';
     this.ctx.font = '24px "Humming"';
@@ -157,6 +151,7 @@ module.exports.Passport = class Passport {
     await this.role();
     await this.username();
     await this.rank();
+    await this.hemisphere();
     return this.canvas.toBuffer();
   }
 };
