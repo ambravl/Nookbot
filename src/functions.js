@@ -6,6 +6,8 @@ module.exports = (client) => {
 
   client.rankFinder = (oldPoints, total) => {
     for (let i = 0; i < client.ranks.length; i++) {
+      console.log(client.ranks[i].minPoints);
+      console.log(client.ranks[i - 1] ? client.ranks[i - 1].minPoints : '');
       if (client.ranks[i].minPoints > total && client.ranks[i - 1].minPoints > oldPoints) return client.ranks[i - 1];
     }
     return null;
