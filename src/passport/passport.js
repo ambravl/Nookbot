@@ -144,17 +144,15 @@ module.exports.Passport = class Passport {
   }
 
   async draw() {
-    await Promise.all([
-      this.background(),
-      this.islandInfo(),
-      this.name(),
-      this.drawBio(),
-      this.friendcode(),
-      this.role(),
-      this.username(),
-      this.rank(),
-      this.hemisphere()
-    ]);
+    await this.background();
+    await this.islandInfo();
+    await this.name();
+    await this.drawBio();
+    await this.friendcode();
+    await this.role();
+    await this.username();
+    await this.rank();
+    await this.hemisphere();
     return this.canvas.toBuffer();
   }
 };
