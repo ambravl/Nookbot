@@ -26,7 +26,7 @@ module.exports.run = async (client, message, args) => {
       if (err2 || res2.statusCode !== 200) {
         console.error(err2 || `Wiki Error: Status Code-${res2.statusCode} Status Message-${res2.statusMessage}`);
         waitingMsg.delete();
-        return client.error(message.channel, 'Error!', 'There was an error when retriving the wiki page!');
+        return client.error(message.channel, 'Error!', 'There was an error when retrieving the wiki page!');
       }
 
       const $ = cheerio.load(html2);
