@@ -140,7 +140,12 @@ module.exports.Passport = class Passport {
     this.ctx.fillText(` joined ${this.info.joined}`, 83 + this.ctx.measureText(this.info.username), 577)
   }
 
-  // 83, 577 is the text on the bottom left corner
+  async hemisphere() {
+    this.ctx.fillStyle = "#99764d";
+    this.ctx.font = '24px "Humming"';
+    this.ctx.rotate(10 * Math.PI / 180);
+    this.ctx.fillText(this.info.hemisphere, 125, 389);
+  }
 
   async draw() {
     await this.background();
