@@ -80,7 +80,7 @@ module.exports = async (client) => {
         columns.unshift(this.mainColumn);
         columns = columns.join(', ');
       } else columns = `${this.mainColumn}, ${this.secondaryColumn}`;
-      if (vals instanceof Array) {
+      if (vals instanceof Array && vals.length !== 0) {
         values = vals;
         values.unshift(primaryKey);
       } else values = [primaryKey, vals !== undefined && vals !== null ? vals : ''];
