@@ -1,7 +1,7 @@
 // eslint-disable-next-line consistent-return
 module.exports.run = async (client, message, args, level) => {
   if (args[0] && args[0].toLowerCase() === 'mod' && level < 3) return;
-  if (args[0]) {
+  if (args[0] && !['a', 'access', 'accessibility', 'embed', 'text'].includes(args[0])) {
     let island = new Profile(client, message, args);
     island.run()
       .catch((err) => {
@@ -9,7 +9,7 @@ module.exports.run = async (client, message, args, level) => {
       })
   } else {
     let profile = new Search(client, message, args);
-    profile.send(client, message)
+    profile.send(client, message, args[0])
       .catch((err) => {
         client.handle(err, 'search profile')
       });
@@ -260,39 +260,115 @@ class Search extends Profile {
   //   return embed;
   // }
 
-  async send(client, message) {
+  getInfo(client, message, isEmbed) {
+    const moment = require('moment-timezone');
+    let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankrole);
+    let color;
+    if (this.userInfo.color) color = this.userInfo.color;
+    else if (role.color) color = role.color;
+    else color = 'white';
+    const info = {
+      icon: message.author.displayAvatarURL({format: 'jpg'}),
+      username: message.author.username,
+      island: this.userInfo.islandname || 'Anysland',
+      fruit: this.userInfo.fruit || 'Fruitless',
+      friendcode: this.userInfo.friendcode || 'No friend code',
+      switchName: this.userInfo.switchname || 'No name',
+      characterName: this.userInfo.charactername || 'No name',
+      rank: this.userInfo.rank,
+      userCount: this.message.guild.memberCount,
+      role: this.userInfo.rankrole,
+      points: this.userInfo.points,
+      nextRole: this.client.ranks.find((r) => r.previous === role.id).minPoints,
+      hemisphere: this.userInfo.hemisphere || 'Central',
+      bio: this.userInfo.bio || "This user didn't set a bio!",
+      color: color,
+      joined: moment(message.member.joinedAt).format('MMMM Do YYYY')
+    };
+    if (isEmbed) {
+      return {
+        author: {
+          name: info.username,
+          icon_url: info.icon
+        },
+        color: info.color,
+        description: info.bio,
+        thumbnail: info.icon,
+        footer: {
+          text: `${info.username} joined:`
+        },
+        timestamp: info.joined,
+        fields: [
+          {
+            name: `#${info.rank}`,
+            value: `out of ${info.userCount} users`,
+            inline: true
+          },
+          {
+            name: info.role,
+            value: `${info.nextRole} points left to level up!`,
+            inline: true
+          },
+          {
+            name: '\u200B',
+            value: '\u200B'
+          },
+          {
+            name: 'Island Name',
+            value: info.island,
+            inline: true
+          },
+          {
+            name: 'In-Game Name',
+            value: info.characterName,
+            inline: true
+          },
+          {
+            name: 'Fruit',
+            value: info.fruit,
+            inline: true
+          },
+          {
+            name: 'Hemisphere',
+            value: info.hemisphere,
+            inline: true
+          },
+          {
+            name: '\u200B',
+            value: '\u200B'
+          },
+          {
+            name: 'Switch Profile Name',
+            value: info.switchName,
+            inline: true
+          },
+          {
+            name: 'Friend Code',
+            value: info.friendcode,
+            inline: true
+          }
+        ]
+      }
+    }
+    return info;
+  }
+
+  async send(client, message, isEmbed) {
     client.userDB.selectAll(this.user.id, true)
       .then(async (res) => {
         if (!res || !res.rows || res.rows.length === 0) return;
         else this.userInfo = res.rows[0];
         const Discord = require('discord.js');
-        let role = message.guild.roles.cache.find((r) => r.name === this.userInfo.rankrole);
-        let color;
-        if (this.userInfo.color) color = this.userInfo.color;
-        else if (role.color) color = role.color;
-        else color = 'white';
-        const Pass = require('../../src/passport/passport').Passport;
-        const moment = require('moment-timezone');
-        const passport = new Pass({
-          icon: message.author.displayAvatarURL({format: 'jpg'}),
-          username: message.author.username,
-          island: this.userInfo.islandname || 'Anysland',
-          fruit: this.userInfo.fruit || 'Fruitless',
-          friendcode: this.userInfo.friendcode || 'No friend code',
-          switchName: this.userInfo.switchname || 'No name',
-          characterName: this.userInfo.charactername || 'No name',
-          rank: this.userInfo.rank,
-          userCount: this.message.guild.memberCount,
-          role: this.userInfo.rankrole,
-          points: this.userInfo.points,
-          nextRole: this.client.ranks.find((r) => r.previous === role.id).minPoints,
-          hemisphere: this.userInfo.hemisphere || 'Central',
-          bio: this.userInfo.bio || "This user didn't set a bio!",
-          color: color,
-          joined: moment(message.member.joinedAt).format('MMMM Do YYYY')
-        });
-        const image = await passport.draw();
-        message.channel.send({files: [new Discord.MessageAttachment(image)]});
+        let msg;
+        if (isEmbed) {
+          msg = {embed: this.getInfo(client, message, true)}
+        } else {
+          const Pass = require('../../src/passport/passport').Passport;
+          const passport = new Pass(this.getInfo(client, message));
+          const image = await passport.draw();
+          msg = {files: [new Discord.MessageAttachment(image)]}
+        }
+        message.channel.send(msg);
       })
       .catch((err) => {
         client.handle(err, 'search constructor')
