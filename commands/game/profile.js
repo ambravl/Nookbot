@@ -276,7 +276,7 @@ class Search extends Profile {
           icon: message.author.displayAvatarURL({format: 'jpg'}),
           username: message.author.username,
           island: this.userInfo.islandname || 'Anysland',
-          fruit: this.userInfo.fruit || 'No fruit',
+          fruit: this.userInfo.fruit || 'Fruitless',
           friendcode: this.userInfo.friendcode || 'No friend code',
           switchName: this.userInfo.switchname || 'No name',
           characterName: this.userInfo.charactername || 'No name',

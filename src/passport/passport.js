@@ -51,16 +51,15 @@ module.exports.Passport = class Passport {
   }
 
   async islandInfo() {
-    const islandIcon = await this.Canvas.loadImage('./src/passport/islandName.png');
-    this.ctx.filter = 'brightness(0.5) sepia(1) saturate(10000%) hue-rotate(120deg)';
-    this.ctx.drawImage(islandIcon, 424, 212, 40, 40);
     this.ctx.fillStyle = '#59440b';
     this.ctx.font = '24px "Humming"';
     this.ctx.fillText(this.info.island, this.coords.island[0], this.coords.island[1]);
     this.ctx.fillStyle = "#999073";
     this.ctx.font = '24px "Humming"';
     const x = this.coords.island[0] + this.ctx.measureText(this.info.island).width + 77;
-    this.ctx.fillText(this.info.fruit, x, this.coords.island[1])
+    this.ctx.fillText(this.info.fruit, x, this.coords.island[1]);
+    const fruitIcon = await this.Canvas.loadImage(`./src/passport/${this.info.fruit}.png`);
+    this.ctx.drawImage(fruitIcon, x - 40, this.coord.island[1], 40, 40);
   }
 
   async name() {
