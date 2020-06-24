@@ -7,10 +7,10 @@ module.exports.run = (client, message, args, level, Discord) => {
   try {
     let msg = JSON.parse(JSON.stringify(args.join(' ')));
     console.log({embed: JSON.parse(msg).embed});
-    // channel.send({embed: msg.embed})
-    //   .catch((err) => {
-    //     client.handle(err, 'sending parsed echo', message)
-    //   })
+    channel.send({embed: JSON.parse(msg).embed})
+      .catch((err) => {
+        client.handle(err, 'sending parsed echo', message)
+      })
   } catch (err) {
     client.error(channel, err.name, err.message);
   }
