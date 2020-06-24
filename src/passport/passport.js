@@ -136,7 +136,7 @@ module.exports.Passport = class Passport {
     this.ctx.fillStyle = '#59440b';
     this.ctx.fillText(this.info.username, 83, 577);
     this.ctx.fillStyle = "#999073";
-    this.ctx.fillText(` joined ${this.info.joined}`, 83 + this.ctx.measureText(this.info.username).width, 577)
+    this.ctx.fillText(` joined ${this.info.joined}`, 63 + this.ctx.measureText(this.info.username).width, 587)
   }
 
   async hemisphere() {
