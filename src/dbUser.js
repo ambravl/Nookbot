@@ -103,8 +103,8 @@ module.exports = async (client) => {
         });
     }
 
-    cacheDB() {
-      return client.db.query(`SELECT * FROM ${this.name}`);
+    cacheDB(orderBy) {
+      return client.db.query(`SELECT * FROM ${this.name}${orderBy ? ' ORDER BY ' + orderBy : ''}`);
     }
 
 

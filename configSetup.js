@@ -18,7 +18,7 @@ module.exports = (client) => {
     });
   });
 
-  client.rankDB.cacheDB().then((res) => {
+  client.rankDB.cacheDB('minpoints').then((res) => {
     client.ranks = [];
     for (let i = 0; i < res.rows.length; i++) {
       client.ranks.push({
