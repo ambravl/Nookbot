@@ -15,8 +15,8 @@ module.exports = (client) => {
     const adjective = message.content.match(/(good|bad) bot/i);
     if (adjective) {
       console.log(adjective);
-      if (adjective[0].toLowerCase() === 'good') message.channel.send("Thanks! I'm happy to help this happy little server!");
-      else if (adjective[0].toLowerCase() === 'bad') {
+      if (adjective[1].toLowerCase() === 'good') message.channel.send("Thanks! I'm happy to help this happy little server!");
+      else if (adjective[1].toLowerCase() === 'bad') {
         if (message.author.id === client.config.botOwner) message.channel.send('Bad programmer!');
         else message.channel.send(`Oh I'm sorry, could your happy little mind do better, ${message.author.username}?`)
       }
