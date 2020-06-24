@@ -285,7 +285,7 @@ module.exports = async (client) => {
      * @param {string|Array<string>} column
      */
     async update(primaryKey, value, column) {
-      if (value instanceof Array) {
+      if (value instanceof Array && value.length > 0) {
         const query = `UPDATE ${this.name} SET ${column[0]} = $1, ${column[1]} = $2 WHERE ${this.mainColumn} = $3`;
         value.push(primaryKey);
         client.db.query(query, value)
