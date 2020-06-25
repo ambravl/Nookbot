@@ -4,6 +4,50 @@ const moment = require('moment');
 
 module.exports = (client) => {
 
+  client.awardPoints = async (message) => {
+    if (client.config.rankedChannels.includes(message.channel.id)) {
+      const cachedPoints = client.cachedMsgPoints[message.author.id];
+      const newPoints = client.calculatePoints(message.content.length);
+      if (cachedPoints && cachedPoints.points > newPoints) return;
+      const currentPoints = cachedPoints ? cachedPoints.currentPoints : await client.userDB.ensure(message.author.id, 0, 'points');
+      client.cachedMsgPoints[message.author.id] = {
+        points: newPoints,
+        currentPoints: currentPoints,
+        leveledUp: cachedPoints && cachedPoints.leveledUp ? true : await client.tryLevellingUp(message, newPoints, currentPoints)
+      };
+      if (!cachedPoints) {
+        setTimeout(() => {
+          client.userDB.math(message.author.id, '+', client.cachedMsgPoints[message.author.id].points, 'points')
+            .catch((err) => {
+              client.handle(err, 'adding points to user', message)
+            });
+        }, 60000)
+      }
+    }
+  };
+
+  client.calculatePoints = (messageLength) => {
+    if (messageLength < 100) return Math.max(1, messageLength / 20);
+    else return Math.min(10, 6 + (messageLength / 100));
+  };
+
+  client.tryLevellingUp = async (message, newPoints, currentPoints) => {
+    const role = client.rankFinder(currentPoints, currentPoints + newPoints);
+    if (role) {
+      await message.member.roles.add(role.roleID, '[Auto] Level Up');
+      if (role.previous) await message.member.roles.remove(role.previous, '[Auto] Level Up');
+      message.guild.roles.fetch(role.roleID).then((role) => {
+        client.userDB.update(message.author.id, role.name, 'rankRole');
+        const embed = new Discord.MessageEmbed()
+          .setTitle(`${client.mStrings.rank.up.title} <@${message.author.id}>!`)
+          .setDescription(client.mStrings.rank.up.descL + role.name + client.mStrings.rank.up.descR);
+        message.channel.send(embed);
+      });
+      return true;
+    }
+    return false;
+  };
+
   client.rankFinder = (oldPoints, total) => {
     for (let i = 0; i < client.ranks.length; i++) {
       console.log(client.ranks[i].minPoints);

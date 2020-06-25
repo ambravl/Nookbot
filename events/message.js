@@ -85,36 +85,7 @@ If you believe this member is a mention spammer bot, please ban them with the co
     }
     // Give points to messages not starting with the prefix
     if (message.content.indexOf(client.config.prefix) !== 0) {
-      if (client.config.rankedChannels.includes(message.channel.id)) {
-        const longest = client.longest[message.author.id];
-        const length = message.content.length;
-        if (!longest || longest < length) client.longest[message.author.id] = length;
-        if (!longest) {
-          setTimeout(() => {
-            client.userDB.ensure(message.author.id, 0, 'points')
-              .then((res) => {
-                const points = Math.floor(length < 100 ? Math.max(1, length / 20) : Math.min(10, 6 + (length / 100)));
-                client.userDB.math(message.author.id, '+', points, 'points');
-                console.log(res);
-                const role = client.rankFinder(res, res + points);
-                console.log(role);
-                if (role) {
-                  message.member.roles.add(role.roleID, '[Auto] Level Up');
-                  if (role.previous) message.member.roles.remove(role.previous, '[Auto] Level Up');
-                  const name = message.guild.roles.cache.get(role.roleID).name;
-                  client.userDB.update(message.author.id, name, 'rankRole');
-                  const embed = new Discord.MessageEmbed()
-                    .setTitle(`${client.mStrings.rank.up.title} <@${message.author.id}>!`)
-                    .setDescription(client.mStrings.rank.up.descL + name + client.mStrings.rank.up.descR);
-                  message.channel.send(embed);
-                }
-              })
-              .catch((err) => {
-                client.handle(err, 'ensuring a member exists when adding points')
-              });
-          }, 60000)
-        }
-      }
+      client.awardPoints(message);
       return client.easter(message);
     }
   }
