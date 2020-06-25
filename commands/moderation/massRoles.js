@@ -8,6 +8,8 @@ module.exports.run = (client, message, args) => {
           throw err
         })
       })
+
+      client.success(message.channel, 'done', 'alright done');
     } catch (err) {
       client.handle(err, 'adding roles', message)
     }
