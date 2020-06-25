@@ -111,6 +111,8 @@ module.exports = (client) => {
       super('cursing');
       const Filter = require('bad-words');
       this.filter = new Filter();
+      this.filter.addWords('wtf');
+      this.filter.removeWords('crap', 'shit')
     }
 
     checker(message) {
