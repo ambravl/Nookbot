@@ -80,12 +80,12 @@ module.exports = (client) => {
 
       client.suggestions = [];
       client.modMail = {};
-      client.longest = {};
+      client.cachedMsgPoints = {};
 
       client.modMailDB.cacheDB()
         .then((res) => {
-          const modMailChannel = client.channels.cache.get(client.config.modMail).messages;
-          const reportChannel = client.channels.cache.get(client.config.reportMail).messages;
+          const modMailChannel = client.channels.resolve(client.config.modMail).messages;
+          const reportChannel = client.channels.resolve(client.config.reportMail).messages;
           modMailChannel.fetch('725331823915434004').then((msg) => {
             client.modMailPin = msg;
           });
