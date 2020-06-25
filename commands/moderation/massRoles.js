@@ -1,13 +1,14 @@
 module.exports.run = (client, message, args) => {
   if (!args) return client.error(message.channel, 'No role mentioned!', 'You need to mention the role!');
   const role = message.mentions.roles.first();
+  if (role) client.success(message.channel, 'k', 'k give me a min');
   message.guild.members.fetch().then(fetchedMembers => {
     try {
       fetchedMembers.each((member) => {
         member.roles.add(role).catch((err) => {
           throw err
         })
-      })
+      });
 
       client.success(message.channel, 'done', 'alright done');
     } catch (err) {
