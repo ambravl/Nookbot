@@ -215,7 +215,7 @@ module.exports = (client) => {
           newPin.fields.find((field) => typeToField[modmail.mailtype] === field.name).value.replace(regex, '');
           if (newPin.description.indexOf('*1*') === -1) {
             newPin.description = `Right now, we have **${parseInt(newPin.description.match(/\d+/g)[1]) - 1}** open tickets. Let's close some!`;
-          } else newPin.description = "Right now, we gave no open tickets!";
+          } else newPin.description = "Right now, we have no open tickets!";
           modmail.mailtype === 'report' || modmail.mailtype === 'scam' ? client.reportPin.edit(newPin) : client.modMailPin.edit(newPin);
         }
         newEmbed.addField(values.emoji1, values.desc1, true).addField(values.emoji2, values.desc2, true).setFooter(values.footer);
