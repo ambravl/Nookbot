@@ -3,7 +3,7 @@ module.exports.run = (client, message, args) => {
   if (!args) return client.error(message.channel, 'No role mentioned!', 'You need to mention the role!');
   const role = message.mentions.roles.first();
   if (role) client.success(message.channel, 'k', 'k give me a min');
-  else client.error(message.channel, 'idk i broke', 'couldnt find that role')
+  else client.error(message.channel, 'idk i broke', 'couldnt find that role');
   message.guild.members.fetch().then(fetchedMembers => {
     try {
       fetchedMembers.each((member) => {
@@ -23,8 +23,7 @@ module.exports.run = (client, message, args) => {
 module.exports.conf = {
   guildOnly: true,
   aliases: [],
-  permLevel: 'Mod',
-  args: 1,
+  permLevel: 'Mod'
 };
 
 module.exports.help = {
