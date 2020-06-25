@@ -106,7 +106,19 @@ module.exports = (client) => {
     }
   }
 
-  client.checkers = [new AttachmentChecker(), new ImageChecker(), new MentionChecker(), new NewlineChecker()];
+  class CurseChecker extends Checker {
+    constructor() {
+      super('cursing');
+      const Filter = require('bad-words');
+      this.filter = new Filter();
+    }
+
+    checker(message) {
+      return !message.deleted && message.deletable && this.filter.isProfane(message.content);
+    }
+  }
+
+  client.checkers = [new AttachmentChecker(), new ImageChecker(), new MentionChecker(), new NewlineChecker(), new CurseChecker()];
 
   client.handleReaction = async (client, messageReaction, user) => {
     if (user.bot || (messageReaction.message.guild && messageReaction.message.guild.id !== client.config.mainGuild)) {
