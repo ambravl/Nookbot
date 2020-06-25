@@ -23,9 +23,9 @@ module.exports.conf = {
 };
 
 module.exports.help = {
-  name: 'roles',
+  name: 'massRoles',
   category: 'moderation',
   description: 'Makes it so Leif listens to reactions to a message and assigns roles accordingly',
-  usage: 'roles <link>',
-  details: "<link> => The link to the message listing roles.",
+  usage: 'massRoles <@role>',
+  details: "",
 };
