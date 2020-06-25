@@ -261,16 +261,17 @@ module.exports = (client) => {
             dmFooter: 'Ticket closed on',
             status: 'complete'
           };
-          const newPin = modmail.mailtype === 'report' || modmail.mailtype === 'scam' ? client.reportPin.embeds[0] : client.modMailPin.embeds[0];
-          const typeToField = {
-            report: 'Rule Breakers',
-            scam: 'Scam Reports',
-            suggestion: 'Suggestions',
-            question: 'Questions',
-            other: 'Misc'
-          };
           const regex = new RegExp(`.+${messageReaction.message.id}.+\n?`, "");
-          newPin.fields.find((field) => typeToField[modmail.mailtype] === field.name).value.replace(regex, '');
+          let newPin, index;
+          if (modmail.type === 'report' || modmail.mailtype === scam) {
+            newPin = client.reportPin.embeds[0];
+            index = modmail.type === 'report' ? 1 : 0;
+          } else {
+            newPin = client.modMailPin.embeds[0];
+            index = ['question', 'suggestion', 'other'].indexOf(modmail.type);
+          }
+          newPin.fields[index].value = newPin.fields[index].value.replace(regex, '');
+          if (!newPin.fields[index].value) newPin.fields[index].value = 'None';
           if (newPin.description.indexOf('*1*') === -1) {
             newPin.description = `Right now, we have **${parseInt(newPin.description.match(/\d+/g)[1]) - 1}** open tickets. Let's close some!`;
           } else newPin.description = "Right now, we have no open tickets!";
