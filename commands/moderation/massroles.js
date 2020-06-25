@@ -1,4 +1,5 @@
 module.exports.run = (client, message, args) => {
+  console.log('got here');
   if (!args) return client.error(message.channel, 'No role mentioned!', 'You need to mention the role!');
   const role = message.mentions.roles.first();
   if (role) client.success(message.channel, 'k', 'k give me a min');
@@ -30,6 +31,6 @@ module.exports.help = {
   name: 'massRoles',
   category: 'moderation',
   description: 'Makes it so Leif listens to reactions to a message and assigns roles accordingly',
-  usage: 'massRoles <@role>',
+  usage: 'massroles <@role>',
   details: "",
 };
