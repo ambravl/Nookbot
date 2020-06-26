@@ -49,6 +49,35 @@ module.exports.sting = async function sting(oldStings, newStings, reason, member
   } catch (e) {
     throw e;
   }
-  return punishment.action;
+  return punishment;
 
+};
+
+module.exports.muter = async function muter(client, member, message, time) {
+
+  try {
+    // Update unmuteTime on users
+    client.mutedUsers.set(member.id, (time * 60000) + Date.now());
+    const guildMember = await message.guild.members.fetch(member);
+    await guildMember.roles.add(client.config.mutedRole, '[Auto] Beestings');
+
+    // Kick and mute/deafen member if in voice
+    if (guildMember.voice.channel) {
+      guildMember.voice.kick().catch((err) => {
+        client.handle(err, 'kicking member from voice channel', message)
+      });
+    }
+
+    // Schedule unmute
+    setTimeout(() => {
+      if ((client.mutedUsers.get(member.id) || 0) < Date.now()) {
+        client.mutedUsers.delete(member.id);
+        guildMember.roles.remove(client.config.mutedRole, `Scheduled unmute after ${mute} minutes.`).catch((err) => {
+          client.error(message.guild.channels.cache.get(client.config.modLog), 'Unmute Failed!', `I've failed to unmute this member! ${err}\nID: ${member.id}`);
+        });
+      }
+    }, mute * 60000);
+  } catch (err) {
+    client.error(message.guild.channels.cache.get(client.config.modLog), 'Mute Failed!', `I've failed to mute this member! ${err}`);
+  }
 }

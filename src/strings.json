@@ -466,6 +466,14 @@
       "desc": "The tag you attempted to display does not exist!"
     }
   },
+  "beesting": {
+    "appeal": "If you wish to contact the moderators about this punishment, please use the .appeal command here.",
+    "reason": " for the following reason:",
+    "warn": "You have been warned",
+    "default": "You have been stinged",
+    "mute": "You have been temporarily muted for ",
+    "ban": "You have been banned from All things garden!"
+  },
   "filters": {
     "imageOnly": "Image Only Channel!\nThis channel only allows posts with images or links in them. Everything else is automatically deleted.",
     "newlineLimit": "Too Many New Lines!\nThis channel only allows posts with less than 10 newline characters in them. Messages with more than that are automatically deleted.",

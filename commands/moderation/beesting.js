@@ -1,30 +1,13 @@
 module.exports.run = async (client, message, args, level, Discord) => {
+  const stinger = require('../../src/stinger');
   let member;
   if (parseInt(args[0], 10)) {
     try {
-      member = await client.users.fetch(args[0]);
+      member = await client.users.fetch(args[0]) || message.mentions.members.first();
     } catch (err) {
-      // Don't need to send a message here
+      client.handle(err, 'fetching member to sting', message);
     }
   }
-
-  if (!member) {
-    member = message.mentions.members.first();
-  }
-
-  if (!member) {
-    const searchedMember = client.searchMember(args[0]);
-    if (searchedMember) {
-      const decision = await client.reactPrompt(message, `Would you like to give \`${searchedMember.user.tag}\` a bee sting?`);
-      if (decision) {
-        member = searchedMember;
-      } else {
-        message.delete().catch((err) => console.error(err));
-        return client.error(message.channel, 'Bee Sting Not Given!', 'The prompt timed out, or you selected no.');
-      }
-    }
-  }
-
   // If no user mentioned, display this
   if (!member) {
     return client.error(message.channel, 'Invalid Member!', 'Please mention a valid member of this server!');
@@ -32,136 +15,39 @@ module.exports.run = async (client, message, args, level, Discord) => {
 
   const newPoints = parseInt(args[1], 10);
 
-  if (!(newPoints >= 0)) {
+  if (newPoints < 0) {
     return client.error(message.channel, 'Invalid Number!', 'Please provide a valid number for the stings to give!');
   }
 
   const reason = args[2] ? args.slice(2).join(' ') : 'No reason given.';
 
   let curPoints = 0;
-  const time = Date.now();
   const infractions = await client.userDB.ensure(member.id, '', 'infractions');
-  if (infractions) infractions.forEach((infraction) => {
-    // If (points * 1 week) + time of infraction > current time, then the points are still valid
-    if ((infraction.points * 604800000) + infraction.date > time) {
-      curPoints += infraction.points;
-    }
+  infractions.forEach((infraction) => {
+    curPoints += infraction.points;
   });
-
-  let dmMsg;
-  let action;
-  let mute = 0;
-  let ban = false;
-  if (newPoints === 0) {
-    // Make a note
-    action = 'Note';
-  } else if (newPoints + curPoints >= 25) {
-    // Ban
-    dmMsg = `You have been banned from the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to appeal your ban, fill out this Google Form:
-${client.config.banAppealLink}`;
-    action = 'Ban';
-    ban = true;
-  } else if (curPoints < 20 && newPoints + curPoints >= 20) {
-    // Mute 12 hours
-    dmMsg = `You have been temporarily muted and will be unable to see many trade channels for 12 hours in the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to contact the moderators about your mute, please send a message to Orvbot to initiate communication. Orvbot can be found at the top of the member list in the server.`;
-    action = '12 Hour Mute';
-    mute = 720;
-  } else if (curPoints < 15 && newPoints + curPoints >= 15) {
-    // Mute 1 hour
-    dmMsg = `You have been temporarily muted and will be unable to see many trade channels for 1 hour in the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to contact the moderators about your mute, please send a message to Orvbot to initiate communication. Orvbot can be found at the top of the member list in the server.`;
-    action = '1 Hour Mute';
-    mute = 60;
-  } else if (curPoints < 10 && newPoints + curPoints >= 10) {
-    // Mute 30 minutes
-    dmMsg = `You have been temporarily muted and will be unable to see many trade channels for 30 minutes in the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to contact the moderators about your mute, please send a message to Orvbot to initiate communication. Orvbot can be found at the top of the member list in the server.`;
-    action = '30 Minute Mute';
-    mute = 30;
-  } else if (curPoints < 5 && newPoints + curPoints >= 5) {
-    // Mute 10 minutes
-    dmMsg = `You have been temporarily muted and will be unable to see many trade channels for 10 minutes in the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to contact the moderators about your mute, please send a message to Orvbot to initiate communication. Orvbot can be found at the top of the member list in the server.`;
-    action = '10 Minute Mute';
-    mute = 10;
-  } else {
-    // Give warning
-    dmMsg = `You have been warned in the AC:NH server for the following reason:
-**${reason}**
-You were given **${newPoints} bee sting${newPoints === 1 ? '' : 's'}** and your total is **${newPoints + curPoints}**.
-If you wish to contact the moderators about your warning, please send a message to Orvbot to initiate communication. Orvbot can be found at the top of the member list in the server.`;
-    action = 'Warn';
-  }
-
-  let dmSent = false;
-  if (newPoints > 0) {
-    // Try to send DM
-    try {
-      const dmChannel = await member.createDM();
-      await dmChannel.send(dmMsg);
-      dmSent = true;
-    } catch (e) {
-      // Nothing to do here
-    }
-  }
-
+  const punishment = await stinger.sting(curPoints, newPoints, reason, member);
   // Create infraction in the infractions to get case number
   const caseNum = await client.infractions.add(member.id);
 
   // Create infraction in the users to store important information
   const infraction = {
     case: caseNum.rows[0].casenumber,
-    action: action,
+    action: punishment.action,
     points: newPoints,
     reason: `${reason}${message.attachments.size > 0 ? `\n${message.attachments.map((a) => `${a.url}`).join('\n')}` : ''}`,
-    moderator: message.author.id,
-    dmSent: dmSent ? "true" : "false",
-    date: time
+    moderator: message.author.id
   };
+
   client.userDB.push(member.id, infraction, 'infractions');
 
   // Perform the required action
-  if (ban) {
+  if (punishment.action === 'ban') {
     await message.guild.members.ban(member, {reason: '[Auto] Beestings', days: 1}).catch((err) => {
       client.error(message.guild.channels.cache.get(client.config.modLog), 'Ban Failed!', `I've failed to ban this member! ${err}`);
     });
-  } else if (mute) {
-    try {
-      // Update unmuteTime on users
-      client.mutedUsers.set(member.id, (mute * 60000) + time);
-      const guildMember = await message.guild.members.fetch(member);
-      await guildMember.roles.add(client.config.mutedRole, '[Auto] Beestings');
+  } else if (punishment.action === 'mute') await stinger.muter(client, member, message, punishment.length);
 
-      // Kick and mute/deafen member if in voice
-      if (guildMember.voice.channel) {
-        guildMember.voice.kick();
-      }
-
-      // Schedule unmute
-      setTimeout(() => {
-        if ((client.mutedUsers.get(member.id) || 0) < Date.now()) {
-          client.mutedUsers.delete(member.id);
-          guildMember.roles.remove(client.config.mutedRole, `Scheduled unmute after ${mute} minutes.`).catch((err) => {
-            client.error(message.guild.channels.cache.get(client.config.modLog), 'Unmute Failed!', `I've failed to unmute this member! ${err}\nID: ${member.id}`);
-          });
-        }
-      }, mute * 60000);
-    } catch (err) {
-      client.error(message.guild.channels.cache.get(client.config.modLog), 'Mute Failed!', `I've failed to mute this member! ${err}`);
-    }
-  }
 
   // Notify in channel
   client.success(message.channel, 'Bee Sting Given!', `**${member.guild ? member.user.tag : member.tag || member}** was given **${newPoints}** bee sting${newPoints === 1 ? '' : 's'}!`);
@@ -174,7 +60,6 @@ If you wish to contact the moderators about your warning, please send a message 
     .addField('User', `<@${member.id}>`, true)
     .addField('Moderator', `<@${message.author.id}>`, true)
     .addField('Stings Given', newPoints, true)
-    .addField('DM Sent?', dmSent ? `${client.emoji.checkMark} Yes` : `${client.emoji.redX} No`, true)
     .addField('Total Stings', curPoints + newPoints, true)
     .setFooter(`ID: ${member.id}`)
     .setTimestamp();
