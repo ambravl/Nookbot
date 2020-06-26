@@ -444,9 +444,6 @@ module.exports = (client) => {
     }
   };
 
-  // FIXME
-  client.searchMember = (name, threshold = 0.5) => undefined;
-
   client.clearSongQueue = () => {
     client.songQueue.stopping = true;
     if (client.songQueue.connection) {

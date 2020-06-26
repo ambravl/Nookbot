@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 module.exports.run = (client, message, args, level) => {
-  const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' ')) || message.member;
+  const member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.member;
   client.userDB.ensure(member.id, '', '*')
     .then((result) => {
       const {positiverep, negativerep} = result;

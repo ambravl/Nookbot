@@ -91,22 +91,6 @@ class Profile {
         }
       }
 
-      if (!member) {
-        const searchedMember = this.client.searchMember(args[1]);
-        if (searchedMember) {
-          const decision = await this.client.reactPrompt(
-            message,
-            this.client.mStrings.island.mod.descL + searchedMember.user.tag + this.client.mStrings.island.mod.descL
-          );
-          if (decision) {
-            member = searchedMember;
-          } else {
-            message.delete().catch((err) => console.error(err));
-            return {channel: message.channel, author: 'noMod'}
-          }
-        }
-      }
-
     if (!member) {
       return {channel: message.channel, author: 'invalid'};
     }

@@ -3,7 +3,7 @@ const moment = require('moment');
 // eslint-disable-next-line consistent-return
 module.exports.nameCheck = async (client, message, args, Discord, nick) => {
   const u = nick ? 'nick' : 'user';
-  let member = message.mentions.members.first() || message.guild.members.cache.get(args[0]) || client.searchMember(args.join(' '));
+  let member = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
   if (!member) {
     member = args[0] ? {id: args[0]} : message.member;

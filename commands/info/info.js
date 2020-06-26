@@ -35,7 +35,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     }
     case 'user': {
       // Setting the member to the mentioned user
-      let member = message.mentions.members.first() || message.guild.members.cache.get(args[1]) || client.searchMember(args.slice(1).join(' '));
+      let member = message.mentions.members.first() || message.guild.members.cache.get(args[1])
 
       if (!member && !args[1]) {
         member = message.member;
