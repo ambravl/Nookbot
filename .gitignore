@@ -1,11 +1,5 @@
 # Node crap
 node_modules
 
-# .env for local testing
-.env
-
-# Data
-data
-
-# VSCode
-.vscode
+# bg wip
+bg.xcf
