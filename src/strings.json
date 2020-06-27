@@ -277,19 +277,19 @@
       "title": "No Matches!",
       "desc": "No emojis matched your search critera!"
     },
-    "top": {
-        "title": "Not a Number!",
-        "desc": "You must supply a number for the amount of top ranked emojis to display."
+    "DESC": {
+      "title": "Not a Number!",
+      "desc": "You must supply a number for the amount of top ranked emojis to display."
     },
-    "bottom": {
-        "title": "Not a Number!",
-        "desc": "You must supply a number for the amount of bottom ranked emojis to display"
+    "ASC": {
+      "title": "Not a Number!",
+      "desc": "You must supply a number for the amount of bottom ranked emojis to display"
     },
-    "more": {
+    ">": {
       "title": "Not a Number!",
       "desc": "You must supply a number for the minimum amount of uses an emoji must have to be displayed."
     },
-    "less": {
+    "<": {
       "title": "Not a Number!",
       "desc": "You must supply a number for the maximum amount of uses an emoji must have to be displayed."
     },
