@@ -115,7 +115,7 @@ class EmojiList{
 
 module.exports.conf = {
   guildOnly: true,
-  aliases: ['es', 'emoji'],
+  aliases: ['es', 'emoji', 'emojistat'],
   permLevel: 'Mod',
   args: 1,
 };
