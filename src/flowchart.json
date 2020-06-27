@@ -83,6 +83,30 @@
             "fewVisitors": "offsetDenseIP",
             "lotsVisitors": "offsetDenseIP"
           }
+        },
+        "three": {
+          "visitors": {
+            "noneVisitors": {
+              "space": {
+                "lotsSpace": "doubleDiamonds",
+                "fewSpace": "offsetDenseIP"
+              }
+            },
+            "fewVisitors": "offsetDenseIP",
+            "lotsVisitors": "offsetDenseIP"
+          }
+        },
+        "four": {
+          "visitors": {
+            "noneVisitors": {
+              "space": {
+                "lotsSpace": "doubleDiamonds",
+                "fewSpace": "offsetDenseIP"
+              }
+            },
+            "fewVisitors": "offsetDenseIP",
+            "lotsVisitors": "offsetDenseIP"
+          }
         }
       }
     }
