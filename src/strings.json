@@ -482,6 +482,10 @@
     "cursing": "No cursing allowed!\nYou can't curse in this channel, please keep it PG-13!"
   },
   "layouts": {
+    "back": {
+      "footer": "You can go back anytime using the ◀️ reaction!",
+      "emoji": "◀️"
+    },
     "start": {
       "title": "Yuecrossing's Garden Layout Decisions",
       "desc": "Hello! You know what's best for your garden, but I'd be happy to help! Would you kindly tell me your objective?"
@@ -528,8 +532,13 @@
       "title": "How popular are you?",
       "desc": "The more people water your flowers, the more likely they are to produce new flowers! (this caps at five visitors). How many people are you planning on inviting to your island to water your flowers each day?"
     },
+    "noneVisitors": {
+      "title": "\uD83D\uDC64 None",
+      "desc": "\u200B",
+      "emoji": "\uD83C\uDF00"
+    },
     "fewVisitors": {
-      "title": "\uD83D\uDC64 Less than three",
+      "title": "\uD83D\uDC64 One or two",
       "desc": "\u200B",
       "emoji": "\uD83D\uDC64"
     },

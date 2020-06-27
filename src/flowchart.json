@@ -1,0 +1,90 @@
+{
+  "start": {
+    "cloning": {
+      "species": {
+        "one": {
+          "cliffs": {
+            "noCliffs": "isolatedClones",
+            "yesCliffs": "cliffCloningSingle"
+          }
+        },
+        "two": {
+          "cliffs": {
+            "noCliffs": "isolatedClones",
+            "yesCliffs": "cliffCloningMulti"
+          }
+        },
+        "three": {
+          "visitors": {
+            "noneVisitors": "offsetCloneRows",
+            "fewVisitors": "offsetCloneRows",
+            "lotsVisitors": "offsetCloneRowsDoubleSpaced"
+          }
+        },
+        "four": {
+          "visitors": {
+            "noneVisitors": "cloneRows",
+            "fewVisitors": "cloneRows",
+            "lotsVisitors": "cloneRowsDoubleSpaced"
+          }
+        }
+      }
+    },
+    "testing": {
+      "cliffs": {
+        "yesCliffs": "2p1CliffTesting",
+        "noCliffs": "2p1Testing"
+      }
+    },
+    "all": {
+      "space": {
+        "fewSpace": "jmaster",
+        "lotsSpace": "backwards"
+      }
+    },
+    "breeding": {
+      "species": {
+        "one": {
+          "parents": {
+            "identical": {
+              "space": {
+                "lotsSpace": "2x2",
+                "fewSpace": {
+                  "visitors": {
+                    "noneVisitors": "hexahole",
+                    "fewVisitors": "hexahole",
+                    "lotsVisitors": "tetrisT"
+                  }
+                }
+              }
+            },
+            "different": {
+              "cliffs": {
+                "yesCliffs": "cliffIP",
+                "noCliffs": {
+                  "visitors": {
+                    "noneVisitors": "diamond",
+                    "fewVisitors": "IP",
+                    "lotsVisitors": "IP"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "two": {
+          "visitors": {
+            "noneVisitors": {
+              "space": {
+                "lotsSpace": "doubleDiamonds",
+                "fewSpace": "offsetDenseIP"
+              }
+            },
+            "fewVisitors": "offsetDenseIP",
+            "lotsVisitors": "offsetDenseIP"
+          }
+        }
+      }
+    }
+  }
+}
