@@ -29,6 +29,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
       errors: ['time']
     }).catch(() => client.error('Timed out!'));
     console.log(reaction);
+    console.log(reaction.emoji);
     const decision = next.find((step) => strings[step].emoji === reaction.emoji.name);
     if (Object.keys(current[decision])) {
       currentName = Object.keys(current[decision])[0];
