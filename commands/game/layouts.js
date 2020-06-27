@@ -52,7 +52,7 @@ module.exports.run = async (client, message, args, Discord) => {
 
 module.exports.conf = {
   guildOnly: false,
-  aliases: ['layout', 'layouts', 'garden', 'gardens', 'lay', 'l'],
+  aliases: ['layout', 'layouts', 'garden', 'gardens', 'lay', 'ly'],
   permLevel: 'User',
   allowedChannels: false,
   cooldown: 300,
