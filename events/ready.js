@@ -71,7 +71,7 @@ module.exports = (client) => {
       client.reactionRoles.cacheDB()
         .then((res) => {
           res.rows.forEach((msg) => {
-            client.channels.cache.get(msg.channelid).messages.fetch(msg.messageid);
+            client.channels.cache.get(msg.channelid).messages.fetch(msg.messageid).catch((err) => client.handle(err, 'fetching reactionrole messages'));
           })
         })
         .catch((err) => {

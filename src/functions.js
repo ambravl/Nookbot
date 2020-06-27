@@ -204,7 +204,9 @@ module.exports = (client) => {
         const newEmbed = new Discord.MessageEmbed(messageReaction.message.embeds[0]);
         newEmbed.setTimestamp();
         const DMChannel = await client.users.cache.get(modmail.memberid).createDM();
-        const DMMessage = await DMChannel.messages.fetch(modmail.dmid);
+        const DMMessage = await DMChannel.messages.fetch(modmail.dmid).catch((err) => {
+          client.handle(err, 'fetching modmail dms')
+        });
         const DMEmbed = new Discord.MessageEmbed(DMMessage.embeds[0]);
         DMEmbed.setTimestamp();
         let values;
