@@ -1,4 +1,4 @@
-module.exports.run = async (client, message, args, Discord) => {
+module.exports.run = async (client, message, args, level, Discord) => {
   const flowchart = require('../../src/flowchart.json');
   const strings = client.mStrings.layouts;
   const channel = message.guild ? await message.member.createDM() : message.channel;
