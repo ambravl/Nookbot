@@ -23,7 +23,7 @@ module.exports = (client) => {
             return;
           }
 
-          console.log(`Attempting to load command ${commandName}`);
+          // console.log(`Attempting to load command ${commandName}`);
 
           client["enabledCommands"].ensure(commandName, 't')
             .then((res) => {
