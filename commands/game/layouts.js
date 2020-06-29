@@ -33,7 +33,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     if (Object.keys(current[decision])) {
       currentName = Object.keys(current[decision])[0];
       console.log(current);
-      current = current[currentName];
+      current = current[decision][currentName];
       next = Object.keys(current);
     } else {
       current = current[decision];
