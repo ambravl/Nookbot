@@ -35,6 +35,9 @@ module.exports.run = async (client, message, args, level, Discord) => {
       console.log(current);
       current = current[decision][currentName];
       next = Object.keys(current);
+      nextEmojis = next.map((step) => {
+        return strings[step].emoji
+      });
     } else {
       current = current[decision];
       next = null;
