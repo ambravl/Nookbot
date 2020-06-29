@@ -32,6 +32,7 @@ module.exports.run = async (client, message, args, level, Discord) => {
     const decision = next.find((step) => strings[step].emoji === reaction.first().emoji.name);
     if (Object.keys(current[decision])) {
       currentName = Object.keys(current[decision])[0];
+      console.log(current);
       current = current[currentName];
       next = Object.keys(current);
     } else {
