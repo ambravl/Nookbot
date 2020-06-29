@@ -30,7 +30,10 @@ module.exports.run = async (client, message, args, level, Discord) => {
     }).catch(() => client.error('Timed out!'));
     console.log(reaction);
     const decision = next.find((step) => strings[step].emoji === reaction.first().emoji.name);
-    if (Object.keys(current[decision])) {
+    if (typeof current[decision] === 'string') {
+      current = current[decision];
+      next = null;
+    } else {
       currentName = Object.keys(current[decision])[0];
       console.log(current);
       current = current[decision][currentName];
@@ -38,9 +41,6 @@ module.exports.run = async (client, message, args, level, Discord) => {
       nextEmojis = next.map((step) => {
         return strings[step].emoji
       });
-    } else {
-      current = current[decision];
-      next = null;
     }
   }
   const layout = new Discord.MessageEmbed()
