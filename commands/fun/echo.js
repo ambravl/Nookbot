@@ -2,7 +2,7 @@ module.exports.run = (client, message, args, level) => {
   let channel = message.channel;
   if (level > 3 && args[0].match(/<#\d+>/)) {
     channel = message.mentions.channels.first();
-    args.unshift();
+    args.shift();
     console.log(args[0]);
   }
   try {
