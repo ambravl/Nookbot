@@ -3,7 +3,13 @@ module.exports = async (client, messageReaction, user) => {
   const reactionRoleMenu = await client.handleReaction(client, messageReaction, user);
   const member = await client.guilds.cache.get(client.config.mainGuild).members.fetch(user.id);
   if (!member || !reactionRoleMenu || !reactionRoleMenu.roleid) return;
-  if (reactionRoleMenu.type === 'exclusive') {
+  if(reactionRoleMenu.type === 'poll'){
+  messageReaction.message.reactions.cache.each((reaction) => {
+    if(reaction.emoji !== messageReaction.emoji) reaction.remove(user.id).catch(() => {});
+  })
+    return;
+  }
+  else if (reactionRoleMenu.type === 'exclusive') {
     const rolesToRemove = [];
     member.roles.cache.forEach((role, rID) => {
       if (rID !== reactionRoleMenu.roleid && reactionRoleMenu.roles.includes(rID)) {
