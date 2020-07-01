@@ -3,6 +3,7 @@ module.exports.run = (client, message, args, level) => {
   if (level > 3 && args[0].match(/<#\d+>/)) {
     channel = message.mentions.channels.first();
     args.unshift();
+    console.log(args[0]);
   }
   try {
     let msg = JSON.parse(JSON.stringify(args.join(' ')));
