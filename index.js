@@ -27,13 +27,6 @@ const emoji = require('./src/emoji');
 require('./src/error-handler')(client);
 require('./src/dbUser')(client);
 
-// this is a test
-let redis = require('redis');
-let reClient = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
-reClient.get('foo', function (err, reply) {
-  console.log(reply.toString()); // Will print `bar`
-});
-
 client.version = `v${version}`;
 client.emoji = emoji;
 client.mStrings = strings;
