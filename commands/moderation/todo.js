@@ -16,15 +16,15 @@ module.exports.run = async (client, message, args) => {
     const newPin = pin;
     let string;
     if (args[0] === 'done') {
-      newPin.embeds[0].fields.splice(parseInt(args[1]) - 1, 1);
+      newPin.fields.splice(parseInt(args[1]) - 1, 1);
       string = 'Item marked as complete! Congratulations!'
     } else if (args[0] === 'edit' || args[0] === 'e') {
-      newPin.embeds[0].fields[parseInt(args[1]) - 1].value = args.slice(2).join(' ');
+      newPin.fields[parseInt(args[1]) - 1].value = args.slice(2).join(' ');
       string = 'Item edited!';
     } else {
-      console.log(newPin.embeds[0]);
-      newPin.embeds[0].fields.push({
-        name: newPin.embeds[0].fields ? newPin.embeds[0].fields.length + 1 : '1',
+      console.log(newPin);
+      newPin.fields.push({
+        name: newPin.fields ? newPin.fields.length + 1 : '1',
         value: args.join(' '),
         inline: false
       });
