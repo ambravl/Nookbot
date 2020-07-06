@@ -22,9 +22,10 @@ module.exports.run = async (client, message, args) => {
       newPin.embeds[0].fields[parseInt(args[1]) - 1].value = args.slice(2).join(' ');
       string = 'Item edited!';
     } else {
-      newPin.embeds[0].addField(newPin.embeds[0].fields ? newPin.embeds[0].fields.length + 1 : 1, args.join(' '));
+      newPin.embeds[0].addField(newPin.embeds[0].fields ? newPin.embeds[0].fields.length + 1 : '1', args.join(' '));
       string = 'Item added to the list!';
     }
+    console.log(newPin.fields);
     pin.edit(newPin);
     return message.channel.send(string);
   })
