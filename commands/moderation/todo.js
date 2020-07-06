@@ -23,7 +23,11 @@ module.exports.run = async (client, message, args) => {
       string = 'Item edited!';
     } else {
       console.log(newPin.embeds[0]);
-      newPin.embeds[0].addField(newPin.embeds[0].fields ? newPin.embeds[0].fields.length + 1 : '1', args.join(' '));
+      newPin.embeds[0].fields.push({
+        name: newPin.embeds[0].fields ? newPin.embeds[0].fields.length + 1 : '1',
+        value: args.join(' '),
+        inline: false
+      });
       string = 'Item added to the list!';
     }
     console.log(newPin.fields);
