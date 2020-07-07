@@ -13,7 +13,7 @@ module.exports.run = async (client, message, args) => {
     })
   }
   channel.messages.fetch(client.config.todoList).then((pin) => {
-    const newPin = pin;
+    const newPin = pin.embeds[0];
     let string;
     if (args[0] === 'done') {
       newPin.fields.splice(parseInt(args[1]) - 1, 1);
