@@ -14,7 +14,6 @@ module.exports.run = async (client, message, args) => {
   }
   channel.messages.fetch(client.config.todoList).then((pin) => {
     const newPin = pin.embeds[0];
-    newPin.fields[0].name = '1';
     let string;
     if (args[0] === 'done') {
       const fieldNum = parseInt(args[1]);
