@@ -22,13 +22,12 @@ module.exports.run = async (client, message, args) => {
       newPin.fields[parseInt(args[1]) - 1].value = args.slice(2).join(' ');
       string = 'Item edited!';
     } else {
-      console.log(newPin);
       newPin.fields.push({
         name: newPin.fields ? newPin.fields.length + 1 : '1',
         value: args.join(' '),
         inline: false
       });
-      string = 'Item added to the list!';
+      newPin.description = newPin.fields.length + ' items active!';
     }
     console.log(newPin.fields);
     pin.edit(newPin);
