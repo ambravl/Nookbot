@@ -14,9 +14,15 @@ module.exports.run = async (client, message, args) => {
   }
   channel.messages.fetch(client.config.todoList).then((pin) => {
     const newPin = pin.embeds[0];
+    newPin.fields[0].name = '1';
     let string;
     if (args[0] === 'done') {
-      newPin.fields.splice(parseInt(args[1]) - 1, 1);
+      const fieldNum = parseInt(args[1]);
+      newPin.fields.splice(fieldNum - 1, 1);
+      newPin.fields.map((field) => {
+        field.name = parseInt(field.name) < fieldNum ? field.name : parseInt(field.name) - 1
+      });
+      newPin.description = newPin.fields.length + ' items active!';
       string = 'Item marked as complete! Congratulations!'
     } else if (args[0] === 'edit' || args[0] === 'e') {
       newPin.fields[parseInt(args[1]) - 1].value = args.slice(2).join(' ');
