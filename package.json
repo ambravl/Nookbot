@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Phoenix1128/Nookbot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
+    "@discordjs/opus": "^0.8.0",
     "bad-words": "^3.0.3",
     "canvas": "^2.6.1",
     "cheerio": "^1.0.0-rc.3",
